@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="NexCode FAQ — answers about protection, licensing, billing, and integration."/>
+<title>FAQ — NexCode</title>
+<link rel="stylesheet" href="../css/base.css"/>
+<style>
+.page-hero{padding:calc(var(--nav) + 90px) 0 40px;text-align:center}
+.page-hero .eyebrow{justify-content:center;display:inline-flex;margin-bottom:18px}
+.page-hero h1{font-size:clamp(2.6rem,6vw,5rem);font-weight:900;letter-spacing:-.045em;line-height:.98;margin-bottom:20px}
+.page-hero h1 em{background:linear-gradient(130deg,var(--a),var(--a2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.page-hero p{font-size:clamp(1rem,1.8vw,1.18rem);color:var(--t2);max-width:500px;margin:0 auto;line-height:1.74}
+
+.faq-search-wrap{max-width:520px;margin:32px auto 0;position:relative}
+.faq-search-ic{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:16px;pointer-events:none}
+#faq-search{width:100%;padding:15px 18px 15px 46px;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rf);color:var(--t1);font-size:14.5px;outline:none;transition:border-color .2s,background .2s}
+#faq-search:focus{border-color:rgba(47,107,255,.5);background:var(--s2)}
+#faq-search::placeholder{color:var(--t3)}
+
+.faq-body-sec{padding:44px 0 clamp(60px,9vw,110px)}
+.faq-cats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
+.faq-cat{padding:9px 18px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rf);font-size:13px;font-weight:600;color:var(--t3);transition:all .18s}
+.faq-cat:hover{color:var(--t1);border-color:var(--b2)}
+.faq-cat.on{background:rgba(47,107,255,.12);border-color:rgba(47,107,255,.3);color:var(--a2)}
+
+.faq-list{max-width:780px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--b1)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;width:100%;padding:22px 0;text-align:left;font-size:15.5px;font-weight:600;color:var(--t2);gap:16px;transition:color .2s}
+.faq-q.open{color:var(--t1)}
+.faq-icon{width:24px;height:24px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:transform .32s var(--eo),background .2s;color:var(--t2)}
+.faq-q.open .faq-icon{transform:rotate(45deg);background:rgba(47,107,255,.14);color:var(--a2)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s var(--eo)}
+.faq-a-inner{padding-bottom:22px;font-size:14px;color:var(--t2);line-height:1.78;max-width:660px}
+.faq-a-inner code{font-family:var(--mono);font-size:12.5px;background:rgba(47,107,255,.1);color:var(--a2);padding:2px 6px;border-radius:4px}
+#faq-no-results{display:none;text-align:center;padding:60px 20px;color:var(--t3)}
+
+.cta-box{background:linear-gradient(145deg,rgba(47,107,255,.1),rgba(29,78,216,.05),rgba(34,211,238,.04));border:1px solid rgba(47,107,255,.22);border-radius:var(--rxl);padding:clamp(44px,6vw,72px) clamp(28px,5vw,64px);text-align:center;max-width:820px;margin:0 auto}
+</style>
+</head>
+<body>
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Support</div>
+    <h1>Got <em>questions?</em></h1>
+    <p>Everything you need to know about NexCode. Can't find an answer? Ask on Discord.</p>
+    <div class="faq-search-wrap">
+      <span class="faq-search-ic">⌕</span>
+      <input type="text" id="faq-search" placeholder="Search questions..." aria-label="Search FAQ"/>
+    </div>
+  </div>
+</section>
+
+<section class="faq-body-sec">
+  <div class="wrap">
+    <div class="faq-cats">
+      <button class="faq-cat on" data-cat="general">General</button>
+      <button class="faq-cat" data-cat="protection">Protection</button>
+      <button class="faq-cat" data-cat="licensing">Licensing</button>
+      <button class="faq-cat" data-cat="billing">Billing</button>
+      <button class="faq-cat" data-cat="technical">Technical</button>
+    </div>
+
+    <div class="faq-list">
+      <!-- GENERAL -->
+      <div class="faq-group" data-cat="general">
+        <div class="faq-item"><button class="faq-q"><span>What exactly is NexCode?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">NexCode is an all-in-one platform for protecting and licensing Lua scripts. It combines custom VM-based obfuscation with a complete key and license management system — plus a REST API, webhooks, and a Discord bot — so you can secure your work and run a business around it from one place.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>Who is NexCode for?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Anyone distributing Lua scripts they want to protect — Roblox and FiveM developers, game tool creators, script hub owners, and teams shipping commercial Lua software. It scales from solo devs on the Starter plan to studios on Enterprise.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>What Lua environments are supported?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Roblox Luau, LuaJIT, Lune, Lua 5.1 through 5.4, FiveM, OpenResty, and LÖVE2D. If your environment is less common, ask on Discord — we're always expanding coverage.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>How do I get started?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Pick a plan, add the <code>NXC_</code> stubs to your script, and compile through the dashboard or API. Our quick-start guide walks you through your first protected build in about five minutes.</div></div></div>
+      </div>
+
+      <!-- PROTECTION -->
+      <div class="faq-group" data-cat="protection" style="display:none">
+        <div class="faq-item"><button class="faq-q"><span>Can NexCode scripts be devirtualized?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">No commercially available tool can automatically devirtualize NexCode output. The VM randomizes opcode mappings on every compile, so reverse-engineering one build yields nothing reusable for the next. Anti-decompiler injection additionally crashes or hangs standard tools like <code>unluac</code>.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>Does obfuscation slow my script down?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">It can add overhead, which is why we give you control. Use <code>NXC_NO_VIRT</code> on hot paths like render loops and physics steps to skip the VM there, and pick the Balanced or Fast optimization profile. Most users report no perceptible difference with the right settings.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>What's the difference between the optimization profiles?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Fast applies lighter protection with minimal performance cost. Balanced (recommended) gives strong protection with reasonable overhead. Max applies every layer at full strength for high-value scripts where security matters more than speed.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>Is any protection truly unbreakable?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">No honest vendor will claim that. The goal is to make attacks so costly and time-consuming that they're not worth attempting. NexCode's per-build randomization, encryption, and anti-tamper layers are engineered to push that cost as high as possible.</div></div></div>
+      </div>
+
+      <!-- LICENSING -->
+      <div class="faq-group" data-cat="licensing" style="display:none">
+        <div class="faq-item"><button class="faq-q"><span>How does HWID locking work?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">On first execution, NexCode captures a hardware fingerprint and binds it to the key. Every subsequent auth check validates the machine matches. Shared keys fail silently on non-matching hardware. Admins can reset fingerprints via <code>/resethwid</code> or the REST API, and every reset is logged.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>What is FFA mode?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">FFA (Free For All) lets anyone execute your script without a key, while premium features stay gated behind a valid key check inside your code. It's ideal for freemium models where you want a large free audience plus a paid tier. Available on Pro and above.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>Can I bulk generate keys for a storefront?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes. Generate up to 1,000 keys at once and export them as TXT or JSON. For fully automated fulfillment, use the REST API — when a purchase fires your storefront's webhook, your server calls <code>POST /v1/keys</code> and delivers the key automatically.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>What key types are available?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Day-locked (expires after N days), Lifetime (never expires), Trial (time and execution capped), Subscription (auto-renewing), and FFA/keyless. You can also configure floating seat pools for shared concurrent access.</div></div></div>
+      </div>
+
+      <!-- BILLING -->
+      <div class="faq-group" data-cat="billing" style="display:none">
+        <div class="faq-item"><button class="faq-q"><span>Is there a free trial?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Every paid plan includes a 14-day money-back guarantee, no questions asked. If NexCode isn't right for you within 14 days, we'll refund you in full.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>Can I change plans anytime?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes. Upgrades take effect immediately and are prorated for the rest of your billing cycle. Downgrades apply at the start of your next cycle.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>Do you charge per authentication?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Never. Authentication checks are unlimited on every plan. You're only limited by scripts, active keys, and projects.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>How much do I save with annual billing?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Annual billing saves you 20% compared to paying monthly. You can switch between monthly and annual anytime from your billing settings.</div></div></div>
+      </div>
+
+      <!-- TECHNICAL -->
+      <div class="faq-group" data-cat="technical" style="display:none">
+        <div class="faq-item"><button class="faq-q"><span>How do I verify webhook signatures?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Every delivery includes <code>X-NexCode-Signature</code> and <code>X-NexCode-Timestamp</code> headers. Compute an HMAC-SHA256 of <code>{timestamp}.{raw_body}</code> using your webhook secret and compare it against the signature with a constant-time function. Full examples in Node and Python are in the docs.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>Which SDKs are available?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Official SDKs for Node.js, Python, Go, Rust, and C#. Each wraps the REST API with typed methods, automatic retries, and built-in webhook verification.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>How do I set up the Discord bot?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Go to Settings → Discord bot in the dashboard, enter your server ID and manager role ID, then click Generate invite link and invite the bot. It's active immediately, and you can customize which commands are available.</div></div></div>
+        <div class="faq-item"><button class="faq-q"><span>Can I self-host or deploy on-premise?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">On-premise deployment is available on the Enterprise plan, along with dedicated infrastructure, SSO, and a 99.99% uptime SLA. Contact our sales team to discuss your requirements.</div></div></div>
+      </div>
+    </div>
+
+    <div id="faq-no-results">
+      <div style="font-size:32px;margin-bottom:12px">🔍</div>
+      <p style="font-size:15px;margin-bottom:6px;color:var(--t2)">No questions match your search.</p>
+      <p style="font-size:13px">Try different keywords or ask us on Discord.</p>
+    </div>
+
+    <div style="margin-top:64px">
+      <div class="cta-box reveal-s">
+        <h2 class="sec-h" style="font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:14px">Still stuck?</h2>
+        <p class="sec-sub" style="max-width:400px;margin:0 auto 28px">Our team and community are ready to help you out.</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+          <a href="#" class="btn btn-primary mag">Join Discord</a>
+          <a href="contact.html" class="btn btn-ghost">Contact support</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/core.js"></script>
+</body>
+</html>

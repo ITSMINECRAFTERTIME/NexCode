@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="NexCode pricing — simple, transparent plans for solo devs to enterprises. Starter, Pro, Business, and Enterprise."/>
+<title>Pricing — NexCode</title>
+<link rel="stylesheet" href="../css/base.css"/>
+<style>
+.page-hero{padding:calc(var(--nav) + 90px) 0 40px;text-align:center}
+.page-hero .eyebrow{justify-content:center;display:inline-flex;margin-bottom:18px}
+.page-hero h1{font-size:clamp(2.6rem,6vw,5rem);font-weight:900;letter-spacing:-.045em;line-height:.98;margin-bottom:20px}
+.page-hero h1 em{background:linear-gradient(130deg,var(--a),var(--a2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.page-hero p{font-size:clamp(1rem,1.8vw,1.18rem);color:var(--t2);max-width:520px;margin:0 auto;line-height:1.74}
+
+/* TOGGLE */
+.billing{display:flex;align-items:center;gap:14px;justify-content:center;margin:36px 0 8px}
+.billing-lbl{font-size:14px;font-weight:600;color:var(--t3);transition:color .2s}
+.billing-lbl.on{color:var(--t1)}
+.bt{width:52px;height:28px;border-radius:14px;background:var(--s3);border:1px solid var(--b2);position:relative;cursor:pointer;transition:background .25s}
+.bt.active{background:var(--a)}
+.bt::after{content:'';position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .24s var(--es);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.bt.active::after{left:26px}
+.save-badge{padding:4px 11px;background:rgba(30,223,156,.12);color:var(--green);border:1px solid rgba(30,223,156,.24);border-radius:var(--rf);font-size:11.5px;font-weight:700}
+
+/* PLANS */
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
+@media(max-width:1060px){.plans{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.plans{grid-template-columns:1fr}}
+.plan{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:30px;display:flex;flex-direction:column;transition:border-color .28s,transform .32s var(--eo),box-shadow .32s;position:relative}
+.plan:hover{border-color:var(--b2);transform:translateY(-4px);box-shadow:0 28px 70px rgba(0,0,0,.5)}
+.plan.pop{border-color:rgba(47,107,255,.45);background:linear-gradient(160deg,rgba(47,107,255,.09),rgba(29,78,216,.04));box-shadow:0 0 0 1px rgba(47,107,255,.18),0 0 80px rgba(47,107,255,.1)}
+.pop-badge{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);padding:5px 16px;background:linear-gradient(135deg,var(--a),var(--a-deep));color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;border-radius:var(--rf);white-space:nowrap;box-shadow:0 4px 16px rgba(47,107,255,.4)}
+.plan-tier{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+.plan-num{font-size:3rem;font-weight:900;letter-spacing:-.05em;line-height:1}
+.plan-per{font-size:14px;color:var(--t3)}
+.plan-note{font-size:11.5px;color:var(--green);margin-bottom:10px;min-height:16px;display:none}
+.plan-desc{font-size:13px;color:var(--t2);margin-bottom:24px;line-height:1.6;min-height:52px}
+.plan-cta{margin-bottom:26px}
+.plan-cta .btn{width:100%;justify-content:center}
+.plan-feats{display:flex;flex-direction:column;gap:11px}
+.plan-feats-h{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:3px}
+.pf{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--t2);line-height:1.45}
+.pf-ok{width:16px;height:16px;background:rgba(30,223,156,.14);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);font-size:9px;margin-top:1px;font-weight:800}
+.pf strong{color:var(--t1);font-weight:600}
+
+/* MATRIX */
+.sec{padding:clamp(60px,9vw,110px) 0;border-top:1px solid var(--b1)}
+.matrix-wrap{overflow-x:auto;border:1px solid var(--b1);border-radius:var(--rl)}
+.matrix{width:100%;border-collapse:collapse;min-width:640px}
+.matrix th,.matrix td{padding:15px 20px;text-align:left;border-bottom:1px solid var(--b1);font-size:13.5px}
+.matrix thead th{background:rgba(0,0,0,.28);font-size:12px;font-weight:800;position:sticky;top:0}
+.matrix thead th:first-child{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3)}
+.matrix thead th.hl{color:var(--a2)}
+.matrix .cat td{background:rgba(255,255,255,.02);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--t3)}
+.matrix td:first-child{color:var(--t2)}
+.matrix td{color:var(--t3);text-align:center}
+.matrix td:first-child{text-align:left}
+.matrix .yes{color:var(--green);font-weight:700}
+.matrix .no{color:var(--t4)}
+.matrix td.hl{background:rgba(47,107,255,.05);color:var(--t1)}
+.matrix tr:last-child td{border-bottom:none}
+
+/* FAQ */
+.faq-list{max-width:760px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--b1)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;width:100%;padding:22px 0;text-align:left;font-size:15.5px;font-weight:600;color:var(--t2);gap:16px;transition:color .2s}
+.faq-q.open{color:var(--t1)}
+.faq-icon{width:24px;height:24px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:transform .32s var(--eo),background .2s;color:var(--t2)}
+.faq-q.open .faq-icon{transform:rotate(45deg);background:rgba(47,107,255,.14);color:var(--a2)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s var(--eo)}
+.faq-a-inner{padding-bottom:22px;font-size:14px;color:var(--t2);line-height:1.76;max-width:640px}
+
+.cta-box{background:linear-gradient(145deg,rgba(47,107,255,.1),rgba(29,78,216,.05),rgba(34,211,238,.04));border:1px solid rgba(47,107,255,.22);border-radius:var(--rxl);padding:clamp(48px,7vw,88px) clamp(28px,5vw,72px);text-align:center;position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(47,107,255,.55),transparent)}
+</style>
+</head>
+<body>
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Pricing</div>
+    <h1>Simple, transparent <em>pricing</em></h1>
+    <p>No hidden fees. No per-key charges. Start free and scale as you grow.</p>
+    <div class="billing">
+      <span class="billing-lbl on" id="lbl-monthly">Monthly</span>
+      <div class="bt" id="billing-toggle" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle annual billing"></div>
+      <span class="billing-lbl" id="lbl-annual">Annual</span>
+      <span class="save-badge">Save 20%</span>
+    </div>
+  </div>
+</section>
+
+<section style="padding-bottom:clamp(60px,9vw,100px)">
+  <div class="wrap">
+    <div class="plans">
+      <!-- STARTER -->
+      <div class="plan tilt reveal">
+        <div class="plan-tier">Starter</div>
+        <div class="plan-price"><span class="plan-num" data-monthly="15" data-annual="12">$15</span><span class="plan-per">/mo</span></div>
+        <div class="plan-note" data-annual-note>billed $144/year</div>
+        <p class="plan-desc">For solo devs protecting their first scripts.</p>
+        <div class="plan-cta"><a href="#" class="btn btn-ghost">Get started</a></div>
+        <div class="plan-feats">
+          <div class="plan-feats-h">Includes</div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>3</strong> protected scripts</span></div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>300</strong> active keys</span></div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>1</strong> project</span></div>
+          <div class="pf"><span class="pf-ok">✓</span>Custom VM obfuscation</div>
+          <div class="pf"><span class="pf-ok">✓</span>HWID-locked keys</div>
+          <div class="pf"><span class="pf-ok">✓</span>REST API + webhooks</div>
+          <div class="pf"><span class="pf-ok">✓</span>Discord bot</div>
+        </div>
+      </div>
+      <!-- PRO -->
+      <div class="plan pop tilt reveal d1">
+        <div class="pop-badge">Most popular</div>
+        <div class="plan-tier">Pro</div>
+        <div class="plan-price"><span class="plan-num" data-monthly="30" data-annual="24">$30</span><span class="plan-per">/mo</span></div>
+        <div class="plan-note" data-annual-note>billed $288/year</div>
+        <p class="plan-desc">For devs with real audiences and revenue.</p>
+        <div class="plan-cta"><a href="#" class="btn btn-primary">Get started</a></div>
+        <div class="plan-feats">
+          <div class="plan-feats-h">Everything in Starter, plus</div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>10</strong> protected scripts</span></div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>2,000</strong> active keys</span></div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>5</strong> projects</span></div>
+          <div class="pf"><span class="pf-ok">✓</span>FFA / keyless mode</div>
+          <div class="pf"><span class="pf-ok">✓</span>Floating seat pools</div>
+          <div class="pf"><span class="pf-ok">✓</span>Verified Script Mode</div>
+          <div class="pf"><span class="pf-ok">✓</span>Offline grace periods</div>
+        </div>
+      </div>
+      <!-- BUSINESS -->
+      <div class="plan tilt reveal d2">
+        <div class="plan-tier">Business</div>
+        <div class="plan-price"><span class="plan-num" data-monthly="55" data-annual="44">$55</span><span class="plan-per">/mo</span></div>
+        <div class="plan-note" data-annual-note>billed $528/year</div>
+        <p class="plan-desc">For teams and studios with multiple products.</p>
+        <div class="plan-cta"><a href="#" class="btn btn-ghost">Get started</a></div>
+        <div class="plan-feats">
+          <div class="plan-feats-h">Everything in Pro, plus</div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>25</strong> protected scripts</span></div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>15,000</strong> active keys</span></div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>10</strong> projects</span></div>
+          <div class="pf"><span class="pf-ok">✓</span>White-label dashboard</div>
+          <div class="pf"><span class="pf-ok">✓</span>Team roles + audit log</div>
+          <div class="pf"><span class="pf-ok">✓</span>Emulator blocking</div>
+          <div class="pf"><span class="pf-ok">✓</span>Priority support</div>
+        </div>
+      </div>
+      <!-- ENTERPRISE -->
+      <div class="plan tilt reveal d3">
+        <div class="plan-tier">Enterprise</div>
+        <div class="plan-price"><span class="plan-num" style="font-size:2.2rem">Custom</span></div>
+        <div class="plan-note" style="min-height:16px"></div>
+        <p class="plan-desc">Unlimited scale, on-premise, SLA, white-glove onboarding.</p>
+        <div class="plan-cta"><a href="contact.html" class="btn btn-outline">Talk to sales</a></div>
+        <div class="plan-feats">
+          <div class="plan-feats-h">Everything in Business, plus</div>
+          <div class="pf"><span class="pf-ok">✓</span><span><strong>Unlimited</strong> scripts &amp; keys</span></div>
+          <div class="pf"><span class="pf-ok">✓</span>SSO / SAML / OIDC</div>
+          <div class="pf"><span class="pf-ok">✓</span>On-premise deployment</div>
+          <div class="pf"><span class="pf-ok">✓</span>Dedicated infrastructure</div>
+          <div class="pf"><span class="pf-ok">✓</span>99.99% uptime SLA</div>
+          <div class="pf"><span class="pf-ok">✓</span>Dedicated support engineer</div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--t3);margin-top:32px">All plans include a 14-day money-back guarantee · No credit card required to start</p>
+  </div>
+</section>
+
+<!-- FEATURE MATRIX -->
+<section class="sec">
+  <div class="wrap">
+    <div style="max-width:600px;margin-bottom:44px" class="reveal">
+      <div class="eyebrow" style="margin-bottom:14px">Compare plans</div>
+      <h2 class="sec-h">Every feature, <em>side by side</em></h2>
+    </div>
+    <div class="matrix-wrap reveal">
+      <table class="matrix">
+        <thead><tr><th>Feature</th><th>Starter</th><th class="hl">Pro</th><th>Business</th><th>Enterprise</th></tr></thead>
+        <tbody>
+          <tr class="cat"><td colspan="5">Limits</td></tr>
+          <tr><td>Protected scripts</td><td>3</td><td class="hl">10</td><td>25</td><td>Unlimited</td></tr>
+          <tr><td>Active keys</td><td>300</td><td class="hl">2,000</td><td>15,000</td><td>Unlimited</td></tr>
+          <tr><td>Projects</td><td>1</td><td class="hl">5</td><td>10</td><td>Unlimited</td></tr>
+          <tr><td>Team members</td><td>1</td><td class="hl">3</td><td>10</td><td>Unlimited</td></tr>
+          <tr class="cat"><td colspan="5">Protection</td></tr>
+          <tr><td>Custom VM obfuscation</td><td class="yes">✓</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>All NXC_ macros</td><td class="yes">✓</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Verified Script Mode</td><td class="no">✕</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Emulator blocking</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr class="cat"><td colspan="5">Licensing</td></tr>
+          <tr><td>HWID-locked keys</td><td class="yes">✓</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>FFA / keyless mode</td><td class="no">✕</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Floating seat pools</td><td class="no">✕</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Offline grace periods</td><td class="no">✕</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr class="cat"><td colspan="5">Platform</td></tr>
+          <tr><td>REST API + webhooks</td><td class="yes">✓</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Discord bot</td><td class="yes">✓</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>White-label dashboard</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Audit log</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>SSO / SAML / OIDC</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
+          <tr><td>On-premise deployment</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
+          <tr class="cat"><td colspan="5">Support</td></tr>
+          <tr><td>Community Discord</td><td class="yes">✓</td><td class="hl yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Priority support</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Dedicated engineer</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
+          <tr><td>Uptime SLA</td><td class="no">—</td><td class="no">—</td><td>99.9%</td><td>99.99%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING FAQ -->
+<section class="sec">
+  <div class="wrap">
+    <div style="text-align:center;max-width:560px;margin:0 auto 44px" class="reveal">
+      <div class="eyebrow" style="justify-content:center;display:inline-flex;margin-bottom:14px">Questions</div>
+      <h2 class="sec-h">Pricing <em>FAQ</em></h2>
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item"><button class="faq-q"><span>Is there a free trial?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Every paid plan comes with a 14-day money-back guarantee, no questions asked. If NexCode isn't right for you within 14 days, we'll refund you in full.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span>Can I change plans later?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes. Upgrades take effect immediately and are prorated for the rest of your billing cycle. Downgrades apply at the start of your next cycle so you keep what you paid for.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span>What counts as an "active key"?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">Any key that is currently valid and not revoked or expired. Revoked and expired keys don't count toward your limit, so cleaning up old keys frees capacity automatically.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span>Do you charge per authentication?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">No. Authentication checks are unlimited on every plan. You're only ever limited by scripts, active keys, and projects — never by how often your users run their scripts.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span>What payment methods do you accept?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">All major credit and debit cards, plus popular crypto options. Enterprise customers can arrange invoicing and bank transfer.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span>What happens if I exceed my plan limits?</span><span class="faq-icon">+</span></button><div class="faq-a"><div class="faq-a-inner">You'll get a heads-up as you approach a limit. Nothing breaks for your existing users — you simply won't be able to create new keys or scripts until you upgrade or free up space.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec" style="border-top:none">
+  <div class="wrap">
+    <div class="cta-box reveal-s">
+      <h2 class="sec-h" style="margin-bottom:16px">Still not sure? <em>Let's talk.</em></h2>
+      <p class="sec-sub" style="max-width:420px;margin:0 auto 32px">Our team will help you pick the right plan for your project.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <a href="#" class="btn btn-primary btn-lg mag">Start free →</a>
+        <a href="contact.html" class="btn btn-ghost btn-lg">Contact sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/core.js"></script>
+</body>
+</html>

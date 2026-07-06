@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="NexCode — Elite Lua script protection and software licensing. Custom VM architecture, HWID locking, and enterprise-grade key management."/>
+<title>NexCode — Elite Lua Protection & Licensing</title>
+<link rel="stylesheet" href="css/base.css"/>
+<style>
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(var(--nav) + 80px) clamp(20px,5vw,72px) 100px;position:relative}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(47,107,255,.1);border:1px solid rgba(47,107,255,.3);border-radius:var(--rf);font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--a2);margin-bottom:36px;opacity:0;transform:translateY(20px);animation:fadeUp .8s var(--eo) .2s forwards}
+.hero-badge .bd{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.hero-h{font-size:clamp(3.4rem,9vw,8.5rem);font-weight:900;line-height:.9;letter-spacing:-.05em;max-width:1000px;margin:0 auto 32px;opacity:0;transform:translateY(40px);animation:fadeUp .9s var(--eo) .38s forwards}
+.hero-h .l1{display:block;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-h .l2{display:block;background:linear-gradient(130deg,var(--a) 0%,var(--a2) 45%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(1rem,2vw,1.22rem);color:var(--t2);max-width:540px;margin:0 auto 52px;line-height:1.76;opacity:0;transform:translateY(30px);animation:fadeUp .8s var(--eo) .54s forwards}
+.hero-btns{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:60px;opacity:0;transform:translateY(24px);animation:fadeUp .8s var(--eo) .68s forwards}
+.hero-proof{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp .8s var(--eo) .82s forwards}
+.avs{display:flex}
+.av{width:34px;height:34px;border-radius:50%;border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;margin-left:-10px}
+.av:first-child{margin-left:0}
+.av1{background:linear-gradient(135deg,var(--a),var(--a-deep))}
+.av2{background:linear-gradient(135deg,var(--cyan),#0891b2)}
+.av3{background:linear-gradient(135deg,var(--sky),var(--a))}
+.av4{background:linear-gradient(135deg,var(--a2),var(--a))}
+.av5{background:linear-gradient(135deg,var(--green),var(--cyan))}
+.proof-txt{font-size:13px;color:var(--t2)}
+.proof-txt strong{color:var(--t1)}
+/* DASHBOARD MOCK */
+.hero-mock{width:100%;max-width:980px;margin:90px auto 0;position:relative;opacity:0;transform:translateY(50px);animation:fadeUp 1.1s var(--eo) .9s forwards}
+.mock-glow{position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);width:75%;height:220px;background:radial-gradient(ellipse,rgba(47,107,255,.28) 0%,transparent 68%);pointer-events:none;z-index:0}
+.mock{position:relative;z-index:1;background:rgba(255,255,255,.026);border:1px solid var(--b2);border-radius:var(--rxl);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 40px 100px rgba(0,0,0,.7),0 0 140px rgba(47,107,255,.14)}
+.mock-bar{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--b1);background:rgba(0,0,0,.3)}
+.mock-dots{display:flex;gap:6px}
+.mbd{width:11px;height:11px;border-radius:50%}.mbd-r{background:#ff5f57}.mbd-y{background:#ffbd2e}.mbd-g{background:#28c940}
+.mock-url{flex:1;background:rgba(255,255,255,.05);border-radius:6px;padding:5px 14px;font-size:12px;color:var(--t3);font-family:var(--mono)}
+.mock-body{display:grid;grid-template-columns:200px 1fr}
+@media(max-width:600px){.mock-body{grid-template-columns:1fr}.mock-side{display:none}}
+.mock-side{border-right:1px solid var(--b1);background:rgba(0,0,0,.22);padding:16px 0}
+.ms-item{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:12.5px;color:var(--t3)}
+.ms-item.active{background:rgba(47,107,255,.1);color:var(--a2);border-left:2px solid var(--a);padding-left:16px}
+.ms-ico{width:14px;text-align:center;opacity:.6}.ms-item.active .ms-ico{opacity:1}
+.mock-main{padding:22px}
+.m-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.m-stat{background:rgba(255,255,255,.035);border:1px solid var(--b1);border-radius:var(--rm);padding:14px}
+.m-stat-l{font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.m-stat-v{font-size:22px;font-weight:900;letter-spacing:-.03em}
+.m-stat-t{font-size:10px;color:var(--green);margin-top:2px}
+.m-table{background:rgba(255,255,255,.025);border:1px solid var(--b1);border-radius:var(--rm);overflow:hidden}
+.m-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--b1);font-size:11.5px}
+.m-row:last-child{border-bottom:none}
+.m-key{font-family:var(--mono);font-size:10.5px;color:var(--a2);background:rgba(47,107,255,.1);padding:2px 7px;border-radius:4px}
+.m-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--rf)}
+.mb-g{background:rgba(30,223,156,.12);color:var(--green)}.mb-b{background:rgba(47,107,255,.12);color:var(--a2)}.mb-a{background:rgba(251,191,36,.12);color:var(--amber)}
+.m-meta{font-size:10px;color:var(--t3);margin-left:auto}
+.mock::after{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(47,107,255,.6),transparent);animation:scan 3.5s ease-in-out infinite;pointer-events:none;top:0}
+@keyframes scan{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+/* MARQUEE */
+.marquee{padding:clamp(40px,6vw,72px) 0;border-top:1px solid var(--b1);border-bottom:1px solid var(--b1);overflow:hidden;position:relative;z-index:2}
+.marquee-label{text-align:center;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:28px}
+.marquee-track{display:flex;gap:clamp(40px,6vw,72px);width:max-content;animation:scroll 24s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.mq-item{display:flex;align-items:center;gap:11px;font-size:14px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);white-space:nowrap;flex-shrink:0}
+.mq-item span{font-size:17px;opacity:.65}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* BENTO */
+.features{padding:clamp(80px,12vw,140px) 0}
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.bc{border:1px solid var(--b1);border-radius:var(--rl);padding:clamp(22px,3vw,36px);position:relative;overflow:hidden;background:var(--s1);transition:border-color .28s,transform .35s var(--eo),box-shadow .35s}
+.bc:hover{border-color:var(--b2);transform:translateY(-3px);box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.bc.feat{background:linear-gradient(140deg,rgba(47,107,255,.1) 0%,rgba(29,78,216,.04) 100%);border-color:rgba(47,107,255,.28)}
+.s8{grid-column:span 8}.s4{grid-column:span 4}.s6{grid-column:span 6}.s12{grid-column:span 12}
+@media(max-width:900px){.s8,.s4{grid-column:span 12}.s6{grid-column:span 6}}
+@media(max-width:560px){.s6{grid-column:span 12}}
+.bc-label{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--a2);margin-bottom:8px}
+.bc-title{font-size:clamp(1.1rem,2vw,1.5rem);font-weight:800;letter-spacing:-.035em;margin-bottom:10px;line-height:1.16}
+.bc-desc{font-size:13.5px;color:var(--t2);line-height:1.72;max-width:380px}
+.vm-layers{display:flex;flex-direction:column;gap:7px;margin-top:22px}
+.vl{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:8px;font-size:12px;font-weight:700}
+.vl1{background:rgba(47,107,255,.22);border:1px solid rgba(47,107,255,.38);color:var(--a2)}
+.vl2{background:rgba(47,107,255,.14);border:1px solid rgba(47,107,255,.22);color:rgba(159,186,255,.8);margin:0 8px}
+.vl3{background:rgba(47,107,255,.08);border:1px solid rgba(47,107,255,.14);color:rgba(159,186,255,.6);margin:0 16px}
+.vl4{background:rgba(47,107,255,.04);border:1px solid rgba(47,107,255,.08);color:rgba(159,186,255,.4);margin:0 24px}
+.vl5{background:rgba(30,223,156,.07);border:1px solid rgba(30,223,156,.18);color:var(--green);margin:0 32px;font-weight:900}
+.vl .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+.macros{display:flex;flex-direction:column;gap:7px;margin-top:18px}
+.mac{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;background:rgba(0,0,0,.32);border:1px solid var(--b1);border-radius:8px;font-size:12px}
+.mac-n{font-family:var(--mono);color:var(--a2);font-weight:600;font-size:11px}
+.mac-d{color:var(--t3);font-size:11px}
+.key-types{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.kt{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,.025);border:1px solid var(--b1);border-radius:8px}
+.kt-n{font-size:12.5px;font-weight:600;color:var(--t2)}
+.wh-feed{display:flex;flex-direction:column;gap:7px;margin-top:20px}
+.wh-row{display:flex;align-items:center;gap:9px;padding:8px 12px;background:rgba(0,0,0,.28);border:1px solid var(--b1);border-radius:8px;font-size:12px}
+.wh-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2.2s ease-in-out infinite}
+.wh-evt{font-family:var(--mono);color:var(--t2);flex:1;font-size:11px}
+.wh-ok{font-family:var(--mono);font-size:10px;color:var(--green);font-weight:700}
+.b-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,4vw,40px);margin-top:28px}
+@media(max-width:600px){.b-stats{grid-template-columns:repeat(2,1fr)}}
+.bs-num{font-size:clamp(2rem,3.5vw,2.8rem);font-weight:900;letter-spacing:-.045em;background:linear-gradient(135deg,var(--t1),rgba(238,242,251,.45));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.bs-label{font-size:12.5px;color:var(--t3);margin-top:4px}
+/* HOW */
+.how{padding:clamp(80px,12vw,140px) 0;border-top:1px solid var(--b1)}
+.how-steps{display:grid;grid-template-columns:repeat(3,1fr);margin-top:60px;border:1px solid var(--b1);border-radius:var(--rl);overflow:hidden;gap:1px;background:var(--b1)}
+@media(max-width:720px){.how-steps{grid-template-columns:1fr}}
+.how-step{background:var(--bg2);padding:clamp(28px,4vw,48px);position:relative}
+.how-num{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--a2);margin-bottom:20px;font-family:var(--mono)}
+.how-icon{width:52px;height:52px;background:rgba(47,107,255,.1);border:1px solid rgba(47,107,255,.22);border-radius:var(--rm);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px}
+.how-title{font-size:1.1rem;font-weight:800;letter-spacing:-.028em;margin-bottom:10px}
+.how-desc{font-size:13.5px;color:var(--t2);line-height:1.74}
+/* TESTI */
+.testi{padding:clamp(80px,12vw,140px) 0}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:60px}
+@media(max-width:880px){.testi-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.testi-grid{grid-template-columns:1fr}}
+.t-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:26px;display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden;transition:border-color .25s}
+.t-card::after{content:'\201C';position:absolute;top:12px;right:20px;font-size:88px;font-weight:900;color:rgba(47,107,255,.07);line-height:1;font-family:Georgia,serif}
+.t-card:hover{border-color:var(--b2)}
+.t-card.feat{background:linear-gradient(140deg,rgba(47,107,255,.09) 0%,rgba(29,78,216,.04) 100%);border-color:rgba(47,107,255,.3)}
+.t-stars{display:flex;gap:3px;color:#fbbf24;font-size:13px}
+.t-text{font-size:14.5px;line-height:1.72;color:var(--t2);flex:1}
+.t-text strong{color:var(--t1);font-weight:600}
+.t-author{display:flex;align-items:center;gap:11px}
+.t-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.ta1{background:linear-gradient(135deg,var(--a),var(--a-deep))}.ta2{background:linear-gradient(135deg,var(--cyan),#0891b2)}.ta3{background:linear-gradient(135deg,var(--sky),var(--a))}.ta4{background:linear-gradient(135deg,var(--a2),var(--a))}.ta5{background:linear-gradient(135deg,var(--green),var(--cyan))}.ta6{background:linear-gradient(135deg,var(--a),var(--sky))}
+.t-name{font-size:13px;font-weight:700}
+.t-role{font-size:12px;color:var(--t3)}
+/* PRICING */
+.pricing-prev{padding:clamp(80px,12vw,140px) 0;border-top:1px solid var(--b1)}
+.plan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:60px}
+@media(max-width:1060px){.plan-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.plan-grid{grid-template-columns:1fr}}
+.plan{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:28px;display:flex;flex-direction:column;transition:border-color .28s,transform .32s var(--eo),box-shadow .32s}
+.plan:hover{border-color:var(--b2);transform:translateY(-4px);box-shadow:0 28px 70px rgba(0,0,0,.5)}
+.plan.pop{border-color:rgba(47,107,255,.45);background:linear-gradient(150deg,rgba(47,107,255,.09) 0%,rgba(29,78,216,.04) 100%);box-shadow:0 0 0 1px rgba(47,107,255,.18),0 0 80px rgba(47,107,255,.1)}
+.pop-badge{display:block;text-align:center;margin:-28px -28px 22px;padding:8px;background:linear-gradient(135deg,var(--a),var(--a-deep));color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.plan-tier{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);margin-bottom:8px}
+.plan-price{display:flex;align-items:baseline;gap:3px;margin-bottom:6px}
+.plan-num{font-size:2.8rem;font-weight:900;letter-spacing:-.045em;line-height:1}
+.plan-per{font-size:13px;color:var(--t3)}
+.plan-desc{font-size:13px;color:var(--t2);margin-bottom:20px;line-height:1.58}
+.plan-feats{display:flex;flex-direction:column;gap:9px;margin-bottom:24px;flex:1}
+.pf{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--t2);line-height:1.4}
+.pf-ok{width:16px;height:16px;background:rgba(30,223,156,.14);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);font-size:9px;margin-top:1px;font-weight:800}
+/* CTA */
+.cta-band{padding:clamp(60px,10vw,120px) 0}
+.cta-box{background:linear-gradient(145deg,rgba(47,107,255,.1) 0%,rgba(29,78,216,.05) 50%,rgba(34,211,238,.04) 100%);border:1px solid rgba(47,107,255,.22);border-radius:var(--rxl);padding:clamp(52px,8vw,100px) clamp(28px,6vw,80px);text-align:center;position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:65%;height:1px;background:linear-gradient(90deg,transparent,rgba(47,107,255,.55),transparent)}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(47,107,255,.1) 0%,transparent 68%);pointer-events:none}
+.cta-note{font-size:12.5px;color:var(--t3);margin-top:16px;position:relative}
+</style>
+</head>
+<body>
+<main>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="bd"></span>Now live — 2,400+ scripts protected</div>
+  <h1 class="hero-h"><span class="l1">Protect. License.</span><span class="l2">Ship fearlessly.</span></h1>
+  <p class="hero-sub">Custom VM architecture, HWID-locked keys, enterprise webhooks, and a full REST API — the only Lua security platform you'll ever need.</p>
+  <div class="hero-btns">
+    <a href="pages/pricing.html" class="btn btn-primary btn-lg mag">Start free <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="pages/features.html" class="btn btn-ghost btn-lg">Explore features</a>
+  </div>
+  <div class="hero-proof">
+    <div class="avs"><div class="av av1">JM</div><div class="av av2">SR</div><div class="av av3">AK</div><div class="av av4">TL</div><div class="av av5">PW</div></div>
+    <p class="proof-txt"><strong>2,400+</strong> developers trust NexCode worldwide</p>
+  </div>
+  <div class="hero-mock">
+    <div class="mock">
+      <div class="mock-bar"><div class="mock-dots"><span class="mbd mbd-r"></span><span class="mbd mbd-y"></span><span class="mbd mbd-g"></span></div><div class="mock-url">app.nexcode.io/dashboard</div></div>
+      <div class="mock-body">
+        <div class="mock-side">
+          <div class="ms-item active"><span class="ms-ico">▤</span>Overview</div>
+          <div class="ms-item"><span class="ms-ico">⚡</span>Scripts</div>
+          <div class="ms-item"><span class="ms-ico">🔑</span>Keys</div>
+          <div class="ms-item"><span class="ms-ico">🔗</span>Webhooks</div>
+          <div class="ms-item"><span class="ms-ico">⌨</span>API</div>
+          <div class="ms-item"><span class="ms-ico">⚙</span>Settings</div>
+        </div>
+        <div class="mock-main">
+          <div class="m-stats">
+            <div class="m-stat"><div class="m-stat-l">Active keys</div><div class="m-stat-v">847</div><div class="m-stat-t">↑ 12% this week</div></div>
+            <div class="m-stat"><div class="m-stat-l">Executions</div><div class="m-stat-v">2.3K</div><div class="m-stat-t">today</div></div>
+            <div class="m-stat"><div class="m-stat-l">Scripts</div><div class="m-stat-v">6/10</div><div class="m-stat-t">pro plan</div></div>
+          </div>
+          <div class="m-table">
+            <div class="m-row"><span class="m-key">NEXC-A1B2-C3D4</span><span class="m-badge mb-g">Active</span><span class="m-meta">Aug 4, 2026</span></div>
+            <div class="m-row"><span class="m-key">NEXC-F9E8-D7C6</span><span class="m-badge mb-b">Lifetime</span><span class="m-meta">Never</span></div>
+            <div class="m-row"><span class="m-key">NEXC-7788-9900</span><span class="m-badge mb-a">Trial</span><span class="m-meta">Jul 12, 2026</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-glow"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <p class="marquee-label">Works across every major Lua environment</p>
+  <div class="marquee-track">
+    <div class="mq-item"><span>🎮</span>Roblox Luau</div><div class="mq-item"><span>⚡</span>LuaJIT</div><div class="mq-item"><span>🌙</span>Luau</div><div class="mq-item"><span>🔥</span>FiveM</div><div class="mq-item"><span>🌐</span>OpenResty</div><div class="mq-item"><span>💚</span>LÖVE2D</div><div class="mq-item"><span>🚀</span>Lune</div><div class="mq-item"><span>🔷</span>Luarocks</div>
+    <div class="mq-item"><span>🎮</span>Roblox Luau</div><div class="mq-item"><span>⚡</span>LuaJIT</div><div class="mq-item"><span>🌙</span>Luau</div><div class="mq-item"><span>🔥</span>FiveM</div><div class="mq-item"><span>🌐</span>OpenResty</div><div class="mq-item"><span>💚</span>LÖVE2D</div><div class="mq-item"><span>🚀</span>Lune</div><div class="mq-item"><span>🔷</span>Luarocks</div>
+  </div>
+</div>
+
+<!-- BENTO FEATURES -->
+<section class="features" id="features">
+  <div class="wrap">
+    <header style="max-width:580px;margin-bottom:56px">
+      <div class="eyebrow reveal" style="margin-bottom:14px">Protection engine</div>
+      <h2 class="sec-h reveal d1" style="margin-bottom:14px">Every layer.<br/><em>Every threat.</em></h2>
+      <p class="sec-sub reveal d2">From custom VM architecture to enterprise licensing — NexCode handles it all so you can focus on building.</p>
+    </header>
+    <div class="bento">
+      <article class="bc s8 feat spot tilt reveal">
+        <div class="bc-label">Core engine</div>
+        <h3 class="bc-title">Unique randomized VM per compilation</h3>
+        <p class="bc-desc">Every build generates a new interpreter. Opcodes, handlers, and structures differ completely — even from the same source.</p>
+        <div class="vm-layers">
+          <div class="vl vl1"><span class="dot"></span>Anti-tamper &amp; environment checks</div>
+          <div class="vl vl2"><span class="dot"></span>Control flow scrambling</div>
+          <div class="vl vl3"><span class="dot"></span>Bytecode mutation &amp; stripping</div>
+          <div class="vl vl4"><span class="dot"></span>Randomized VM execution loop</div>
+          <div class="vl vl5"><span class="dot"></span>🔒 Encrypted core logic</div>
+        </div>
+      </article>
+      <article class="bc s4 spot reveal d1">
+        <div class="bc-label">Macros</div>
+        <h3 class="bc-title">Surgical control</h3>
+        <p class="bc-desc">Wrap exact blocks with compile-time directives.</p>
+        <div class="macros">
+          <div class="mac"><span class="mac-n">ENCFUNC</span><span class="mac-d">Encrypt function</span></div>
+          <div class="mac"><span class="mac-n">ENCSTR</span><span class="mac-d">String obfuscation</span></div>
+          <div class="mac"><span class="mac-n">NO_VIRT</span><span class="mac-d">Skip VM for perf</span></div>
+          <div class="mac"><span class="mac-n">JUNK</span><span class="mac-d">Inject decoys</span></div>
+        </div>
+      </article>
+      <article class="bc s4 spot reveal">
+        <div class="bc-label">Licensing</div>
+        <h3 class="bc-title">Every key type</h3>
+        <div class="key-types">
+          <div class="kt"><span class="kt-n">Day-locked</span><span class="tag tag-sky">N days</span></div>
+          <div class="kt"><span class="kt-n">Lifetime</span><span class="tag tag-green">Forever</span></div>
+          <div class="kt"><span class="kt-n">Trial</span><span class="tag tag-amber">Time + cap</span></div>
+          <div class="kt"><span class="kt-n">FFA / Keyless</span><span class="tag tag-blue">Free</span></div>
+          <div class="kt"><span class="kt-n">Subscription</span><span class="tag tag-pink">Renew</span></div>
+        </div>
+      </article>
+      <article class="bc s8 spot reveal d1">
+        <div class="bc-label">Integration</div>
+        <h3 class="bc-title">Ship in minutes with local stubs</h3>
+        <p class="bc-desc">Add macros, compile, distribute. Passthrough stubs mean zero code changes between development and production.</p>
+        <div class="code-block" style="margin-top:18px">
+<span class="cc">-- Stubs for local dev — stripped at compile time</span>
+<span class="ck">if not</span> <span class="cv">NXC_OBFUSCATED</span> <span class="ck">then</span>
+  <span class="cm">NXC_ENCFUNC</span> = <span class="ck">function</span>(f) <span class="ck">return</span> f <span class="ck">end</span>
+  <span class="cm">NXC_ENCSTR</span>  = <span class="ck">function</span>(s) <span class="ck">return</span> s <span class="ck">end</span>
+<span class="ck">end</span>
+
+<span class="ck">local</span> <span class="cv">core</span> = <span class="cm">NXC_ENCFUNC</span>(<span class="ck">function</span>()
+  <span class="cf">print</span>(<span class="cm">NXC_ENCSTR</span>(<span class="cs">"Protected and running."</span>))
+<span class="ck">end</span>)
+<span class="cv">core</span>()</div>
+      </article>
+      <article class="bc s6 spot reveal">
+        <div class="bc-label">Webhooks</div>
+        <h3 class="bc-title">Real-time HMAC-signed events</h3>
+        <p class="bc-desc">10 event types, retry backoff, delivery dashboard, idempotency keys.</p>
+        <div class="wh-feed">
+          <div class="wh-row"><span class="wh-dot"></span><span class="wh-evt">key.validated</span><span class="wh-ok">200 OK</span></div>
+          <div class="wh-row"><span class="wh-dot" style="animation-delay:.6s"></span><span class="wh-evt">key.created</span><span class="wh-ok">200 OK</span></div>
+          <div class="wh-row"><span class="wh-dot" style="animation-delay:1.2s"></span><span class="wh-evt">key.hwid_reset</span><span class="wh-ok">200 OK</span></div>
+          <div class="wh-row"><span class="wh-dot" style="background:var(--a);animation-delay:1.8s"></span><span class="wh-evt">validation.failed</span><span class="wh-ok" style="color:var(--amber)">logged</span></div>
+        </div>
+      </article>
+      <article class="bc s6 spot reveal d1">
+        <div class="bc-label">Security</div>
+        <h3 class="bc-title">HWID locking &amp; anti-share</h3>
+        <p class="bc-desc">Keys bind to hardware on first run. Reset fingerprints logged for abuse detection. One-click kill switch for leaks.</p>
+        <div class="b-stats" style="grid-template-columns:1fr 1fr;margin-top:24px">
+          <div><div class="bs-num">&lt;50ms</div><div class="bs-label">Auth latency</div></div>
+          <div><div class="bs-num">99.9%</div><div class="bs-label">Uptime SLA</div></div>
+        </div>
+      </article>
+      <article class="bc s12 spot reveal">
+        <div class="bc-label">Scale</div>
+        <h3 class="bc-title">Built for the long run</h3>
+        <div class="b-stats">
+          <div><div class="bs-num" data-count="2400" data-suffix="+">2,400+</div><div class="bs-label">Scripts protected</div></div>
+          <div><div class="bs-num" data-count="180000">180K+</div><div class="bs-label">Keys issued</div></div>
+          <div><div class="bs-num" data-count="4200000">4.2M+</div><div class="bs-label">Auth checks/month</div></div>
+          <div><div class="bs-num">&lt;50ms</div><div class="bs-label">Global latency</div></div>
+        </div>
+      </article>
+    </div>
+    <div style="text-align:center;margin-top:40px" class="reveal">
+      <a href="pages/features.html" class="btn btn-ghost btn-lg">View all features →</a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="how">
+  <div class="wrap">
+    <div style="text-align:center">
+      <div class="eyebrow reveal" style="justify-content:center;display:inline-flex">How it works</div>
+      <h2 class="sec-h reveal d1" style="max-width:560px;margin:14px auto">Source to protected <em>in 3 steps</em></h2>
+      <p class="sec-sub reveal d2" style="margin:0 auto;max-width:440px">No servers to manage, no complex setup. Paste, compile, distribute.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step reveal"><div class="how-num">01</div><div class="how-icon">📝</div><h3 class="how-title">Add NXC_ macros</h3><p class="how-desc">Insert <span class="mono-chip">NXC_ENCFUNC</span> and <span class="mono-chip">NXC_ENCSTR</span> into your Lua source. Passthrough stubs keep everything running locally.</p></div>
+      <div class="how-step reveal d1"><div class="how-num">02</div><div class="how-icon">⚡</div><h3 class="how-title">Compile via dashboard or API</h3><p class="how-desc">Upload source or POST to <span class="mono-chip">/v1/scripts/:id/compile</span>. A unique randomized VM output is generated — no two builds ever identical.</p></div>
+      <div class="how-step reveal d2"><div class="how-num">03</div><div class="how-icon">🔑</div><h3 class="how-title">Distribute keys, monitor live</h3><p class="how-desc">Generate HWID-locked keys from the dashboard, Discord bot, or REST API. Users authenticate in under 50ms. Revoke and extend in real time.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi">
+  <div class="wrap">
+    <div class="eyebrow reveal">Testimonials</div>
+    <h2 class="sec-h reveal d1" style="margin:14px 0 0">Loved by <em>serious devs</em></h2>
+    <div class="testi-grid">
+      <article class="t-card feat tilt reveal"><div class="t-stars">★★★★★</div><blockquote class="t-text">"NexCode's VM is in a completely different league. My script survived attacks that cracked every competitor. <strong>This is the real deal.</strong>"</blockquote><div class="t-author"><div class="t-av ta1">JM</div><div><div class="t-name">Jake M.</div><div class="t-role">Roblox exploit dev</div></div></div></article>
+      <article class="t-card tilt reveal d1"><div class="t-stars">★★★★★</div><blockquote class="t-text">"The REST API let me build a fully automated storefront. Keys generate and expire automatically. <strong>Zero manual work.</strong>"</blockquote><div class="t-author"><div class="t-av ta2">SR</div><div><div class="t-name">Sarah R.</div><div class="t-role">Script hub, 2K+ users</div></div></div></article>
+      <article class="t-card tilt reveal d2"><div class="t-stars">★★★★★</div><blockquote class="t-text">"Webhook encryption means users literally cannot extract my endpoints. <strong>Revenue loss from leaks dropped to zero.</strong>"</blockquote><div class="t-author"><div class="t-av ta3">AK</div><div><div class="t-name">Alex K.</div><div class="t-role">FiveM script developer</div></div></div></article>
+      <article class="t-card tilt reveal"><div class="t-stars">★★★★★</div><blockquote class="t-text">"HWID logging caught 3 key resellers in the first week. Revoked all their keys in one click. <strong>The audit trail alone is worth it.</strong>"</blockquote><div class="t-author"><div class="t-av ta4">TL</div><div><div class="t-name">Tom L.</div><div class="t-role">Luau tool developer</div></div></div></article>
+      <article class="t-card tilt reveal d1"><div class="t-stars">★★★★★</div><blockquote class="t-text">"Skipping the VM on my physics loops kept performance identical. <strong>The perf tradeoff is finally solved.</strong>"</blockquote><div class="t-author"><div class="t-av ta5">PW</div><div><div class="t-name">Priya W.</div><div class="t-role">Game engine developer</div></div></div></article>
+      <article class="t-card tilt reveal d2"><div class="t-stars">★★★★★</div><blockquote class="t-text">"Auth under 50ms globally, users never notice. Uptime flawless for 4 months. <strong>Enterprise-grade actually means something here.</strong>"</blockquote><div class="t-author"><div class="t-av ta6">DV</div><div><div class="t-name">Daniel V.</div><div class="t-role">OpenResty + Lua backend</div></div></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING PREVIEW -->
+<section class="pricing-prev">
+  <div class="wrap">
+    <div style="text-align:center">
+      <div class="eyebrow reveal" style="justify-content:center;display:inline-flex">Pricing</div>
+      <h2 class="sec-h reveal d1" style="margin:14px auto;max-width:500px">Simple, transparent <em>pricing</em></h2>
+      <p class="sec-sub reveal d2" style="margin:0 auto;max-width:400px">Start free. Scale as you grow. No hidden fees.</p>
+    </div>
+    <div class="plan-grid">
+      <div class="plan tilt reveal"><div class="plan-tier">Starter</div><div class="plan-price"><span class="plan-num">$15</span><span class="plan-per">/mo</span></div><p class="plan-desc">For solo devs protecting their first scripts.</p><ul class="plan-feats"><li class="pf"><span class="pf-ok">✓</span>Custom VM obfuscation</li><li class="pf"><span class="pf-ok">✓</span>HWID-locked keys</li><li class="pf"><span class="pf-ok">✓</span>REST API + webhooks</li><li class="pf"><span class="pf-ok">✓</span>Discord bot</li></ul><a href="pages/pricing.html" class="btn btn-ghost" style="width:100%;justify-content:center">Get started</a></div>
+      <div class="plan pop tilt reveal d1"><div class="pop-badge">Most popular</div><div class="plan-tier">Pro</div><div class="plan-price"><span class="plan-num">$30</span><span class="plan-per">/mo</span></div><p class="plan-desc">For devs with real audiences and revenue.</p><ul class="plan-feats"><li class="pf"><span class="pf-ok">✓</span>Everything in Starter</li><li class="pf"><span class="pf-ok">✓</span>FFA / keyless mode</li><li class="pf"><span class="pf-ok">✓</span>Floating seat pools</li><li class="pf"><span class="pf-ok">✓</span>Verified Script Mode</li></ul><a href="pages/pricing.html" class="btn btn-primary" style="width:100%;justify-content:center">Get started</a></div>
+      <div class="plan tilt reveal d2"><div class="plan-tier">Business</div><div class="plan-price"><span class="plan-num">$55</span><span class="plan-per">/mo</span></div><p class="plan-desc">For teams and studios with multiple products.</p><ul class="plan-feats"><li class="pf"><span class="pf-ok">✓</span>Everything in Pro</li><li class="pf"><span class="pf-ok">✓</span>White-label dashboard</li><li class="pf"><span class="pf-ok">✓</span>Team roles + audit log</li><li class="pf"><span class="pf-ok">✓</span>Priority support</li></ul><a href="pages/pricing.html" class="btn btn-ghost" style="width:100%;justify-content:center">Get started</a></div>
+      <div class="plan tilt reveal d3"><div class="plan-tier">Enterprise</div><div class="plan-price"><span class="plan-num" style="font-size:2rem">Custom</span></div><p class="plan-desc">Unlimited scale, on-premise, SLA, white-glove.</p><ul class="plan-feats"><li class="pf"><span class="pf-ok">✓</span>Everything in Business</li><li class="pf"><span class="pf-ok">✓</span>SSO / SAML / OIDC</li><li class="pf"><span class="pf-ok">✓</span>On-premise deployment</li><li class="pf"><span class="pf-ok">✓</span>99.99% uptime SLA</li></ul><a href="pages/contact.html" class="btn btn-outline" style="width:100%;justify-content:center">Talk to sales</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-band">
+  <div class="wrap">
+    <div class="cta-box reveal-s">
+      <div class="cta-glow"></div>
+      <h2 class="sec-h" style="max-width:560px;margin:0 auto 18px;position:relative"><span style="background:linear-gradient(180deg,#fff,rgba(255,255,255,.45));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Protect your work.</span><br/><em>Start today.</em></h2>
+      <p class="sec-sub" style="max-width:400px;margin:0 auto 36px;position:relative">Join 2,400+ developers who've secured their scripts and built businesses on NexCode.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative">
+        <a href="pages/pricing.html" class="btn btn-primary btn-lg mag">Get started free <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="pages/contact.html" class="btn btn-ghost btn-lg">Talk to us</a>
+      </div>
+      <p class="cta-note">No credit card required · Cancel anytime · 14-day money-back guarantee</p>
+    </div>
+  </div>
+</section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/core.js"></script>
+</body>
+</html>

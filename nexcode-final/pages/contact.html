@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="Contact NexCode — support, sales, and security. We reply to everything."/>
+<title>Contact — NexCode</title>
+<link rel="stylesheet" href="../css/base.css"/>
+<style>
+.page-hero{padding:calc(var(--nav) + 90px) 0 40px;text-align:center}
+.page-hero .eyebrow{justify-content:center;display:inline-flex;margin-bottom:18px}
+.page-hero h1{font-size:clamp(2.6rem,6vw,5rem);font-weight:900;letter-spacing:-.045em;line-height:.98;margin-bottom:20px}
+.page-hero h1 em{background:linear-gradient(130deg,var(--a),var(--a2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.page-hero p{font-size:clamp(1rem,1.8vw,1.18rem);color:var(--t2);max-width:500px;margin:0 auto;line-height:1.74}
+
+.contact-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(32px,5vw,64px);padding:44px 0 clamp(60px,9vw,110px);align-items:start}
+@media(max-width:880px){.contact-layout{grid-template-columns:1fr}}
+
+.channels{display:flex;flex-direction:column;gap:12px}
+.channel{display:flex;align-items:center;gap:15px;padding:18px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);transition:border-color .2s,transform .3s var(--eo)}
+.channel:hover{border-color:var(--b2);transform:translateX(4px)}
+.ch-ic{width:46px;height:46px;border-radius:var(--rm);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ch1 .ch-ic{background:rgba(47,107,255,.1);border:1px solid rgba(47,107,255,.22)}
+.ch2 .ch-ic{background:rgba(30,223,156,.1);border:1px solid rgba(30,223,156,.22)}
+.ch3 .ch-ic{background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.22)}
+.ch4 .ch-ic{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.22)}
+.ch-body{flex:1;min-width:0}
+.ch-title{font-size:14.5px;font-weight:700;margin-bottom:3px}
+.ch-sub{font-size:12.5px;color:var(--t3)}
+.ch-arrow{color:var(--t3);font-size:18px}
+
+.response-times{margin-top:28px;padding:20px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl)}
+.rt-h{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:16px}
+.rt-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b1)}
+.rt-row:last-child{border-bottom:none}
+.rt-label{font-size:13.5px;color:var(--t2)}
+.rt-val{font-size:12.5px;font-weight:700;color:var(--green)}
+.status-row{display:flex;align-items:center;gap:8px;margin-top:18px;padding:12px 14px;background:rgba(30,223,156,.06);border:1px solid rgba(30,223,156,.18);border-radius:var(--rm);font-size:12.5px;color:var(--t2)}
+
+/* FORM */
+.form-card{background:var(--s1);border:1px solid var(--b2);border-radius:var(--rl);padding:clamp(28px,4vw,40px)}
+.form-card h3{font-size:1.3rem;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.form-card .form-sub{font-size:13.5px;color:var(--t2);margin-bottom:26px;line-height:1.6}
+.fg{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.fg-row{grid-template-columns:1fr}}
+.fl{font-size:12.5px;font-weight:700;color:var(--t2)}
+.fi,.fsel,.fta{width:100%;padding:12px 15px;background:rgba(0,0,0,.28);border:1px solid var(--b2);border-radius:var(--rm);color:var(--t1);font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
+.fi:focus,.fsel:focus,.fta:focus{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 3px rgba(47,107,255,.1)}
+.fi::placeholder,.fta::placeholder{color:var(--t3)}
+.fsel{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='rgba(238,242,251,.3)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center;padding-right:38px}
+.fsel option{background:#0c1428}
+.fta{resize:vertical;min-height:130px;line-height:1.6}
+.form-note{font-size:11.5px;color:var(--t3);margin-top:14px;text-align:center}
+
+.success-box{text-align:center;padding:40px 20px;display:none}
+.success-ic{width:66px;height:66px;background:rgba(30,223,156,.12);border:1px solid rgba(30,223,156,.28);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 20px}
+.success-box h3{font-size:1.5rem;font-weight:900;letter-spacing:-.03em;background:linear-gradient(130deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.success-box p{font-size:14px;color:var(--t2);line-height:1.7;max-width:320px;margin:0 auto 24px}
+</style>
+</head>
+<body>
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Contact</div>
+    <h1>We're here to <em>help</em></h1>
+    <p>Support, sales, or security — reach out through any channel and we'll get back to you fast.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="contact-layout">
+    <!-- LEFT: channels -->
+    <div class="reveal-l">
+      <div class="channels">
+        <a href="#" class="channel ch1"><div class="ch-ic">⌘</div><div class="ch-body"><div class="ch-title">Discord community</div><div class="ch-sub">Fastest support · usually under 1 hour</div></div><span class="ch-arrow">→</span></a>
+        <a href="#" class="channel ch2"><div class="ch-ic">✉️</div><div class="ch-body"><div class="ch-title">Email support</div><div class="ch-sub">support@nexcode.io</div></div><span class="ch-arrow">→</span></a>
+        <a href="#" class="channel ch3"><div class="ch-ic">💼</div><div class="ch-body"><div class="ch-title">Enterprise sales</div><div class="ch-sub">sales@nexcode.io</div></div><span class="ch-arrow">→</span></a>
+        <a href="#" class="channel ch4"><div class="ch-ic">🔒</div><div class="ch-body"><div class="ch-title">Security &amp; disclosure</div><div class="ch-sub">security@nexcode.io</div></div><span class="ch-arrow">→</span></a>
+      </div>
+      <div class="response-times">
+        <div class="rt-h">Typical response times</div>
+        <div class="rt-row"><span class="rt-label">Discord community</span><span class="rt-val">≤ 1 hour</span></div>
+        <div class="rt-row"><span class="rt-label">Email support</span><span class="rt-val">≤ 24 hours</span></div>
+        <div class="rt-row"><span class="rt-label">Enterprise SLA</span><span class="rt-val">≤ 2 hours</span></div>
+      </div>
+      <div class="status-row"><span class="sdot"></span>All systems operational — 99.98% uptime this month</div>
+    </div>
+
+    <!-- RIGHT: form -->
+    <div class="reveal-r">
+      <div class="form-card">
+        <div id="contact-form">
+          <h3>Send us a message</h3>
+          <p class="form-sub">Fill out the form and we'll get back to you within 24 hours.</p>
+          <div class="fg-row">
+            <div class="fg"><label class="fl" for="cf-name">Name *</label><input class="fi" id="cf-name" type="text" placeholder="Your name"/></div>
+            <div class="fg"><label class="fl" for="cf-email">Email *</label><input class="fi" id="cf-email" type="email" placeholder="you@example.com"/></div>
+          </div>
+          <div class="fg"><label class="fl" for="cf-topic">Topic *</label>
+            <select class="fsel" id="cf-topic">
+              <option value="" disabled selected>Select a topic…</option>
+              <option>Technical support</option>
+              <option>Billing &amp; plans</option>
+              <option>Enterprise inquiry</option>
+              <option>API / integrations</option>
+              <option>Report a bug</option>
+              <option>Security disclosure</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="fg"><label class="fl" for="cf-msg">Message *</label><textarea class="fta" id="cf-msg" placeholder="Tell us what you need help with…"></textarea></div>
+          <button class="btn btn-primary" id="contact-send" style="width:100%;justify-content:center;padding:14px" data-orig="Send message →">Send message →</button>
+          <p class="form-note">Your information is only used to respond to your inquiry.</p>
+        </div>
+        <div id="contact-success" class="success-box">
+          <div class="success-ic">✓</div>
+          <h3>Message sent!</h3>
+          <p>Thanks for reaching out. We'll get back to you within 24 hours. For faster help, hop into our Discord.</p>
+          <a href="../index.html" class="btn btn-ghost btn-sm">Back to home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+<script>
+const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev'; // change to deployed URL later
+
+const TOPIC_MAP = {
+  'Technical support': 'technical_support',
+  'Billing & plans': 'billing',
+  'Enterprise inquiry': 'enterprise',
+  'API / integrations': 'api_integrations',
+  'Report a bug': 'bug_report',
+  'Security disclosure': 'security',
+  'Other': 'other'
+};
+
+document.getElementById('contact-send').addEventListener('click', async () => {
+  const btn  = document.getElementById('contact-send');
+  const name = document.getElementById('cf-name').value.trim();
+  const email= document.getElementById('cf-email').value.trim();
+  const topicRaw = document.getElementById('cf-topic').value;
+  const msg  = document.getElementById('cf-msg').value.trim();
+
+  if (!name || !email || !topicRaw || !msg) {
+    btn.textContent = 'Please fill in all fields';
+    btn.style.background = 'rgba(240,82,82,.22)';
+    setTimeout(() => { btn.textContent = btn.dataset.orig; btn.style.background = ''; }, 2200);
+    return;
+  }
+
+  const topic = TOPIC_MAP[topicRaw] || 'other';
+  btn.disabled = true; btn.textContent = 'Sending…';
+
+  try {
+    const res  = await fetch(`${API}/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, topic, message: msg })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      btn.textContent = data.error || 'Something went wrong';
+      btn.style.background = 'rgba(240,82,82,.22)';
+      btn.disabled = false;
+      setTimeout(() => { btn.textContent = btn.dataset.orig; btn.style.background = ''; }, 2500);
+      return;
+    }
+
+    // Show success state
+    document.getElementById('contact-form').style.display = 'none';
+    document.getElementById('contact-success').style.display = 'block';
+
+  } catch {
+    btn.textContent = 'Cannot connect — is the backend running?';
+    btn.style.background = 'rgba(240,82,82,.22)';
+    btn.disabled = false;
+    setTimeout(() => { btn.textContent = btn.dataset.orig; btn.style.background = ''; }, 3000);
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/core.js"></script>
+</body>
+</html>

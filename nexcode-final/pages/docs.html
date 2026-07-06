@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="NexCode developer documentation — quick start, macros, REST API, webhooks, SDKs, and Discord bot."/>
+<title>Documentation — NexCode</title>
+<link rel="stylesheet" href="../css/base.css"/>
+<style>
+.page-hero{padding:calc(var(--nav) + 80px) 0 44px;text-align:center}
+.page-hero .eyebrow{justify-content:center;display:inline-flex;margin-bottom:18px}
+.page-hero h1{font-size:clamp(2.4rem,5vw,4rem);font-weight:900;letter-spacing:-.045em;line-height:1;margin-bottom:18px}
+.page-hero h1 em{background:linear-gradient(130deg,var(--a),var(--a2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.page-hero p{font-size:clamp(1rem,1.7vw,1.14rem);color:var(--t2);max-width:500px;margin:0 auto;line-height:1.72}
+
+.docs-layout{display:grid;grid-template-columns:230px 1fr;gap:48px;padding:40px 0 clamp(60px,9vw,110px);align-items:start}
+@media(max-width:900px){.docs-layout{grid-template-columns:1fr}.docs-sidebar{display:none}}
+.docs-sidebar{position:sticky;top:calc(var(--nav) + 24px)}
+.ds-group{margin-bottom:24px}
+.ds-group-h{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:12px}
+.ds-link{display:block;padding:7px 12px;font-size:13.5px;color:var(--t3);border-radius:8px;border-left:2px solid transparent;transition:all .15s;margin-bottom:2px}
+.ds-link:hover{color:var(--t1);background:var(--s1)}
+.ds-link.on{color:var(--a2);border-left-color:var(--a);background:rgba(47,107,255,.06)}
+
+.docs-content{max-width:760px;min-width:0}
+.docs-section{margin-bottom:56px;scroll-margin-top:calc(var(--nav) + 24px)}
+.docs-section h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.035em;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.docs-section .sub{font-size:14px;color:var(--t2);line-height:1.75;margin-bottom:22px}
+.docs-section h3{font-size:16px;font-weight:700;margin:28px 0 12px}
+.docs-section p{font-size:14px;color:var(--t2);line-height:1.76;margin-bottom:14px}
+.docs-section p code,li code{font-family:var(--mono);font-size:12.5px;background:rgba(47,107,255,.1);color:var(--a2);padding:2px 6px;border-radius:4px}
+.docs-section ul{margin:0 0 16px;display:flex;flex-direction:column;gap:8px}
+.docs-section ul li{font-size:14px;color:var(--t2);line-height:1.6;padding-left:20px;position:relative}
+.docs-section ul li::before{content:'›';position:absolute;left:4px;color:var(--a2);font-weight:700}
+.callout{display:flex;gap:12px;padding:16px 18px;background:rgba(47,107,255,.06);border:1px solid rgba(47,107,255,.18);border-radius:var(--rm);margin:18px 0;font-size:13px;color:var(--t2);line-height:1.65}
+.callout-ic{flex-shrink:0;font-size:16px}
+.ep{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(0,0,0,.28);border:1px solid var(--b1);border-radius:10px;margin-bottom:8px;font-family:var(--mono);flex-wrap:wrap}
+.ep-m{font-size:10px;font-weight:800;padding:3px 8px;border-radius:5px;flex-shrink:0}
+.ep-post{background:rgba(30,223,156,.13);color:var(--green)}
+.ep-get{background:rgba(47,107,255,.14);color:var(--a2)}
+.ep-patch{background:rgba(251,191,36,.13);color:var(--amber)}
+.ep-del{background:rgba(240,82,82,.13);color:var(--red)}
+.ep-path{font-size:12.5px;color:var(--t2)}
+.tbl{width:100%;border-collapse:collapse;border:1px solid var(--b1);border-radius:var(--rm);overflow:hidden;margin:14px 0}
+.tbl th,.tbl td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--b1);font-size:13px}
+.tbl th{background:rgba(0,0,0,.28);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3)}
+.tbl td{color:var(--t2)}
+.tbl td:first-child{font-family:var(--mono);font-size:12px;color:var(--a2)}
+.tbl tr:last-child td{border-bottom:none}
+.sdk-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.sdk-tab{padding:7px 14px;background:var(--s1);border:1px solid var(--b1);border-radius:8px;font-size:12.5px;font-weight:600;color:var(--t3)}
+.sdk-tab.on{background:rgba(47,107,255,.12);border-color:rgba(47,107,255,.28);color:var(--a2)}
+</style>
+</head>
+<body>
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Documentation</div>
+    <h1>Developer <em>reference</em></h1>
+    <p>Everything you need to integrate NexCode into your workflow, from first compile to full automation.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="docs-layout">
+    <!-- SIDEBAR -->
+    <aside class="docs-sidebar">
+      <div class="ds-group">
+        <div class="ds-group-h">Getting started</div>
+        <a href="#quickstart" class="ds-link on">Quick start</a>
+        <a href="#macros" class="ds-link">Macros</a>
+        <a href="#compile" class="ds-link">Compiling</a>
+      </div>
+      <div class="ds-group">
+        <div class="ds-group-h">Platform</div>
+        <a href="#api" class="ds-link">REST API</a>
+        <a href="#webhooks" class="ds-link">Webhooks</a>
+        <a href="#sdks" class="ds-link">SDKs</a>
+        <a href="#discord" class="ds-link">Discord bot</a>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="docs-content">
+      <section class="docs-section" id="quickstart">
+        <h2>Quick start</h2>
+        <p class="sub">Get your first script protected in under five minutes.</p>
+        <p>NexCode works by adding <code>NXC_</code> macros to your Lua source. Locally they behave as harmless passthrough stubs, so your code runs unchanged during development. At compile time, they transform into real protection.</p>
+        <h3>1. Add the stubs</h3>
+        <p>Drop this at the top of your script so it runs locally without NexCode:</p>
+        <div class="code-block"><span class="cc">-- Passthrough stubs — stripped &amp; replaced at compile time</span>
+<span class="ck">if not</span> <span class="cv">NXC_OBFUSCATED</span> <span class="ck">then</span>
+  <span class="cm">NXC_ENCFUNC</span> = <span class="ck">function</span>(f) <span class="ck">return</span> f <span class="ck">end</span>
+  <span class="cm">NXC_ENCSTR</span>  = <span class="ck">function</span>(s) <span class="ck">return</span> s <span class="ck">end</span>
+  <span class="cm">NXC_JUNK</span>    = <span class="ck">function</span>() <span class="ck">end</span>
+<span class="ck">end</span></div>
+        <h3>2. Wrap what matters</h3>
+        <div class="code-block"><span class="ck">local</span> <span class="cv">core</span> = <span class="cm">NXC_ENCFUNC</span>(<span class="ck">function</span>()
+  <span class="ck">local</span> <span class="cv">url</span> = <span class="cm">NXC_ENCSTR</span>(<span class="cs">"https://api.example.com/data"</span>)
+  <span class="cf">print</span>(<span class="cs">"Running protected logic"</span>)
+<span class="ck">end</span>)
+
+<span class="cv">core</span>()</div>
+        <h3>3. Compile &amp; distribute</h3>
+        <p>Upload through the dashboard or call the API. You'll get a protected build plus a key to hand to your users.</p>
+        <div class="callout"><span class="callout-ic">💡</span><span>Keep your stubs in your source permanently. They're free locally and get replaced automatically at compile time — so one file works everywhere.</span></div>
+      </section>
+
+      <section class="docs-section" id="macros">
+        <h2>Macros</h2>
+        <p class="sub">Compile-time directives for surgical control over protection.</p>
+        <table class="tbl">
+          <thead><tr><th>Macro</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>NXC_ENCFUNC(fn)</td><td>Encrypt a function body; reconstructed only when called</td></tr>
+            <tr><td>NXC_ENCSTR(s)</td><td>Encrypt a string; decrypted in memory at use</td></tr>
+            <tr><td>NXC_NO_VIRT(fn)</td><td>Skip VM virtualization on a hot path for performance</td></tr>
+            <tr><td>NXC_JUNK()</td><td>Inject decoy logic at this location</td></tr>
+            <tr><td>NXC_SEND_WEBHOOK(u,d)</td><td>Send a webhook via encrypted proxy</td></tr>
+            <tr><td>NXC_INIT()</td><td>Pre-auth hook for integrity checks</td></tr>
+          </tbody>
+        </table>
+        <div class="callout"><span class="callout-ic">⚡</span><span>Use <code>NXC_NO_VIRT</code> on render loops and physics steps. Virtualization is powerful but adds overhead — skip it where every millisecond counts.</span></div>
+      </section>
+
+      <section class="docs-section" id="compile">
+        <h2>Compiling</h2>
+        <p class="sub">Turn your source into a protected build.</p>
+        <p>You can compile two ways: through the dashboard's visual configuration panel, or programmatically via the API. Both give you the same protection options — VM virtualization, control flow scrambling, string encryption, anti-decompiler injection, junk code, and anti-tamper hooks.</p>
+        <p>Pick an optimization profile to balance strength against runtime cost:</p>
+        <ul>
+          <li><strong>Fast</strong> — lighter protection, minimal performance impact</li>
+          <li><strong>Balanced</strong> — strong protection with reasonable overhead (recommended)</li>
+          <li><strong>Max</strong> — maximum protection for high-value scripts</li>
+        </ul>
+        <div class="code-block"><span class="cc"># Compile via the API</span>
+curl -X POST https://api.nexcode.io/v1/scripts/scr_abc/compile \
+  -H <span class="cs">"Authorization: Bearer nxc_sk_..."</span> \
+  -d <span class="cs">'{ "profile": "balanced", "vm": true, "encrypt_strings": true }'</span></div>
+      </section>
+
+      <section class="docs-section" id="api">
+        <h2>REST API</h2>
+        <p class="sub">Base URL: <code>https://api.nexcode.io/v1</code></p>
+        <p>Authenticate with a scoped API key in the <code>Authorization</code> header. All requests and responses are JSON.</p>
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/v1/scripts/:id/compile</span></div>
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/v1/keys</span></div>
+        <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/v1/keys</span></div>
+        <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/v1/keys/:id</span></div>
+        <div class="ep"><span class="ep-m ep-patch">PATCH</span><span class="ep-path">/v1/keys/:id</span></div>
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/v1/keys/:id/reset-hwid</span></div>
+        <div class="ep"><span class="ep-m ep-del">DELETE</span><span class="ep-path">/v1/keys/:id</span></div>
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/v1/keys/bulk</span></div>
+        <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/v1/jobs/:id</span></div>
+        <h3>Create a key</h3>
+        <div class="code-block">curl -X POST https://api.nexcode.io/v1/keys \
+  -H <span class="cs">"Authorization: Bearer nxc_sk_..."</span> \
+  -H <span class="cs">"Content-Type: application/json"</span> \
+  -d <span class="cs">'{
+    "script_id": "scr_abc",
+    "type": "day_locked",
+    "duration_days": 30
+  }'</span></div>
+        <div class="callout"><span class="callout-ic">🔑</span><span>Scope your API keys with permissions like <code>keys:write</code> or <code>scripts:read</code> so each integration only gets what it needs.</span></div>
+      </section>
+
+      <section class="docs-section" id="webhooks">
+        <h2>Webhooks</h2>
+        <p class="sub">Get notified in real time when things happen.</p>
+        <p>NexCode sends signed webhooks for 10 event types including <code>key.created</code>, <code>key.validated</code>, <code>key.revoked</code>, <code>key.hwid_reset</code>, and <code>validation.failed</code>. Always verify the signature before trusting a payload.</p>
+        <h3>Verifying signatures (Node.js)</h3>
+        <div class="code-block"><span class="ck">const</span> <span class="cv">crypto</span> = <span class="cf">require</span>(<span class="cs">'crypto'</span>);
+
+<span class="ck">function</span> <span class="cf">verify</span>(body, sig, ts, secret) {
+  <span class="ck">const</span> <span class="cv">expected</span> = <span class="cs">'sha256='</span> +
+    <span class="cv">crypto</span>.<span class="cf">createHmac</span>(<span class="cs">'sha256'</span>, secret)
+      .<span class="cf">update</span>(<span class="cs">`${ts}.${body}`</span>)
+      .<span class="cf">digest</span>(<span class="cs">'hex'</span>);
+  <span class="ck">return</span> <span class="cv">crypto</span>.<span class="cf">timingSafeEqual</span>(
+    <span class="cv">Buffer</span>.<span class="cf">from</span>(expected),
+    <span class="cv">Buffer</span>.<span class="cf">from</span>(sig)
+  );
+}</div>
+        <h3>Verifying signatures (Python)</h3>
+        <div class="code-block"><span class="ck">import</span> hmac, hashlib
+
+<span class="ck">def</span> <span class="cf">verify</span>(body, sig, ts, secret):
+    expected = <span class="cs">"sha256="</span> + hmac.<span class="cf">new</span>(
+        secret.<span class="cf">encode</span>(),
+        <span class="cf">f"{ts}.{body}"</span>.<span class="cf">encode</span>(),
+        hashlib.sha256
+    ).<span class="cf">hexdigest</span>()
+    <span class="ck">return</span> hmac.<span class="cf">compare_digest</span>(expected, sig)</div>
+      </section>
+
+      <section class="docs-section" id="sdks">
+        <h2>SDKs</h2>
+        <p class="sub">Official libraries for five languages.</p>
+        <div class="sdk-tabs">
+          <span class="sdk-tab on">Node.js</span><span class="sdk-tab">Python</span><span class="sdk-tab">Go</span><span class="sdk-tab">Rust</span><span class="sdk-tab">C#</span>
+        </div>
+        <div class="code-block">npm install @nexcode/sdk</div>
+        <div class="code-block"><span class="ck">import</span> { NexCode } <span class="ck">from</span> <span class="cs">'@nexcode/sdk'</span>;
+
+<span class="ck">const</span> <span class="cv">nxc</span> = <span class="ck">new</span> <span class="cf">NexCode</span>({ apiKey: <span class="cs">'nxc_sk_...'</span> });
+
+<span class="ck">const</span> <span class="cv">key</span> = <span class="ck">await</span> <span class="cv">nxc</span>.keys.<span class="cf">create</span>({
+  script_id: <span class="cs">'scr_abc'</span>,
+  type: <span class="cs">'day_locked'</span>,
+  duration_days: <span class="cn">30</span>
+});
+
+<span class="cf">console</span>.<span class="cf">log</span>(<span class="cv">key</span>.key); <span class="cc">// NEXC-A1B2-C3D4</span></div>
+        <div class="callout"><span class="callout-ic">📦</span><span>Every SDK wraps the same REST API with typed methods, automatic retries, and built-in webhook signature verification.</span></div>
+      </section>
+
+      <section class="docs-section" id="discord">
+        <h2>Discord bot</h2>
+        <p class="sub">Manage keys and roles without leaving Discord.</p>
+        <p>Invite the bot, connect it to your NexCode project, and your community can redeem keys and reset their own HWID while your team manages everything else.</p>
+        <table class="tbl">
+          <thead><tr><th>Command</th><th>Access</th></tr></thead>
+          <tbody>
+            <tr><td>/whitelist</td><td>Manager</td></tr>
+            <tr><td>/redeem</td><td>Any user</td></tr>
+            <tr><td>/resethwid</td><td>Any user</td></tr>
+            <tr><td>/force-resethwid</td><td>Manager</td></tr>
+            <tr><td>/getrole</td><td>Any user</td></tr>
+            <tr><td>/script</td><td>Any user</td></tr>
+            <tr><td>/revoke</td><td>Manager</td></tr>
+            <tr><td>/extend</td><td>Manager</td></tr>
+          </tbody>
+        </table>
+        <p>Set it up under <strong>Settings → Discord bot</strong> in the dashboard: enter your server ID and manager role ID, then generate an invite link.</p>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/core.js"></script>
+</body>
+</html>

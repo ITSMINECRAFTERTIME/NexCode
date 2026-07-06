@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Create account — NexCode</title>
+<link rel="stylesheet" href="../../css/base.css"/>
+<style>
+body{display:flex;flex-direction:column;min-height:100vh}
+.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:calc(var(--nav) + 32px) 20px 60px;position:relative;z-index:2}
+.auth-card{width:100%;max-width:440px;background:rgba(255,255,255,.035);border:1px solid var(--b2);border-radius:var(--rxl);padding:clamp(28px,5vw,44px);box-shadow:0 40px 100px rgba(0,0,0,.6)}
+.auth-logo{display:flex;align-items:center;gap:9px;font-size:20px;font-weight:800;letter-spacing:-.05em;margin-bottom:28px;justify-content:center;text-decoration:none}
+.auth-logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#2f6bff,#1d4ed8);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(47,107,255,.4)}
+.auth-logo-mark svg{width:18px;height:18px}
+.auth-logo em{background:linear-gradient(120deg,var(--a2),var(--a3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+h1{font-size:1.55rem;font-weight:900;letter-spacing:-.035em;margin-bottom:6px;text-align:center}
+.auth-sub{font-size:14px;color:var(--t2);text-align:center;margin-bottom:28px;line-height:1.6}
+.fg{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.fl{font-size:12.5px;font-weight:700;color:var(--t2);display:flex;align-items:center;justify-content:space-between}
+.fi{width:100%;padding:13px 15px;background:rgba(0,0,0,.32);border:1px solid var(--b2);border-radius:var(--rm);color:var(--t1);font-size:14.5px;outline:none;transition:border-color .2s,box-shadow .2s}
+.fi:focus{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 3px rgba(47,107,255,.1)}
+.fi::placeholder{color:var(--t3)}
+.fi.err{border-color:rgba(240,82,82,.5)}
+.pw-wrap{position:relative}
+.pw-wrap .fi{padding-right:44px}
+.pw-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;display:flex;align-items:center}
+.pw-eye:hover{color:var(--t2)}
+.pw-strength{margin-top:8px;height:3px;border-radius:2px;background:var(--s2);overflow:hidden}
+.pws-bar{height:100%;border-radius:2px;transition:width .3s,background .3s;width:0%}
+.pw-hint{font-size:11px;color:var(--t3);margin-top:5px}
+.submit-btn{width:100%;padding:14px;margin-top:4px;font-size:15px;font-weight:700}
+.err-msg{font-size:13px;color:var(--red);background:rgba(240,82,82,.08);border:1px solid rgba(240,82,82,.2);border-radius:10px;padding:11px 14px;display:none;margin-bottom:14px;line-height:1.5}
+.success-box{display:none;text-align:center;padding:16px 0}
+.success-ic{font-size:44px;margin-bottom:16px}
+.success-box h2{font-size:1.3rem;font-weight:900;margin-bottom:10px;background:linear-gradient(130deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.success-box p{font-size:14px;color:var(--t2);line-height:1.7;max-width:300px;margin:0 auto 22px}
+.auth-link{display:flex;justify-content:center;margin-top:22px;font-size:13.5px;color:var(--t3);gap:6px}
+.auth-link a{color:var(--a2);font-weight:600;transition:color .14s}
+.auth-link a:hover{color:var(--t1)}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--t4);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--b1)}
+</style>
+</head>
+<body>
+<main class="auth-wrap">
+  <div class="auth-card glass">
+    <a href="../../index.html" class="auth-logo">
+      <div class="auth-logo-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.5 9 9.5 5.2-1 9-4.5 9-9.5v-6L12 2z" fill="#fff" fill-opacity=".95"/><path d="M9 11.5l2 2 4-4.5" stroke="#2f6bff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      Nex<em>Code</em>
+    </a>
+    <h1>Create your account</h1>
+    <p class="auth-sub">Join 2,400+ developers protecting their scripts.</p>
+
+    <div class="err-msg" id="err-msg"></div>
+
+    <div id="form-body">
+      <div class="fg">
+        <label class="fl" for="r-name">Display name</label>
+        <input class="fi" id="r-name" type="text" placeholder="Your name" autocomplete="name"/>
+      </div>
+      <div class="fg">
+        <label class="fl" for="r-email">Email *</label>
+        <input class="fi" id="r-email" type="email" placeholder="you@example.com" autocomplete="email" required/>
+      </div>
+      <div class="fg">
+        <label class="fl" for="r-password">Password *</label>
+        <div class="pw-wrap">
+          <input class="fi" id="r-password" type="password" placeholder="Min. 8 chars, 1 uppercase, 1 number" autocomplete="new-password" required/>
+          <button type="button" class="pw-eye" id="pw-eye" aria-label="Toggle password">👁</button>
+        </div>
+        <div class="pw-strength"><div class="pws-bar" id="pws-bar"></div></div>
+        <span class="pw-hint" id="pw-hint"></span>
+      </div>
+      <button class="btn btn-primary submit-btn" id="reg-btn">
+        Create account <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-left:4px"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p style="font-size:12px;color:var(--t4);text-align:center;margin-top:14px;line-height:1.6">
+        By creating an account you agree to our <a href="../privacy.html" style="color:var(--a2)">Privacy Policy</a> and <a href="../terms.html" style="color:var(--a2)">Terms of Service</a>.
+      </p>
+    </div>
+
+    <div class="success-box" id="success-box">
+      <div class="success-ic">📬</div>
+      <h2>Check your email</h2>
+      <p>We sent a verification link to <strong id="sent-to"></strong>. Click it to activate your account, then log in.</p>
+      <a href="login.html" class="btn btn-primary" style="width:100%;justify-content:center">Go to login →</a>
+    </div>
+
+    <div class="auth-link" id="login-link">
+      <span>Already have an account?</span>
+      <a href="login.html">Sign in</a>
+    </div>
+  </div>
+</main>
+
+<script>
+const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev'; // Change to your deployed backend URL later
+
+// ── Password strength ────────────────────────────────────────
+const pwInput = document.getElementById('r-password');
+const pwsBar  = document.getElementById('pws-bar');
+const pwHint  = document.getElementById('pw-hint');
+
+pwInput.addEventListener('input', () => {
+  const v = pwInput.value;
+  let score = 0;
+  if (v.length >= 8) score++;
+  if (/[A-Z]/.test(v)) score++;
+  if (/[0-9]/.test(v)) score++;
+  if (/[^A-Za-z0-9]/.test(v)) score++;
+  const w = ['0%','30%','55%','80%','100%'][score];
+  const c = ['','#f05252','#fbbf24','#22d3ee','#1edf9c'][score];
+  const h = ['','Too short','Weak','Good','Strong'][score];
+  pwsBar.style.width = w;
+  pwsBar.style.background = c;
+  pwHint.textContent = h;
+  pwHint.style.color = c || 'var(--t3)';
+});
+
+// ── Show/hide password ───────────────────────────────────────
+document.getElementById('pw-eye').addEventListener('click', () => {
+  const t = pwInput.type === 'password' ? 'text' : 'password';
+  pwInput.type = t;
+  document.getElementById('pw-eye').textContent = t === 'password' ? '👁' : '🙈';
+});
+
+// ── Submit ───────────────────────────────────────────────────
+document.getElementById('reg-btn').addEventListener('click', async () => {
+  const btn   = document.getElementById('reg-btn');
+  const errEl = document.getElementById('err-msg');
+  errEl.style.display = 'none';
+
+  const name     = document.getElementById('r-name').value.trim();
+  const email    = document.getElementById('r-email').value.trim();
+  const password = pwInput.value;
+
+  // Basic client-side check
+  if (!email || !password) {
+    errEl.textContent = 'Email and password are required.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Creating account…';
+
+  try {
+    const res = await fetch(`${API}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, displayName: name || undefined })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      errEl.textContent = data.error || 'Something went wrong. Please try again.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = 'Create account <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-left:4px"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      return;
+    }
+
+    // Success — show the "check your email" state
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('login-link').style.display = 'none';
+    document.getElementById('sent-to').textContent = email;
+    document.getElementById('success-box').style.display = 'block';
+
+  } catch (err) {
+    errEl.textContent = 'Could not connect to the server. Is the backend running?';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Create account';
+  }
+});
+
+// Enter key submits
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('reg-btn').click();
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../../js/layout.js"></script>
+</body>
+</html>

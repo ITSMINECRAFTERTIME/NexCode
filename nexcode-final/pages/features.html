@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="NexCode features — protection options, compile settings, licensing, webhooks, REST API, and Discord bot."/>
+<title>Features — NexCode</title>
+<link rel="stylesheet" href="../css/base.css"/>
+<style>
+.page-hero{padding:calc(var(--nav) + 90px) 0 60px;text-align:center;position:relative}
+.page-hero .eyebrow{justify-content:center;display:inline-flex;margin-bottom:18px}
+.page-hero h1{font-size:clamp(2.6rem,6vw,5rem);font-weight:900;letter-spacing:-.045em;line-height:.98;margin-bottom:20px}
+.page-hero h1 em{background:linear-gradient(130deg,var(--a),var(--a2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.page-hero p{font-size:clamp(1rem,1.8vw,1.18rem);color:var(--t2);max-width:520px;margin:0 auto;line-height:1.74}
+.sec{padding:clamp(60px,9vw,110px) 0;border-top:1px solid var(--b1)}
+.sec-head{max-width:600px;margin-bottom:52px}
+.sec-head .eyebrow{margin-bottom:14px}
+.sec-head h2{margin-bottom:14px}
+
+/* SPLIT */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,64px);align-items:center}
+.split.rev .split-visual{order:-1}
+@media(max-width:840px){.split{grid-template-columns:1fr}.split.rev .split-visual{order:0}}
+.split-text h3{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;letter-spacing:-.035em;line-height:1.1;margin-bottom:16px}
+.split-text p{font-size:14.5px;color:var(--t2);line-height:1.76;margin-bottom:22px}
+.check-list{display:flex;flex-direction:column;gap:12px}
+.cli{display:flex;align-items:flex-start;gap:11px;font-size:14px;color:var(--t2);line-height:1.5}
+.cli-ic{width:20px;height:20px;background:rgba(47,107,255,.13);border:1px solid rgba(47,107,255,.28);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--a2);font-size:11px;margin-top:1px}
+.cli strong{color:var(--t1);font-weight:600}
+
+/* SETTINGS PANEL */
+.settings-panel{background:rgba(255,255,255,.026);border:1px solid var(--b2);border-radius:var(--rl);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.sp-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--b1);background:rgba(0,0,0,.28)}
+.sp-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:9px}
+.sp-title .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.sp-tag{font-size:10.5px;font-family:var(--mono);color:var(--t3);background:var(--s2);padding:3px 9px;border-radius:5px}
+.sp-body{padding:8px}
+.sp-row{display:flex;align-items:center;justify-content:space-between;padding:14px 14px;border-radius:var(--rm);transition:background .15s}
+.sp-row:hover{background:var(--s1)}
+.sp-info{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.sp-name{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px}
+.sp-desc{font-size:11.5px;color:var(--t3);line-height:1.4}
+.sp-toggle{width:42px;height:24px;border-radius:12px;background:var(--s3);border:1px solid var(--b2);position:relative;cursor:pointer;flex-shrink:0;transition:background .25s;margin-left:14px}
+.sp-toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--t2);transition:left .22s var(--es),background .22s}
+.sp-toggle.on{background:var(--a)}
+.sp-toggle.on::after{left:20px;background:#fff}
+.sp-divider{height:1px;background:var(--b1);margin:6px 14px}
+/* SEGMENT */
+.seg{display:flex;gap:4px;background:rgba(0,0,0,.3);border:1px solid var(--b1);border-radius:10px;padding:4px;margin-left:14px}
+.seg-opt{padding:5px 12px;font-size:11.5px;font-weight:600;color:var(--t3);border-radius:7px;cursor:pointer;transition:all .18s;white-space:nowrap}
+.seg-opt.on{background:var(--a);color:#fff;box-shadow:0 2px 8px rgba(47,107,255,.4)}
+.sp-foot{padding:14px 20px;border-top:1px solid var(--b1);background:rgba(0,0,0,.2);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sp-est{font-size:11.5px;color:var(--t3)}
+.sp-est strong{color:var(--a2);font-family:var(--mono)}
+
+/* GRID CARDS */
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:840px){.fgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.fgrid{grid-template-columns:1fr}}
+.fcard{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:26px;transition:border-color .25s,transform .3s var(--eo)}
+.fcard:hover{border-color:var(--b2);transform:translateY(-3px)}
+.fcard-ic{width:46px;height:46px;border-radius:var(--rm);background:rgba(47,107,255,.1);border:1px solid rgba(47,107,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px}
+.fcard h4{font-size:16px;font-weight:800;letter-spacing:-.025em;margin-bottom:9px}
+.fcard p{font-size:13px;color:var(--t2);line-height:1.66}
+
+/* MACRO TABLE */
+.mtable{border:1px solid var(--b1);border-radius:var(--rl);overflow:hidden}
+.mtable-row{display:grid;grid-template-columns:180px 1fr;gap:16px;padding:16px 22px;border-bottom:1px solid var(--b1);align-items:center}
+.mtable-row:last-child{border-bottom:none}
+.mtable-row:hover{background:var(--s1)}
+@media(max-width:600px){.mtable-row{grid-template-columns:1fr;gap:6px}}
+.mtable-name{font-family:var(--mono);font-size:12.5px;color:var(--a2);font-weight:600}
+.mtable-desc{font-size:13px;color:var(--t2);line-height:1.55}
+
+/* KEY TYPE CARDS */
+.ktgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.ktgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.ktgrid{grid-template-columns:1fr}}
+.ktcard{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rm);padding:20px;transition:border-color .25s,transform .3s var(--eo)}
+.ktcard:hover{border-color:var(--b2);transform:translateY(-2px)}
+.ktcard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ktcard h4{font-size:14.5px;font-weight:700}
+.ktcard p{font-size:12.5px;color:var(--t3);line-height:1.6}
+
+/* API */
+.ep{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(0,0,0,.28);border:1px solid var(--b1);border-radius:10px;margin-bottom:8px;font-family:var(--mono)}
+.ep-m{font-size:10px;font-weight:800;padding:3px 8px;border-radius:5px;flex-shrink:0;letter-spacing:.03em}
+.ep-post{background:rgba(30,223,156,.13);color:var(--green)}
+.ep-get{background:rgba(47,107,255,.14);color:var(--a2)}
+.ep-patch{background:rgba(251,191,36,.13);color:var(--amber)}
+.ep-del{background:rgba(240,82,82,.13);color:var(--red)}
+.ep-path{font-size:12.5px;color:var(--t2)}
+.ep-desc{font-size:11.5px;color:var(--t3);margin-left:auto;font-family:var(--font)}
+@media(max-width:600px){.ep-desc{display:none}}
+
+/* CMD */
+.cmd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.cmd-grid{grid-template-columns:1fr}}
+.cmd{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--s1);border:1px solid var(--b1);border-radius:10px;transition:border-color .2s}
+.cmd:hover{border-color:var(--b2)}
+.cmd-ic{font-size:16px;flex-shrink:0}
+.cmd-body{flex:1;min-width:0}
+.cmd-n{font-family:var(--mono);font-size:12.5px;color:var(--a2);font-weight:600;margin-bottom:2px}
+.cmd-d{font-size:11.5px;color:var(--t3)}
+
+/* COMPARE */
+.ctable{width:100%;border-collapse:collapse;border:1px solid var(--b1);border-radius:var(--rl);overflow:hidden}
+.ctable th,.ctable td{padding:15px 18px;text-align:left;border-bottom:1px solid var(--b1);font-size:13.5px}
+.ctable th{background:rgba(0,0,0,.28);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3)}
+.ctable th.hl{color:var(--a2)}
+.ctable td:first-child{color:var(--t2);font-weight:500}
+.ctable td{color:var(--t3)}
+.ctable .yes{color:var(--green);font-weight:700}
+.ctable .no{color:var(--t4)}
+.ctable tr:last-child td{border-bottom:none}
+.ctable td.hl{background:rgba(47,107,255,.05);color:var(--t1)}
+.ctable-wrap{overflow-x:auto}
+
+.cta-box{background:linear-gradient(145deg,rgba(47,107,255,.1),rgba(29,78,216,.05),rgba(34,211,238,.04));border:1px solid rgba(47,107,255,.22);border-radius:var(--rxl);padding:clamp(48px,7vw,88px) clamp(28px,5vw,72px);text-align:center;position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(47,107,255,.55),transparent)}
+</style>
+</head>
+<body>
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Features</div>
+    <h1>Everything you need.<br/><em>Nothing you don't.</em></h1>
+    <p>Two pillars — bulletproof protection and complete licensing — engineered into one focused platform.</p>
+  </div>
+</section>
+
+<!-- PROTECTION OPTIONS / SETTINGS -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Compile settings</div>
+      <h2 class="sec-h">Tune every <em>protection option</em></h2>
+      <p class="sec-sub">Full control over how aggressively your script is protected. Dial in the exact tradeoff between security and performance — per build.</p>
+    </div>
+    <div class="split">
+      <div class="split-text reveal-l">
+        <h3>Real settings, real control</h3>
+        <p>This is the actual compile configuration you get in the dashboard. Toggle protection layers, pick an optimization profile, and see the estimated impact before you build.</p>
+        <div class="check-list">
+          <div class="cli"><span class="cli-ic">✓</span><span><strong>Optimization profiles</strong> — balance protection strength against runtime performance.</span></div>
+          <div class="cli"><span class="cli-ic">✓</span><span><strong>Granular layer toggles</strong> — enable only the defenses your script needs.</span></div>
+          <div class="cli"><span class="cli-ic">✓</span><span><strong>Per-build config</strong> — every compile can use different settings.</span></div>
+          <div class="cli"><span class="cli-ic">✓</span><span><strong>Live impact estimate</strong> — know the size and speed cost up front.</span></div>
+        </div>
+      </div>
+      <div class="split-visual reveal-r">
+        <div class="settings-panel tilt">
+          <div class="sp-head">
+            <div class="sp-title"><span class="dot"></span>Compile Configuration</div>
+            <div class="sp-tag">main.lua</div>
+          </div>
+          <div class="sp-body">
+            <div class="sp-row">
+              <div class="sp-info">
+                <div class="sp-name">Optimization profile</div>
+                <div class="sp-desc">Protection strength vs. performance</div>
+              </div>
+              <div class="seg">
+                <div class="seg-opt">Fast</div>
+                <div class="seg-opt on">Balanced</div>
+                <div class="seg-opt">Max</div>
+              </div>
+            </div>
+            <div class="sp-divider"></div>
+            <div class="sp-row">
+              <div class="sp-info"><div class="sp-name">VM virtualization</div><div class="sp-desc">Convert bytecode to a custom VM</div></div>
+              <div class="sp-toggle on toggle-demo"></div>
+            </div>
+            <div class="sp-row">
+              <div class="sp-info"><div class="sp-name">Control flow scrambling</div><div class="sp-desc">Obscure execution order</div></div>
+              <div class="sp-toggle on toggle-demo"></div>
+            </div>
+            <div class="sp-row">
+              <div class="sp-info"><div class="sp-name">String encryption</div><div class="sp-desc">Runtime-decrypt all string literals</div></div>
+              <div class="sp-toggle on toggle-demo"></div>
+            </div>
+            <div class="sp-row">
+              <div class="sp-info"><div class="sp-name">Anti-decompiler injection</div><div class="sp-desc">Crash or hang known tools</div></div>
+              <div class="sp-toggle on toggle-demo"></div>
+            </div>
+            <div class="sp-row">
+              <div class="sp-info"><div class="sp-name">Junk / decoy code</div><div class="sp-desc">Insert misleading dead logic</div></div>
+              <div class="sp-toggle toggle-demo"></div>
+            </div>
+            <div class="sp-row">
+              <div class="sp-info"><div class="sp-name">Anti-tamper hooks</div><div class="sp-desc">Detect debuggers &amp; hook attempts</div></div>
+              <div class="sp-toggle on toggle-demo"></div>
+            </div>
+            <div class="sp-row">
+              <div class="sp-info"><div class="sp-name">Constant obfuscation</div><div class="sp-desc">Hide numeric constants</div></div>
+              <div class="sp-toggle on toggle-demo"></div>
+            </div>
+          </div>
+          <div class="sp-foot">
+            <div class="sp-est">Est. size <strong>+34%</strong> · Est. speed <strong>~0.94×</strong></div>
+            <button class="btn btn-primary btn-sm">Compile</button>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:11.5px;color:var(--t4);margin-top:14px">Try the toggles — this is a live preview of the dashboard panel</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROTECTION LAYERS -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Protection engine</div>
+      <h2 class="sec-h">Defense in <em>depth</em></h2>
+      <p class="sec-sub">Each layer compounds. An attacker has to defeat all of them — and the layout changes with every compile.</p>
+    </div>
+    <div class="fgrid">
+      <div class="fcard reveal"><div class="fcard-ic">🧬</div><h4>Custom VM per build</h4><p>Randomized opcode mappings and handler structures. Cracking one build teaches nothing about the next.</p></div>
+      <div class="fcard reveal d1"><div class="fcard-ic">🔀</div><h4>Control flow scrambling</h4><p>Execution paths are flattened and reordered so static analysis can't follow the logic.</p></div>
+      <div class="fcard reveal d2"><div class="fcard-ic">🔐</div><h4>String encryption</h4><p>Every literal is encrypted and only decrypted at runtime, in memory, at the moment of use.</p></div>
+      <div class="fcard reveal"><div class="fcard-ic">💣</div><h4>Anti-decompiler injection</h4><p>Malformed constructs crash or hang popular decompilers like unluac before they extract anything.</p></div>
+      <div class="fcard reveal d1"><div class="fcard-ic">🎭</div><h4>Junk &amp; decoy logic</h4><p>Optional dead code paths mislead anyone attempting to trace real behavior.</p></div>
+      <div class="fcard reveal d2"><div class="fcard-ic">🛡️</div><h4>Anti-tamper hooks</h4><p>Runtime checks detect debuggers, hooks, and environment tampering — and can trigger a kill switch.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MACROS -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">NXC_ Macros</div>
+      <h2 class="sec-h">Surgical <em>compile-time control</em></h2>
+      <p class="sec-sub">Directives you drop into your source. They run as harmless stubs locally and transform at compile time — zero runtime overhead.</p>
+    </div>
+    <div class="mtable reveal">
+      <div class="mtable-row"><span class="mtable-name">NXC_ENCFUNC(fn)</span><span class="mtable-desc">Wraps a function so its body is encrypted with 256-bit protection and only reconstructed when called.</span></div>
+      <div class="mtable-row"><span class="mtable-name">NXC_ENCSTR(str)</span><span class="mtable-desc">Encrypts a string literal; decrypted at runtime in memory only, never stored in plaintext.</span></div>
+      <div class="mtable-row"><span class="mtable-name">NXC_NO_VIRT(fn)</span><span class="mtable-desc">Marks a hot path to skip VM virtualization, preserving native performance on critical loops.</span></div>
+      <div class="mtable-row"><span class="mtable-name">NXC_JUNK()</span><span class="mtable-desc">Injects context-aware decoy logic at this location to mislead reverse engineers.</span></div>
+      <div class="mtable-row"><span class="mtable-name">NXC_SEND_WEBHOOK(url, data)</span><span class="mtable-desc">Sends a Discord/HTTP webhook through an encrypted proxy so endpoints can't be extracted.</span></div>
+      <div class="mtable-row"><span class="mtable-name">NXC_INIT()</span><span class="mtable-desc">Pre-authentication hook — runs environment and integrity checks before your logic executes.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY SYSTEM -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Key &amp; license system</div>
+      <h2 class="sec-h">Licensing that <em>does it all</em></h2>
+      <p class="sec-sub">Five key types, hardware locking, floating seats, and instant control. Everything a modern software business needs.</p>
+    </div>
+    <div class="ktgrid" style="margin-bottom:14px">
+      <div class="ktcard reveal"><div class="ktcard-top"><h4>Day-locked</h4><span class="tag tag-sky">N days</span></div><p>Expires a set number of days after redemption. Perfect for rentals and time-boxed access.</p></div>
+      <div class="ktcard reveal d1"><div class="ktcard-top"><h4>Lifetime</h4><span class="tag tag-green">Forever</span></div><p>One-time purchase, never expires. HWID-locked to prevent sharing.</p></div>
+      <div class="ktcard reveal d2"><div class="ktcard-top"><h4>Trial</h4><span class="tag tag-amber">Limited</span></div><p>Time-limited and execution-capped so users can evaluate before buying.</p></div>
+      <div class="ktcard reveal"><div class="ktcard-top"><h4>Subscription</h4><span class="tag tag-pink">Recurring</span></div><p>Auto-renewing access tied to your billing webhooks. Lapses instantly on non-payment.</p></div>
+      <div class="ktcard reveal d1"><div class="ktcard-top"><h4>FFA / Keyless</h4><span class="tag tag-blue">Free</span></div><p>Anyone can run the script; premium features gate behind a valid key check.</p></div>
+      <div class="ktcard reveal d2"><div class="ktcard-top"><h4>Floating seats</h4><span class="tag tag-cyan">Pooled</span></div><p>A pool of N concurrent activations shared across a team or customer.</p></div>
+    </div>
+    <div class="fgrid" style="margin-top:24px">
+      <div class="fcard reveal"><div class="fcard-ic">🔗</div><h4>HWID locking</h4><p>Keys bind to hardware on first run. Sharing fails silently on mismatched machines.</p></div>
+      <div class="fcard reveal d1"><div class="fcard-ic">⏸️</div><h4>Offline grace</h4><p>Cached authentication lets legitimate users keep working through brief connectivity drops.</p></div>
+      <div class="fcard reveal d2"><div class="fcard-ic">🛑</div><h4>Kill switch</h4><p>Disable any key, script, or user instantly — the change propagates on the next auth check.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REST API -->
+<section class="sec">
+  <div class="wrap">
+    <div class="split">
+      <div class="split-text reveal-l">
+        <div class="eyebrow" style="margin-bottom:14px">REST API</div>
+        <h2 class="sec-h" style="font-size:clamp(1.8rem,3.5vw,2.6rem);margin-bottom:16px">Automate <em>everything</em></h2>
+        <p class="sec-sub" style="margin-bottom:22px">Every dashboard action is available via a clean REST API. Build storefronts, auto-fulfill orders, and manage keys programmatically.</p>
+        <div class="check-list">
+          <div class="cli"><span class="cli-ic">✓</span><span><strong>5 official SDKs</strong> — Node.js, Python, Go, Rust, and C#.</span></div>
+          <div class="cli"><span class="cli-ic">✓</span><span><strong>Scoped API keys</strong> — grant only the permissions each integration needs.</span></div>
+          <div class="cli"><span class="cli-ic">✓</span><span><strong>Bulk operations</strong> — generate up to 1,000 keys in a single call.</span></div>
+        </div>
+      </div>
+      <div class="split-visual reveal-r">
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/v1/scripts/:id/compile</span><span class="ep-desc">Compile</span></div>
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/v1/keys</span><span class="ep-desc">Create key</span></div>
+        <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/v1/keys</span><span class="ep-desc">List keys</span></div>
+        <div class="ep"><span class="ep-m ep-patch">PATCH</span><span class="ep-path">/v1/keys/:id</span><span class="ep-desc">Update</span></div>
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/v1/keys/:id/reset-hwid</span><span class="ep-desc">Reset HWID</span></div>
+        <div class="ep"><span class="ep-m ep-del">DELETE</span><span class="ep-path">/v1/keys/:id</span><span class="ep-desc">Revoke</span></div>
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/v1/keys/bulk</span><span class="ep-desc">Bulk create</span></div>
+        <div style="text-align:center;margin-top:18px"><a href="docs.html#api" class="btn btn-ghost btn-sm">Full API reference →</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DISCORD BOT -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Discord bot</div>
+      <h2 class="sec-h">Run your business <em>from Discord</em></h2>
+      <p class="sec-sub">Your whole community and key management, in the place your users already are. No dashboard needed for daily operations.</p>
+    </div>
+    <div class="cmd-grid reveal">
+      <div class="cmd"><span class="cmd-ic">✅</span><div class="cmd-body"><div class="cmd-n">/whitelist &lt;user&gt; &lt;type&gt;</div><div class="cmd-d">Grant a user access · Manager</div></div></div>
+      <div class="cmd"><span class="cmd-ic">🎟️</span><div class="cmd-body"><div class="cmd-n">/redeem &lt;key&gt;</div><div class="cmd-d">Redeem a key for access · Any</div></div></div>
+      <div class="cmd"><span class="cmd-ic">🔄</span><div class="cmd-body"><div class="cmd-n">/resethwid</div><div class="cmd-d">Reset your own HWID · Any</div></div></div>
+      <div class="cmd"><span class="cmd-ic">⚡</span><div class="cmd-body"><div class="cmd-n">/force-resethwid &lt;user&gt;</div><div class="cmd-d">Reset another user's HWID · Manager</div></div></div>
+      <div class="cmd"><span class="cmd-ic">🎭</span><div class="cmd-body"><div class="cmd-n">/getrole</div><div class="cmd-d">Claim your premium role · Any</div></div></div>
+      <div class="cmd"><span class="cmd-ic">📜</span><div class="cmd-body"><div class="cmd-n">/script</div><div class="cmd-d">Get your protected loadstring · Any</div></div></div>
+      <div class="cmd"><span class="cmd-ic">🚫</span><div class="cmd-body"><div class="cmd-n">/revoke &lt;user or key&gt;</div><div class="cmd-d">Instantly revoke access · Manager</div></div></div>
+      <div class="cmd"><span class="cmd-ic">⏱️</span><div class="cmd-body"><div class="cmd-n">/extend &lt;user&gt; &lt;days&gt;</div><div class="cmd-d">Extend a key's duration · Manager</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Why NexCode</div>
+      <h2 class="sec-h">One platform vs. <em>the rest</em></h2>
+      <p class="sec-sub">Most tools do protection or licensing. NexCode does both, natively integrated, so they actually work together.</p>
+    </div>
+    <div class="ctable-wrap reveal">
+      <table class="ctable">
+        <thead><tr><th>Capability</th><th class="hl">NexCode</th><th>Obfuscator-only</th><th>Key-system-only</th></tr></thead>
+        <tbody>
+          <tr><td>Custom VM per build</td><td class="hl yes">✓</td><td class="no">Sometimes</td><td class="no">✕</td></tr>
+          <tr><td>HWID-locked keys</td><td class="hl yes">✓</td><td class="no">✕</td><td class="yes">✓</td></tr>
+          <tr><td>Integrated macros</td><td class="hl yes">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
+          <tr><td>Encrypted webhooks</td><td class="hl yes">✓</td><td class="no">✕</td><td class="no">Rarely</td></tr>
+          <tr><td>REST API + SDKs</td><td class="hl yes">✓</td><td class="no">Limited</td><td class="no">Limited</td></tr>
+          <tr><td>Discord bot</td><td class="hl yes">✓</td><td class="no">✕</td><td class="no">Sometimes</td></tr>
+          <tr><td>Perf-preserving toggles</td><td class="hl yes">✓</td><td class="no">Rarely</td><td class="no">N/A</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec" style="border-top:none">
+  <div class="wrap">
+    <div class="cta-box reveal-s">
+      <h2 class="sec-h" style="margin-bottom:16px">Ready to lock it <em>down?</em></h2>
+      <p class="sec-sub" style="max-width:420px;margin:0 auto 32px">Start protecting your scripts in minutes. No credit card required.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <a href="pricing.html" class="btn btn-primary btn-lg mag">View pricing →</a>
+        <a href="docs.html" class="btn btn-ghost btn-lg">Read the docs</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/core.js"></script>
+</body>
+</html>
