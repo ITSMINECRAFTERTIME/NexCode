@@ -162,8 +162,10 @@ router.post('/reset-password/confirm', async (req, res) => {
 
   const { error } = await supabase.auth.updateUser({ password: req.body.password });
 
-  if (error) console.error("SUPABASE ERROR:", JSON.stringify(error));
+  if (error) {
+    console.error("SUPABASE ERROR:", JSON.stringify(error));
     return res.status(400).json({ error: error.message || JSON.stringify(error) });
+  }
 
   return res.json({ message: 'Password updated successfully. You can now log in.' });
 });
