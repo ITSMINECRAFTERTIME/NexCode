@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexCode — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<div class="dash-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../nexcode-final/index.html" class="sidebar-logo">
+      <div class="logo-mark">NX</div>
+      <span class="logo-text">Nex<span>Code</span></span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+
+      <button class="nav-item active" data-page="overview" onclick="navigate('overview')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Overview
+      </button>
+
+      <button class="nav-item" data-page="scripts" onclick="navigate('scripts')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Scripts
+        <span class="nav-badge green">3</span>
+      </button>
+
+      <button class="nav-item" data-page="keys" onclick="navigate('keys')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        Key Manager
+        <span class="nav-badge">1.2k</span>
+      </button>
+
+      <button class="nav-item" data-page="projects" onclick="navigate('projects')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        Projects
+      </button>
+
+      <span class="nav-section-label">Integrations</span>
+
+      <button class="nav-item" data-page="webhooks" onclick="navigate('webhooks')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+        Webhooks
+      </button>
+
+      <button class="nav-item" data-page="api" onclick="navigate('api')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        API Keys
+      </button>
+
+      <button class="nav-item" data-page="discord" onclick="navigate('discord')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Discord Bot
+      </button>
+
+      <span class="nav-section-label">Account</span>
+
+      <button class="nav-item" data-page="settings" onclick="navigate('settings')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">JD</div>
+        <div class="user-info">
+          <div class="user-name">John Dev</div>
+          <div class="user-plan">Pro Plan</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <button class="mobile-menu-btn" onclick="openSidebar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="topbar-title">Overview</span>
+
+      <div class="topbar-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d6080" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search anything...">
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Notifications">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+        <button class="icon-btn" title="Docs" onclick="window.open('../nexcode-final/pages/docs.html')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ═══════════════════════════════════
+         PAGE: OVERVIEW
+    ═══════════════════════════════════ -->
+    <main class="page active" id="page-overview">
+
+      <div class="plan-banner">
+        <div class="plan-banner-info">
+          <div class="plan-banner-name">Pro Plan — 10 scripts · 2,000 keys · FFA mode</div>
+          <div class="plan-banner-desc">Renews July 30, 2026 · $30/mo</div>
+          <div class="plan-usage">
+            <span class="usage-item">Scripts: <strong>3 / 10</strong></span>
+            <span class="usage-item">Keys: <strong>1,247 / 2,000</strong></span>
+            <span class="usage-item">Projects: <strong>2 / 5</strong></span>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="navigate('settings')">Manage plan</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-icon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          </div>
+          <div class="stat-value" data-target="1247">0</div>
+          <div class="stat-label">Active Keys</div>
+          <div class="stat-change up">↑ 48 this week</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="stat-value" data-target="84920">0</div>
+          <div class="stat-label">Total Executions</div>
+          <div class="stat-change up">↑ 12% vs last month</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-icon yellow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="stat-value" data-target="3">0</div>
+          <div class="stat-label">Live Scripts</div>
+          <div class="stat-change neutral">All healthy</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-icon purple">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="stat-value" data-target="2">0</div>
+          <div class="stat-label">Projects</div>
+          <div class="stat-change neutral">2 hubs active</div>
+        </div>
+      </div>
+
+      <div class="grid-2-1" style="gap:16px">
+        <!-- Activity feed -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Recent Activity</span>
+            <button class="btn btn-ghost btn-sm">View all</button>
+          </div>
+          <div class="card-body" style="padding:0 20px">
+            <div class="activity-item">
+              <div class="activity-dot green"></div>
+              <div>
+                <div class="activity-text"><strong>NEXC-A4F2-BB91</strong> executed — key validated in 34ms</div>
+                <div class="activity-time">2 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot blue"></div>
+              <div>
+                <div class="activity-text">New key generated for <strong>user@gmail.com</strong> — Lifetime</div>
+                <div class="activity-time">11 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot yellow"></div>
+              <div>
+                <div class="activity-text">HWID reset requested — <strong>NEXC-CC31-9E2A</strong></div>
+                <div class="activity-time">34 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot green"></div>
+              <div>
+                <div class="activity-text"><strong>AimScript v2.1</strong> compiled successfully</div>
+                <div class="activity-time">1 hour ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot red"></div>
+              <div>
+                <div class="activity-text">Webhook delivery failed — <strong>key.validated</strong> event</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot blue"></div>
+              <div>
+                <div class="activity-text">Bulk generated <strong>50 keys</strong> — 30-day trial</div>
+                <div class="activity-time">3 hours ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions + top scripts -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Quick Actions</span></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="openModal('modal-genkey')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Generate Key
+              </button>
+              <button class="btn btn-secondary" style="width:100%;justify-content:center" onclick="navigate('scripts')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                New Script
+              </button>
+              <button class="btn btn-secondary" style="width:100%;justify-content:center" onclick="navigate('webhooks')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                Add Webhook
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">Top Scripts</span></div>
+            <div style="padding:4px 0">
+              <div style="padding:10px 20px;border-bottom:1px solid var(--border-subtle)">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                  <span style="font-size:13px;font-weight:600">AimScript Pro</span>
+                  <span class="badge badge-green">Live</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">52,310 execs · 890 keys</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:89%"></div></div>
+              </div>
+              <div style="padding:10px 20px;border-bottom:1px solid var(--border-subtle)">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                  <span style="font-size:13px;font-weight:600">ESP Utility</span>
+                  <span class="badge badge-green">Live</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">28,440 execs · 312 keys</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:54%"></div></div>
+              </div>
+              <div style="padding:10px 20px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                  <span style="font-size:13px;font-weight:600">Misc Hub v3</span>
+                  <span class="badge badge-green">Live</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">4,170 execs · 45 keys</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:18%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══════════════════════════════════
+         PAGE: SCRIPTS
+    ═══════════════════════════════════ -->
+    <main class="page" id="page-scripts">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Scripts</div>
+          <div class="page-subtitle">Upload, configure protection settings, and compile scripts</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-newscript')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Script
+        </button>
+      </div>
+
+      <!-- Script Cards -->
+      <div class="grid-3" style="margin-bottom:24px">
+        <!-- Script 1 -->
+        <div class="card" style="border-color:rgba(47,107,255,0.2)">
+          <div class="card-header">
+            <div>
+              <div style="font-size:14px;font-weight:700">AimScript Pro</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">v2.1.0 · Updated 2h ago</div>
+            </div>
+            <span class="badge badge-green">Live</span>
+          </div>
+          <div class="card-body" style="padding:14px 16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;font-size:12px;color:var(--text-muted)">
+              <div>Executions<br><strong style="color:var(--text-primary);font-size:15px">52,310</strong></div>
+              <div>Keys<br><strong style="color:var(--text-primary);font-size:15px">890</strong></div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+              <span class="macro-pill">NXC_ENCFUNC</span>
+              <span class="macro-pill">NXC_ENCSTR</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="openModal('modal-settings-script')">Configure</button>
+              <button class="btn btn-danger btn-sm" title="Kill Switch" onclick="toast('Kill switch activated — script disabled', 'error')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Script 2 -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div style="font-size:14px;font-weight:700">ESP Utility</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">v1.4.2 · Updated 1d ago</div>
+            </div>
+            <span class="badge badge-green">Live</span>
+          </div>
+          <div class="card-body" style="padding:14px 16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;font-size:12px;color:var(--text-muted)">
+              <div>Executions<br><strong style="color:var(--text-primary);font-size:15px">28,440</strong></div>
+              <div>Keys<br><strong style="color:var(--text-primary);font-size:15px">312</strong></div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+              <span class="macro-pill">NXC_ENCFUNC</span>
+              <span class="macro-pill">NXC_JUNK</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="openModal('modal-settings-script')">Configure</button>
+              <button class="btn btn-danger btn-sm" title="Kill Switch" onclick="toast('Kill switch activated', 'error')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Script 3 -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div style="font-size:14px;font-weight:700">Misc Hub v3</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">v3.0.1 · Updated 4d ago</div>
+            </div>
+            <span class="badge badge-green">Live</span>
+          </div>
+          <div class="card-body" style="padding:14px 16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;font-size:12px;color:var(--text-muted)">
+              <div>Executions<br><strong style="color:var(--text-primary);font-size:15px">4,170</strong></div>
+              <div>Keys<br><strong style="color:var(--text-primary);font-size:15px">45</strong></div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+              <span class="macro-pill">NXC_NO_VIRT</span>
+              <span class="macro-pill">NXC_ENCSTR</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="openModal('modal-settings-script')">Configure</button>
+              <button class="btn btn-danger btn-sm" title="Kill Switch" onclick="toast('Kill switch activated', 'error')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Protection Settings Panel -->
+      <div class="card" id="modal-settings-script-inline" style="display:none"></div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Compile History</span>
+          <button class="btn btn-ghost btn-sm">Clear</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Script</th><th>Version</th><th>Status</th><th>Optimization</th><th>Compiled</th><th>Size</th></tr></thead>
+            <tbody>
+              <tr><td>AimScript Pro</td><td>v2.1.0</td><td><span class="badge badge-green">Success</span></td><td><span class="badge badge-blue">Max Security</span></td><td>2h ago</td><td>184 KB</td></tr>
+              <tr><td>ESP Utility</td><td>v1.4.2</td><td><span class="badge badge-green">Success</span></td><td><span class="badge badge-yellow">Balanced</span></td><td>1d ago</td><td>96 KB</td></tr>
+              <tr><td>AimScript Pro</td><td>v2.0.9</td><td><span class="badge badge-gray">Superseded</span></td><td><span class="badge badge-blue">Max Security</span></td><td>3d ago</td><td>178 KB</td></tr>
+              <tr><td>Misc Hub v3</td><td>v3.0.1</td><td><span class="badge badge-green">Success</span></td><td><span class="badge badge-green">Performance</span></td><td>4d ago</td><td>51 KB</td></tr>
+              <tr><td>ESP Utility</td><td>v1.4.1</td><td><span class="badge badge-red">Failed</span></td><td><span class="badge badge-yellow">Balanced</span></td><td>5d ago</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══════════════════════════════════
+         PAGE: KEYS
+    ═══════════════════════════════════ -->
+    <main class="page" id="page-keys">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Key Manager</div>
+          <div class="page-subtitle">1,247 active keys across all scripts</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="openModal('modal-bulkgen')">Bulk Generate</button>
+          <button class="btn btn-primary" onclick="openModal('modal-genkey')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Key
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="padding:14px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <div class="topbar-search" style="width:240px;display:flex">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d6080" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search keys, notes, emails..." id="key-search" oninput="filterTable('key-search','key-table')" style="background:none;border:none;outline:none;color:var(--text-primary);font-size:13px;width:100%;margin-left:8px;font-family:inherit">
+          </div>
+          <select class="form-select" style="width:auto;padding:8px 28px 8px 12px" onchange="filterKeysByStatus(this.value)">
+            <option>All Status</option>
+            <option>Active</option>
+            <option>Expired</option>
+            <option>Revoked</option>
+          </select>
+          <select class="form-select" style="width:auto;padding:8px 28px 8px 12px">
+            <option>All Scripts</option>
+            <option>AimScript Pro</option>
+            <option>ESP Utility</option>
+            <option>Misc Hub v3</option>
+          </select>
+          <select class="form-select" style="width:auto;padding:8px 28px 8px 12px">
+            <option>All Types</option>
+            <option>Lifetime</option>
+            <option>Day-locked</option>
+            <option>Trial</option>
+            <option>FFA</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="toast('Exported 1,247 keys as JSON', 'success')">Export</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table id="key-table">
+            <thead><tr><th>Key</th><th>Script</th><th>Type</th><th>Status</th><th>HWID</th><th>Expires</th><th>Note</th><th>Actions</th></tr></thead>
+            <tbody id="key-tbody">
+              <tr>
+                <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-accent)">NEXC-A4F2-BB91-C3D1</code></td>
+                <td>AimScript Pro</td><td><span class="badge badge-purple">Lifetime</span></td><td><span class="badge badge-green">Active</span></td>
+                <td><span class="badge badge-blue">Locked</span></td><td>Never</td><td>VIP customer</td>
+                <td><div class="td-actions">
+                  <button class="btn btn-ghost btn-xs" onclick="toast('HWID reset — key unlinked', 'success')">Reset HWID</button>
+                  <button class="btn btn-ghost btn-xs" onclick="toast('Key extended 30 days', 'success')">Extend</button>
+                  <button class="btn btn-danger btn-xs" onclick="revokeKey(this)">Revoke</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-accent)">NEXC-F812-3A09-E7C4</code></td>
+                <td>ESP Utility</td><td><span class="badge badge-blue">30-Day</span></td><td><span class="badge badge-green">Active</span></td>
+                <td><span class="badge badge-blue">Locked</span></td><td>Aug 5, 2026</td><td>—</td>
+                <td><div class="td-actions">
+                  <button class="btn btn-ghost btn-xs" onclick="toast('HWID reset', 'success')">Reset HWID</button>
+                  <button class="btn btn-ghost btn-xs" onclick="toast('Key extended 30 days', 'success')">Extend</button>
+                  <button class="btn btn-danger btn-xs" onclick="revokeKey(this)">Revoke</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-accent)">NEXC-CC31-9E2A-7711</code></td>
+                <td>AimScript Pro</td><td><span class="badge badge-yellow">Trial</span></td><td><span class="badge badge-yellow">Expiring</span></td>
+                <td><span class="badge badge-blue">Locked</span></td><td>Jul 9, 2026</td><td>Trial user</td>
+                <td><div class="td-actions">
+                  <button class="btn btn-ghost btn-xs" onclick="toast('HWID reset', 'success')">Reset HWID</button>
+                  <button class="btn btn-ghost btn-xs" onclick="toast('Key extended 30 days', 'success')">Extend</button>
+                  <button class="btn btn-danger btn-xs" onclick="revokeKey(this)">Revoke</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-accent)">NEXC-2B8E-4401-FF00</code></td>
+                <td>Misc Hub v3</td><td><span class="badge badge-gray">FFA</span></td><td><span class="badge badge-green">Active</span></td>
+                <td><span class="badge badge-gray">None</span></td><td>Never</td><td>Free tier</td>
+                <td><div class="td-actions">
+                  <button class="btn btn-ghost btn-xs" style="opacity:.4" disabled>Reset HWID</button>
+                  <button class="btn btn-ghost btn-xs" onclick="toast('Key extended', 'success')">Extend</button>
+                  <button class="btn btn-danger btn-xs" onclick="revokeKey(this)">Revoke</button>
+                </div></td>
+              </tr>
+              <tr style="opacity:.5">
+                <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px">NEXC-D001-AA20-5C3F</code></td>
+                <td>AimScript Pro</td><td><span class="badge badge-blue">7-Day</span></td><td><span class="badge badge-red">Revoked</span></td>
+                <td><span class="badge badge-gray">Cleared</span></td><td>—</td><td>Chargeback</td>
+                <td><div class="td-actions"><button class="btn btn-ghost btn-xs" disabled>Revoked</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:14px 20px;border-top:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-muted)">
+          <span>Showing 5 of 1,247 keys</span>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-secondary btn-xs">← Prev</button>
+            <button class="btn btn-secondary btn-xs">Next →</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══════════════════════════════════
+         PAGE: PROJECTS
+    ═══════════════════════════════════ -->
+    <main class="page" id="page-projects">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Projects</div>
+          <div class="page-subtitle">Group scripts into hubs with a shared whitelist</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-newproject')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Project
+        </button>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="border-color:rgba(47,107,255,0.2)">
+          <div class="card-header">
+            <div>
+              <div style="font-size:15px;font-weight:700">Combat Suite</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">2 scripts · 1,202 keys</div>
+            </div>
+            <span class="badge badge-green">Active</span>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom:14px">
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Scripts in this project</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg-input);border-radius:6px;border:1px solid var(--border-subtle)">
+                  <span style="font-size:13px;font-weight:500">AimScript Pro</span>
+                  <span class="badge badge-green">Live</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg-input);border-radius:6px;border:1px solid var(--border-subtle)">
+                  <span style="font-size:13px;font-weight:500">ESP Utility</span>
+                  <span class="badge badge-green">Live</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;font-size:12px;text-align:center">
+              <div style="background:var(--bg-input);border-radius:6px;padding:8px;border:1px solid var(--border-subtle)"><div style="font-weight:700;font-size:16px;color:var(--text-primary)">80,750</div><div style="color:var(--text-muted)">Executions</div></div>
+              <div style="background:var(--bg-input);border-radius:6px;padding:8px;border:1px solid var(--border-subtle)"><div style="font-weight:700;font-size:16px;color:var(--text-primary)">1,202</div><div style="color:var(--text-muted)">Keys</div></div>
+              <div style="background:var(--bg-input);border-radius:6px;padding:8px;border:1px solid var(--border-subtle)"><div style="font-weight:700;font-size:16px;color:var(--text-primary)">2</div><div style="color:var(--text-muted)">Scripts</div></div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center">Manage</button>
+              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center">View Keys</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div style="font-size:15px;font-weight:700">Free Hub</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">1 script · 45 keys</div>
+            </div>
+            <span class="badge badge-green">Active</span>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom:14px">
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Scripts in this project</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg-input);border-radius:6px;border:1px solid var(--border-subtle)">
+                  <span style="font-size:13px;font-weight:500">Misc Hub v3</span>
+                  <span class="badge badge-green">Live</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;font-size:12px;text-align:center">
+              <div style="background:var(--bg-input);border-radius:6px;padding:8px;border:1px solid var(--border-subtle)"><div style="font-weight:700;font-size:16px;color:var(--text-primary)">4,170</div><div style="color:var(--text-muted)">Executions</div></div>
+              <div style="background:var(--bg-input);border-radius:6px;padding:8px;border:1px solid var(--border-subtle)"><div style="font-weight:700;font-size:16px;color:var(--text-primary)">45</div><div style="color:var(--text-muted)">Keys</div></div>
+              <div style="background:var(--bg-input);border-radius:6px;padding:8px;border:1px solid var(--border-subtle)"><div style="font-weight:700;font-size:16px;color:var(--text-primary)">1</div><div style="color:var(--text-muted)">Scripts</div></div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center">Manage</button>
+              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center">View Keys</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══════════════════════════════════
+         PAGE: WEBHOOKS
+    ═══════════════════════════════════ -->
+    <main class="page" id="page-webhooks">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Webhooks</div>
+          <div class="page-subtitle">Receive real-time events from NexCode to your endpoints</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-addwebhook')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Endpoint
+        </button>
+      </div>
+
+      <!-- Endpoint Cards -->
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+        <div class="card" style="border-color:rgba(47,107,255,0.2)">
+          <div style="padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);flex-shrink:0"></div>
+              <div>
+                <div style="font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--text-accent)">https://discord.com/api/webhooks/11234.../abcdef</div>
+                <div style="font-size:11.5px;color:var(--text-muted);margin-top:2px">Last delivery: 4 min ago · 99.1% success rate</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm" onclick="toast('Test event sent', 'info')">Test</button>
+              <button class="btn btn-secondary btn-sm" onclick="openModal('modal-editwebhook')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="toast('Endpoint removed', 'error')">Remove</button>
+            </div>
+          </div>
+          <div style="padding:0 20px 16px;display:flex;gap:6px;flex-wrap:wrap">
+            <span class="badge badge-blue">key.created</span>
+            <span class="badge badge-blue">key.validated</span>
+            <span class="badge badge-blue">key.revoked</span>
+            <span class="badge badge-blue">key.expired</span>
+            <span class="badge badge-blue">key.hwid_reset</span>
+            <span class="badge badge-blue">validation.failed</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 8px var(--yellow);flex-shrink:0"></div>
+              <div>
+                <div style="font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--text-accent)">https://myserver.com/nexcode/events</div>
+                <div style="font-size:11.5px;color:var(--text-muted);margin-top:2px">Last delivery: 2h ago · 87.4% success rate</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm" onclick="toast('Test event sent', 'info')">Test</button>
+              <button class="btn btn-secondary btn-sm" onclick="openModal('modal-editwebhook')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="toast('Endpoint removed', 'error')">Remove</button>
+            </div>
+          </div>
+          <div style="padding:0 20px 16px;display:flex;gap:6px;flex-wrap:wrap">
+            <span class="badge badge-blue">key.validated</span>
+            <span class="badge badge-blue">validation.failed</span>
+            <span class="badge badge-blue">subscription.renewed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Log -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Delivery Log</span>
+          <button class="btn btn-ghost btn-sm">Clear failed</button>
+        </div>
+        <div>
+          <div class="webhook-event">
+            <div class="webhook-status-dot ok"></div>
+            <span class="webhook-code ok">200</span>
+            <span style="flex:1;color:var(--text-secondary)">key.validated — NEXC-A4F2-BB91</span>
+            <span style="font-size:11px;color:var(--text-muted)">2 min ago</span>
+            <button class="btn btn-ghost btn-xs">View</button>
+          </div>
+          <div class="webhook-event">
+            <div class="webhook-status-dot ok"></div>
+            <span class="webhook-code ok">200</span>
+            <span style="flex:1;color:var(--text-secondary)">key.created — NEXC-F812-3A09</span>
+            <span style="font-size:11px;color:var(--text-muted)">11 min ago</span>
+            <button class="btn btn-ghost btn-xs">View</button>
+          </div>
+          <div class="webhook-event">
+            <div class="webhook-status-dot fail"></div>
+            <span class="webhook-code fail">503</span>
+            <span style="flex:1;color:var(--text-secondary)">key.validated — NEXC-CC31-9E2A</span>
+            <span style="font-size:11px;color:var(--text-muted)">2h ago</span>
+            <button class="btn btn-ghost btn-xs" onclick="toast('Event replayed', 'info')">Replay</button>
+          </div>
+          <div class="webhook-event">
+            <div class="webhook-status-dot ok"></div>
+            <span class="webhook-code ok">200</span>
+            <span style="flex:1;color:var(--text-secondary)">key.hwid_reset — NEXC-CC31-9E2A</span>
+            <span style="font-size:11px;color:var(--text-muted)">34 min ago</span>
+            <button class="btn btn-ghost btn-xs">View</button>
+          </div>
+          <div class="webhook-event">
+            <div class="webhook-status-dot ok"></div>
+            <span class="webhook-code ok">200</span>
+            <span style="flex:1;color:var(--text-secondary)">validation.failed — unknown key attempt</span>
+            <span style="font-size:11px;color:var(--text-muted)">1h ago</span>
+            <button class="btn btn-ghost btn-xs">View</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══════════════════════════════════
+         PAGE: API KEYS
+    ═══════════════════════════════════ -->
+    <main class="page" id="page-api">
+      <div class="page-header">
+        <div>
+          <div class="page-title">API Keys</div>
+          <div class="page-subtitle">Programmatic access to NexCode — scoped, rotatable</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-newapi')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create API Key
+        </button>
+      </div>
+
+      <div class="info-box" style="margin-bottom:20px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        API keys are only shown once at creation. Store them securely — we cannot display them again.
+      </div>
+
+      <div class="card" style="margin-bottom:20px">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Key Preview</th><th>Scopes</th><th>Last Used</th><th>Created</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Production</td>
+                <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted)">nxc_live_••••••••••••A8F2</code></td>
+                <td><div class="scope-list"><span class="scope-tag">keys:read</span><span class="scope-tag">keys:write</span><span class="scope-tag">scripts:read</span></div></td>
+                <td>2 min ago</td><td>Jun 10, 2026</td>
+                <td><div class="td-actions">
+                  <button class="btn btn-ghost btn-xs" onclick="toast('API key rotated', 'success')">Rotate</button>
+                  <button class="btn btn-danger btn-xs" onclick="toast('API key revoked', 'error')">Revoke</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td>Discord Bot</td>
+                <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted)">nxc_live_••••••••••••3C91</code></td>
+                <td><div class="scope-list"><span class="scope-tag">keys:write</span><span class="scope-tag">hwid:reset</span></div></td>
+                <td>34 min ago</td><td>Jun 12, 2026</td>
+                <td><div class="td-actions">
+                  <button class="btn btn-ghost btn-xs" onclick="toast('API key rotated', 'success')">Rotate</button>
+                  <button class="btn btn-danger btn-xs" onclick="toast('API key revoked', 'error')">Revoke</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td>Read-only Monitor</td>
+                <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted)">nxc_live_••••••••••••F400</code></td>
+                <td><div class="scope-list"><span class="scope-tag">keys:read</span><span class="scope-tag">scripts:read</span><span class="scope-tag">webhooks:read</span></div></td>
+                <td>1h ago</td><td>Jul 1, 2026</td>
+                <td><div class="td-actions">
+                  <button class="btn btn-ghost btn-xs" onclick="toast('API key rotated', 'success')">Rotate</button>
+                  <button class="btn btn-danger btn-xs" onclick="toast('API key revoked', 'error')">Revoke</button>
+                </div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Code snippet -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'tab-node')">Node.js</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-python')">Python</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-go')">Go</button>
+      </div>
+
+      <div id="tab-node" class="code-block" style="position:relative">
+<button class="btn btn-secondary btn-xs copy-btn" style="position:absolute;top:10px;right:10px" onclick="toast('Copied!','success')">Copy</button>
+<span class="code-comment">// npm install @nexcode/sdk</span>
+<span class="code-keyword">import</span> { NexCode } <span class="code-keyword">from</span> <span class="code-string">'@nexcode/sdk'</span>;
+
+<span class="code-keyword">const</span> client = <span class="code-keyword">new</span> <span class="code-func">NexCode</span>({ apiKey: <span class="code-string">'nxc_live_...'</span> });
+
+<span class="code-comment">// Validate a key</span>
+<span class="code-keyword">const</span> result = <span class="code-keyword">await</span> client.keys.<span class="code-func">validate</span>({
+  key: <span class="code-string">'NEXC-A4F2-BB91-C3D1'</span>,
+  hwid: <span class="code-string">'HWID-of-machine'</span>,
+  scriptId: <span class="code-string">'script_abc123'</span>
+});
+
+<span class="code-keyword">if</span> (result.valid) {
+  console.<span class="code-func">log</span>(<span class="code-string">'✓ Key valid'</span>, result.key);
+} <span class="code-keyword">else</span> {
+  console.<span class="code-func">log</span>(<span class="code-string">'✗ Reason:'</span>, result.reason);
+}</div>
+
+      <div id="tab-python" class="code-block" style="display:none;position:relative">
+<button class="btn btn-secondary btn-xs copy-btn" style="position:absolute;top:10px;right:10px" onclick="toast('Copied!','success')">Copy</button>
+<span class="code-comment"># pip install nexcode</span>
+<span class="code-keyword">from</span> nexcode <span class="code-keyword">import</span> NexCode
+
+client = <span class="code-func">NexCode</span>(api_key=<span class="code-string">"nxc_live_..."</span>)
+
+<span class="code-comment"># Generate a key</span>
+key = client.keys.<span class="code-func">create</span>(
+    script_id=<span class="code-string">"script_abc123"</span>,
+    key_type=<span class="code-string">"day_locked"</span>,
+    days=<span class="code-num">30</span>,
+    note=<span class="code-string">"Discord sale"</span>
+)
+<span class="code-func">print</span>(key.key)  <span class="code-comment"># NEXC-XXXX-XXXX-XXXX</span></div>
+
+      <div id="tab-go" class="code-block" style="display:none;position:relative">
+<button class="btn btn-secondary btn-xs copy-btn" style="position:absolute;top:10px;right:10px" onclick="toast('Copied!','success')">Copy</button>
+<span class="code-keyword">import</span> <span class="code-string">"github.com/nexcode/nexcode-go"</span>
+
+client := nexcode.<span class="code-func">New</span>(<span class="code-string">"nxc_live_..."</span>)
+
+result, err := client.Keys.<span class="code-func">Validate</span>(context.<span class="code-func">Background</span>(), nexcode.ValidateParams{
+    Key:      <span class="code-string">"NEXC-A4F2-BB91-C3D1"</span>,
+    HWID:     <span class="code-string">"HWID-of-machine"</span>,
+    ScriptID: <span class="code-string">"script_abc123"</span>,
+})
+<span class="code-keyword">if</span> err != <span class="code-keyword">nil</span> { <span class="code-func">log.Fatal</span>(err) }
+fmt.<span class="code-func">Println</span>(result.Valid)</div>
+    </main>
+
+    <!-- ═══════════════════════════════════
+         PAGE: DISCORD BOT
+    ═══════════════════════════════════ -->
+    <main class="page" id="page-discord">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Discord Bot</div>
+          <div class="page-subtitle">Manage keys and users directly from your Discord server</div>
+        </div>
+        <button class="btn btn-primary" onclick="toast('Bot invite link copied', 'success')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Copy Invite Link
+        </button>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Bot Status</span></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)"></div>
+              <span style="font-size:13px;font-weight:600;color:var(--green)">Connected to NexCode Hub</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Server</span><span style="font-weight:500">NexCode Hub</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Members</span><span style="font-weight:500">1,420</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Commands used today</span><span style="font-weight:500">214</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Uptime</span><span style="font-weight:500;color:var(--green)">99.97%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="card-title">Role Configuration</span></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Manager Role (can run /whitelist, /revoke)</label>
+              <input class="form-input" value="@Moderator" placeholder="@RoleName">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Buyer Role (auto-assigned on whitelist)</label>
+              <input class="form-input" value="@Customer" placeholder="@RoleName">
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="toast('Role config saved', 'success')">Save roles</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Commands table -->
+      <div class="card">
+        <div class="card-header"><span class="card-title">Bot Commands</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th><th>Who can use</th></tr></thead>
+            <tbody>
+              <tr><td><code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-bright)">/whitelist</code></td><td style="color:var(--text-secondary)">Add a user to the whitelist by Discord ID or @mention</td><td><span class="badge badge-yellow">Manager</span></td></tr>
+              <tr><td><code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-bright)">/revoke</code></td><td style="color:var(--text-secondary)">Revoke a user's key immediately</td><td><span class="badge badge-yellow">Manager</span></td></tr>
+              <tr><td><code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-bright)">/extend</code></td><td style="color:var(--text-secondary)">Add days to a user's existing key</td><td><span class="badge badge-yellow">Manager</span></td></tr>
+              <tr><td><code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-bright)">/force-resethwid</code></td><td style="color:var(--text-secondary)">Force HWID reset on any key (manager override)</td><td><span class="badge badge-yellow">Manager</span></td></tr>
+              <tr><td><code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-bright)">/resethwid</code></td><td style="color:var(--text-secondary)">Reset HWID on your own key (self-service)</td><td><span class="badge badge-gray">Everyone</span></td></tr>
+              <tr><td><code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-bright)">/redeem</code></td><td style="color:var(--text-secondary)">Redeem a key and link it to your Discord account</td><td><span class="badge badge-gray">Everyone</span></td></tr>
+              <tr><td><code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-bright)">/getrole</code></td><td style="color:var(--text-secondary)">Check your current plan role and key status</td><td><span class="badge badge-gray">Everyone</span></td></tr>
+              <tr><td><code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-bright)">/script</code></td><td style="color:var(--text-secondary)">Get the loader link for a script you own access to</td><td><span class="badge badge-gray">Everyone</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══════════════════════════════════
+         PAGE: SETTINGS
+    ═══════════════════════════════════ -->
+    <main class="page" id="page-settings">
+      <div class="page-header">
+        <div><div class="page-title">Settings</div><div class="page-subtitle">Account, security, and billing preferences</div></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'stab-account')">Account</button>
+        <button class="tab-btn" onclick="switchTab(this,'stab-security')">Security</button>
+        <button class="tab-btn" onclick="switchTab(this,'stab-billing')">Billing</button>
+        <button class="tab-btn" onclick="switchTab(this,'stab-danger')">Danger Zone</button>
+      </div>
+
+      <div id="stab-account">
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><span class="card-title">Profile</span></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Display Name</label><input class="form-input" value="John Dev"></div>
+              <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="john@example.com" type="email"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Discord ID (for bot integration)</label><input class="form-input" placeholder="Your Discord user ID" value="291847362912"></div>
+            <button class="btn btn-primary btn-sm" onclick="toast('Profile saved', 'success')">Save changes</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="stab-security" style="display:none">
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><span class="card-title">Change Password</span></div>
+          <div class="card-body">
+            <div class="form-group"><label class="form-label">Current Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">New Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+              <div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="toast('Password updated', 'success')">Update password</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Active Sessions</span></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-subtle)">
+              <div><div style="font-size:13px;font-weight:500">Chrome · Android (OnePlus)</div><div style="font-size:11.5px;color:var(--text-muted)">Current session · Last active now</div></div>
+              <span class="badge badge-green">This device</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
+              <div><div style="font-size:13px;font-weight:500">Chrome · macOS</div><div style="font-size:11.5px;color:var(--text-muted)">Last active 2 days ago</div></div>
+              <button class="btn btn-danger btn-xs" onclick="toast('Session revoked', 'error')">Revoke</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="stab-billing" style="display:none">
+        <div class="plan-banner" style="margin-bottom:20px">
+          <div class="plan-banner-info">
+            <div class="plan-banner-name">Pro Plan — $30/month</div>
+            <div class="plan-banner-desc">Next billing date: July 30, 2026</div>
+          </div>
+          <button class="btn btn-secondary btn-sm">Upgrade to Business</button>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Invoice History</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Plan</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>Jul 1, 2026</td><td>Pro</td><td>$30.00</td><td><span class="badge badge-green">Paid</span></td><td><button class="btn btn-ghost btn-xs">Download</button></td></tr>
+                <tr><td>Jun 1, 2026</td><td>Pro</td><td>$30.00</td><td><span class="badge badge-green">Paid</span></td><td><button class="btn btn-ghost btn-xs">Download</button></td></tr>
+                <tr><td>May 1, 2026</td><td>Starter</td><td>$15.00</td><td><span class="badge badge-green">Paid</span></td><td><button class="btn btn-ghost btn-xs">Download</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="stab-danger" style="display:none">
+        <div class="card" style="border-color:rgba(239,68,68,0.2)">
+          <div class="card-header"><span class="card-title" style="color:var(--red)">Danger Zone</span></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--red-dim);border-radius:8px;border:1px solid rgba(239,68,68,0.15);gap:16px;flex-wrap:wrap">
+              <div><div style="font-size:13px;font-weight:600">Kill All Scripts</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Immediately disables all scripts. All keys stop validating.</div></div>
+              <button class="btn btn-danger btn-sm" onclick="toast('All scripts disabled — confirm in email', 'error')">Kill All</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--red-dim);border-radius:8px;border:1px solid rgba(239,68,68,0.15);gap:16px;flex-wrap:wrap">
+              <div><div style="font-size:13px;font-weight:600">Revoke All Keys</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Immediately invalidates all 1,247 keys across all scripts.</div></div>
+              <button class="btn btn-danger btn-sm" onclick="toast('All keys revoked', 'error')">Revoke All</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--red-dim);border-radius:8px;border:1px solid rgba(239,68,68,0.15);gap:16px;flex-wrap:wrap">
+              <div><div style="font-size:13px;font-weight:600">Delete Account</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Permanently deletes your account and all data. This cannot be undone.</div></div>
+              <button class="btn btn-danger btn-sm" onclick="toast('Confirmation email sent', 'info')">Delete Account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div><!-- /main-content -->
+</div><!-- /dash-layout -->
+
+<!-- ═══════════════════════════════════
+     MODALS
+═══════════════════════════════════ -->
+
+<!-- Generate Key -->
+<div class="modal-overlay" id="modal-genkey" onclick="if(event.target===this)closeModal('modal-genkey')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Generate Key</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-genkey')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Script</label>
+        <select class="form-select"><option>AimScript Pro</option><option>ESP Utility</option><option>Misc Hub v3</option></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Key Type</label>
+          <select class="form-select" id="key-type-sel" onchange="toggleDays()">
+            <option value="lifetime">Lifetime</option>
+            <option value="day">Day-locked</option>
+            <option value="trial">Trial</option>
+            <option value="ffa">FFA (keyless)</option>
+          </select>
+        </div>
+        <div class="form-group" id="days-field">
+          <label class="form-label">Duration (days)</label>
+          <input class="form-input" type="number" value="30" min="1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+        <input class="form-input" placeholder="e.g. Discord purchase, VIP customer">
+      </div>
+      <div class="form-group">
+        <label class="form-label">HWID Policy</label>
+        <select class="form-select"><option>Lock on first execution</option><option>Lock immediately (require HWID now)</option><option>No HWID lock</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-genkey')">Cancel</button>
+      <button class="btn btn-primary" onclick="doGenKey()">Generate Key</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Generate -->
+<div class="modal-overlay" id="modal-bulkgen" onclick="if(event.target===this)closeModal('modal-bulkgen')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Bulk Generate Keys</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-bulkgen')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Script</label>
+        <select class="form-select"><option>AimScript Pro</option><option>ESP Utility</option><option>Misc Hub v3</option></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Number of keys</label>
+          <input class="form-input" type="number" value="50" min="1" max="500">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Key Type</label>
+          <select class="form-select"><option>Lifetime</option><option>30-Day</option><option>7-Day</option><option>Trial</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Export Format</label>
+        <select class="form-select"><option>TXT (one per line)</option><option>JSON</option><option>CSV</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-bulkgen')">Cancel</button>
+      <button class="btn btn-primary" onclick="doBulkGen()">Generate &amp; Export</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Script -->
+<div class="modal-overlay" id="modal-newscript" onclick="if(event.target===this)closeModal('modal-newscript')">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <span class="modal-title">New Script</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-newscript')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Script Name</label><input class="form-input" placeholder="e.g. AimScript Pro"></div>
+      <div class="form-group">
+        <label class="form-label">Project</label>
+        <select class="form-select"><option>Combat Suite</option><option>Free Hub</option><option>No project</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Upload Source (.lua)</label>
+        <div style="border:1px dashed var(--border);border-radius:var(--radius-sm);padding:24px;text-align:center;background:var(--bg-input);cursor:pointer" onclick="toast('File picker opened','info')">
+          <div style="font-size:13px;color:var(--text-muted)">Click to upload or drag & drop<br><span style="font-size:11.5px">.lua files only</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-newscript')">Cancel</button>
+      <button class="btn btn-primary" onclick="toast('Script uploaded and queued for compile','success');closeModal('modal-newscript')">Upload &amp; Compile</button>
+    </div>
+  </div>
+</div>
+
+<!-- Script Protection Settings Modal -->
+<div class="modal-overlay" id="modal-settings-script" onclick="if(event.target===this)closeModal('modal-settings-script')">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <span class="modal-title">Protection Settings — AimScript Pro</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-settings-script')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px">Optimization Level</div>
+      <div class="opt-levels" style="margin-bottom:20px">
+        <div class="opt-level"><div class="opt-level-name" style="color:var(--green)">Fast</div><div class="opt-level-desc">Minimal VM, max speed</div></div>
+        <div class="opt-level selected"><div class="opt-level-name">Balanced</div><div class="opt-level-desc">Security + performance</div></div>
+        <div class="opt-level"><div class="opt-level-name" style="color:var(--red)">Max</div><div class="opt-level-desc">Full protection, slower load</div></div>
+      </div>
+
+      <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px">Protection Layers</div>
+
+      <div class="protect-option enabled">
+        <div class="protect-info"><div class="protect-name">Custom VM Architecture</div><div class="protect-desc">Randomized opcode set per compile — no two outputs identical</div></div>
+        <div class="toggle on"></div>
+      </div>
+      <div class="protect-option enabled">
+        <div class="protect-info"><div class="protect-name">Onion-Ring Defense</div><div class="protect-desc">Layered execution rings — each layer must be broken independently</div></div>
+        <div class="toggle on"></div>
+      </div>
+      <div class="protect-option enabled">
+        <div class="protect-info"><div class="protect-name">Control Flow Scrambling</div><div class="protect-desc">False execution paths and dead ends confuse static analysis</div></div>
+        <div class="toggle on"></div>
+      </div>
+      <div class="protect-option enabled">
+        <div class="protect-info"><div class="protect-name">Bytecode Mutation</div><div class="protect-desc">All variable names, parameters, and debug info stripped</div></div>
+        <div class="toggle on"></div>
+      </div>
+      <div class="protect-option">
+        <div class="protect-info"><div class="protect-name">Anti-Decompiler Injection</div><div class="protect-desc">Injected patterns crash unluac and Luau decompilers</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="protect-option enabled">
+        <div class="protect-info"><div class="protect-name">Anti-Tamper Hooks</div><div class="protect-desc">Detects memory modification — compatible with Lune, Luau, LuaJIT</div></div>
+        <div class="toggle on"></div>
+      </div>
+      <div class="protect-option">
+        <div class="protect-info"><div class="protect-name">VM Compression</div><div class="protect-desc">Compresses output — requires loadstring on execution platform</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="protect-option">
+        <div class="protect-info"><div class="protect-name">Constant Optimization</div><div class="protect-desc">Merges duplicate string/number tables, reduces file size</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="protect-option">
+        <div class="protect-info"><div class="protect-name">Hardcode Globals</div><div class="protect-desc">Localizes _G lookups — improves runtime performance</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="protect-option">
+        <div class="protect-info"><div class="protect-name">Static Environment</div><div class="protect-desc">Skips fallback env checks when environment is known-static</div></div>
+        <div class="toggle"></div>
+      </div>
+
+      <div style="margin-top:20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px">Active Macros</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span class="macro-pill">NXC_ENCFUNC</span>
+        <span class="macro-pill">NXC_ENCSTR</span>
+        <span class="macro-pill">NXC_JUNK</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-settings-script')">Cancel</button>
+      <button class="btn btn-primary" onclick="toast('Settings saved — recompile to apply','success');closeModal('modal-settings-script')">Save &amp; Recompile</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Webhook -->
+<div class="modal-overlay" id="modal-addwebhook" onclick="if(event.target===this)closeModal('modal-addwebhook')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Add Webhook Endpoint</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-addwebhook')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Endpoint URL</label><input class="form-input" placeholder="https://your-server.com/webhook" type="url"></div>
+      <div class="form-group">
+        <label class="form-label">Events to send</label>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+          <label class="toggle-wrap"><div class="toggle on"></div><span class="toggle-label">key.created</span></label>
+          <label class="toggle-wrap"><div class="toggle on"></div><span class="toggle-label">key.validated</span></label>
+          <label class="toggle-wrap"><div class="toggle on"></div><span class="toggle-label">key.revoked</span></label>
+          <label class="toggle-wrap"><div class="toggle on"></div><span class="toggle-label">key.expired</span></label>
+          <label class="toggle-wrap"><div class="toggle"></div><span class="toggle-label">key.hwid_reset</span></label>
+          <label class="toggle-wrap"><div class="toggle"></div><span class="toggle-label">validation.failed</span></label>
+          <label class="toggle-wrap"><div class="toggle"></div><span class="toggle-label">subscription.renewed</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-addwebhook')">Cancel</button>
+      <button class="btn btn-primary" onclick="toast('Webhook endpoint added','success');closeModal('modal-addwebhook')">Add Endpoint</button>
+    </div>
+  </div>
+</div>
+
+<!-- New API Key -->
+<div class="modal-overlay" id="modal-newapi" onclick="if(event.target===this)closeModal('modal-newapi')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Create API Key</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-newapi')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Key Name</label><input class="form-input" placeholder="e.g. Production, Discord Bot"></div>
+      <div class="form-group">
+        <label class="form-label">Scopes</label>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+          <label class="toggle-wrap"><div class="toggle on"></div><span class="toggle-label" style="font-family:'JetBrains Mono',monospace;font-size:12px">keys:read</span></label>
+          <label class="toggle-wrap"><div class="toggle on"></div><span class="toggle-label" style="font-family:'JetBrains Mono',monospace;font-size:12px">keys:write</span></label>
+          <label class="toggle-wrap"><div class="toggle"></div><span class="toggle-label" style="font-family:'JetBrains Mono',monospace;font-size:12px">scripts:read</span></label>
+          <label class="toggle-wrap"><div class="toggle"></div><span class="toggle-label" style="font-family:'JetBrains Mono',monospace;font-size:12px">scripts:compile</span></label>
+          <label class="toggle-wrap"><div class="toggle"></div><span class="toggle-label" style="font-family:'JetBrains Mono',monospace;font-size:12px">hwid:reset</span></label>
+          <label class="toggle-wrap"><div class="toggle"></div><span class="toggle-label" style="font-family:'JetBrains Mono',monospace;font-size:12px">webhooks:read</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-newapi')">Cancel</button>
+      <button class="btn btn-primary" onclick="toast('API key created — copy it now, won\'t show again','success');closeModal('modal-newapi')">Create Key</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Project -->
+<div class="modal-overlay" id="modal-newproject" onclick="if(event.target===this)closeModal('modal-newproject')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">New Project</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-newproject')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" placeholder="e.g. Combat Suite, Free Hub"></div>
+      <div class="form-group"><label class="form-label">Description <span style="color:var(--text-muted);font-weight:400">(optional)</span></label><input class="form-input" placeholder="Brief description of this project"></div>
+      <div class="form-group">
+        <label class="form-label">Add Scripts</label>
+        <select class="form-select"><option>AimScript Pro</option><option>ESP Utility</option><option>Misc Hub v3</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-newproject')">Cancel</button>
+      <button class="btn btn-primary" onclick="toast('Project created','success');closeModal('modal-newproject')">Create Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container"></div>
+
+<script src="js/dashboard.js"></script>
+<script>
+// Tab switching
+function switchTab(btn, tabId) {
+  const allTabs = btn.closest('.tabs').nextElementSibling;
+  // find all sibling tab contents
+  btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // find tab content siblings
+  let sib = btn.closest('.tabs').nextElementSibling;
+  while (sib) {
+    if (sib.id && sib.id.startsWith(tabId.split('-')[0] + '-')) {
+      sib.style.display = 'none';
+    }
+    sib = sib.nextElementSibling;
+  }
+  document.getElementById(tabId).style.display = '';
+}
+
+// Settings tabs
+document.querySelectorAll('#page-settings .tab-btn').forEach(btn => {
+  btn.onclick = function() {
+    document.querySelectorAll('#page-settings .tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ['stab-account','stab-security','stab-billing','stab-danger'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    const target = btn.textContent.trim().toLowerCase().replace(' ','');
+    const map = {'account':'stab-account','security':'stab-security','billing':'stab-billing','dangerzone':'stab-danger'};
+    const el = document.getElementById(map[target]);
+    if (el) el.style.display = '';
+  };
+});
+
+// API tabs
+document.querySelectorAll('#page-api .tab-btn').forEach(btn => {
+  btn.onclick = function() {
+    document.querySelectorAll('#page-api .tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ['tab-node','tab-python','tab-go'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    const map = {'node.js':'tab-node','python':'tab-python','go':'tab-go'};
+    const el = document.getElementById(map[btn.textContent.trim().toLowerCase()]);
+    if (el) el.style.display = '';
+  };
+});
+
+// Key generation
+function doGenKey() {
+  const key = genKey();
+  const tbody = document.getElementById('key-tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-accent)">${key}</code></td>
+    <td>AimScript Pro</td><td><span class="badge badge-purple">Lifetime</span></td>
+    <td><span class="badge badge-green">Active</span></td>
+    <td><span class="badge badge-gray">Unlocked</span></td><td>Never</td><td>—</td>
+    <td><div class="td-actions">
+      <button class="btn btn-ghost btn-xs" onclick="toast('HWID reset','success')">Reset HWID</button>
+      <button class="btn btn-ghost btn-xs" onclick="toast('Extended 30d','success')">Extend</button>
+      <button class="btn btn-danger btn-xs" onclick="revokeKey(this)">Revoke</button>
+    </div></td>`;
+  tbody.insertBefore(tr, tbody.firstChild);
+  closeModal('modal-genkey');
+  toast(`Key generated: ${key}`, 'success');
+}
+
+function doBulkGen() {
+  closeModal('modal-bulkgen');
+  toast('50 keys generated and exported as TXT', 'success');
+}
+
+function revokeKey(btn) {
+  const row = btn.closest('tr');
+  row.style.opacity = '0.5';
+  row.querySelector('.badge-green, .badge-yellow')?.classList?.replace('badge-green','badge-red');
+  btn.textContent = 'Revoked';
+  btn.disabled = true;
+  toast('Key revoked', 'error');
+}
+
+function toggleDays() {
+  const sel = document.getElementById('key-type-sel');
+  const df = document.getElementById('days-field');
+  df.style.display = (sel.value === 'lifetime' || sel.value === 'ffa') ? 'none' : '';
+}
+
+// Counter animation on overview
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-target]').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    const duration = 1200;
+    const start = performance.now();
+    const update = now => {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(ease * target).toLocaleString();
+      if (p < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+  });
+});
+</script>
+</body>
+</html>
