@@ -1,93 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reset password — NexCode</title>
-<link rel="stylesheet" href="../../css/base.css"/>
-<style>
-body{display:flex;flex-direction:column;min-height:100vh}
-.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:calc(var(--nav)+32px) 20px 60px;position:relative;z-index:2}
-.auth-card{width:100%;max-width:440px;background:rgba(255,255,255,.035);border:1px solid var(--b2);border-radius:var(--rxl);padding:clamp(28px,5vw,44px);box-shadow:0 40px 100px rgba(0,0,0,.6)}
-.auth-logo{display:flex;align-items:center;gap:9px;font-size:20px;font-weight:800;letter-spacing:-.05em;margin-bottom:28px;justify-content:center;text-decoration:none;color:inherit}
-.auth-logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#2f6bff,#1d4ed8);display:flex;align-items:center;justify-content:center}
-.auth-logo-mark svg{width:18px;height:18px}
-.auth-logo em{background:linear-gradient(120deg,var(--a2),var(--a3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
-h1{font-size:1.5rem;font-weight:900;letter-spacing:-.035em;margin-bottom:8px;text-align:center}
-.auth-sub{font-size:14px;color:var(--t2);text-align:center;margin-bottom:28px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto}
-.fg{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
-.fl{font-size:12.5px;font-weight:700;color:var(--t2)}
-.fi{width:100%;padding:13px 15px;background:rgba(0,0,0,.32);border:1px solid var(--b2);border-radius:var(--rm);color:var(--t1);font-size:14.5px;outline:none;transition:border-color .2s,box-shadow .2s}
-.fi:focus{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 3px rgba(47,107,255,.1)}
-.fi::placeholder{color:var(--t3)}
-.submit-btn{width:100%;padding:14px;font-size:15px;font-weight:700}
-.err-msg{font-size:13px;color:var(--red);background:rgba(240,82,82,.08);border:1px solid rgba(240,82,82,.2);border-radius:10px;padding:11px 14px;display:none;margin-bottom:14px}
-.success-box{display:none;text-align:center;padding:8px 0}
-.success-ic{font-size:40px;margin-bottom:14px}
-.success-box h2{font-size:1.2rem;font-weight:900;margin-bottom:10px;background:linear-gradient(130deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.success-box p{font-size:13.5px;color:var(--t2);line-height:1.7;max-width:300px;margin:0 auto 22px}
-.back-link{display:flex;justify-content:center;margin-top:22px;font-size:13.5px}
-.back-link a{color:var(--a2);font-weight:600;display:flex;align-items:center;gap:6px}
-</style>
+<link rel="stylesheet" href="../../css/auth.css">
 </head>
 <body>
-<main class="auth-wrap">
-  <div class="auth-card glass">
-    <a href="../../index.html" class="auth-logo">
-      <div class="auth-logo-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.5 9 9.5 5.2-1 9-4.5 9-9.5v-6L12 2z" fill="#fff" fill-opacity=".95"/><path d="M9 11.5l2 2 4-4.5" stroke="#2f6bff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      Nex<em>Code</em>
-    </a>
-    <h1>Reset password</h1>
-    <p class="auth-sub">Enter your email and we'll send you a link to set a new password.</p>
+<div class="aurora"></div>
 
-    <div class="err-msg" id="err-msg"></div>
+<div class="auth-wrap">
+  <a href="../../index.html" class="auth-logo">
+    <div class="logo-mark">NX</div>
+    <span class="logo-text">Nex<span>Code</span></span>
+  </a>
 
-    <div id="form-body">
-      <div class="fg">
-        <label class="fl" for="r-email">Email address</label>
-        <input class="fi" id="r-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+  <!-- STATE 1: request a reset link -->
+  <div class="auth-card" id="request-card">
+    <div class="auth-title">Reset your password</div>
+    <div class="auth-subtitle">We'll email you a link to set a new one</div>
+
+    <div id="alert-box-request"></div>
+
+    <form id="request-form">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="email" placeholder="you@example.com" required autocomplete="email">
       </div>
-      <button class="btn btn-primary submit-btn" id="reset-btn">Send reset link</button>
-    </div>
+      <button class="btn btn-primary" type="submit" id="request-btn">Send reset link</button>
+    </form>
 
-    <div class="success-box" id="success-box">
-      <div class="success-ic">📩</div>
-      <h2>Check your inbox</h2>
-      <p>If an account exists for that email, a reset link is on its way. It expires in 1 hour.</p>
-      <a href="login.html" class="btn btn-ghost btn-sm" style="margin:0 auto">Back to login</a>
-    </div>
-
-    <div class="back-link" id="back-link">
+    <div class="auth-links">
       <a href="login.html">← Back to sign in</a>
     </div>
   </div>
-</main>
+
+  <!-- STATE 2: set new password (shown when a recovery token is in the URL) -->
+  <div class="auth-card" id="newpw-card" style="display:none">
+    <div class="auth-title">Set a new password</div>
+    <div class="auth-subtitle">Choose something you haven't used before</div>
+
+    <div id="alert-box-newpw"></div>
+
+    <form id="newpw-form">
+      <div class="form-group">
+        <label class="form-label">New password</label>
+        <input class="form-input" type="password" id="newPassword" placeholder="At least 8 characters" required minlength="8" autocomplete="new-password">
+        <div class="pw-strength">
+          <div class="pw-bar" id="bar1"></div>
+          <div class="pw-bar" id="bar2"></div>
+          <div class="pw-bar" id="bar3"></div>
+          <div class="pw-bar" id="bar4"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm new password</label>
+        <input class="form-input" type="password" id="confirmPassword" placeholder="Repeat password" required minlength="8" autocomplete="new-password">
+      </div>
+      <button class="btn btn-primary" type="submit" id="newpw-btn">Update password</button>
+    </form>
+  </div>
+
+  <!-- STATE 3: link expired/invalid -->
+  <div class="auth-card" id="expired-card" style="display:none">
+    <div class="status-icon-wrap"><div class="status-icon error">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div></div>
+    <div class="auth-title">Link expired</div>
+    <div class="auth-subtitle">This reset link is no longer valid. Request a new one below.</div>
+    <button class="btn btn-primary" onclick="showRequestCard()">Request new link</button>
+  </div>
+</div>
+
 <script>
 const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
-document.getElementById('reset-btn').addEventListener('click', async () => {
-  const btn   = document.getElementById('reset-btn');
-  const errEl = document.getElementById('err-msg');
-  const email = document.getElementById('r-email').value.trim();
-  errEl.style.display = 'none';
-  if (!email) { errEl.textContent='Enter your email address.'; errEl.style.display='block'; return; }
-  btn.disabled = true; btn.textContent = 'Sending…';
+const SUPABASE_URL = 'https://guejuktegklifjrdvfnp.supabase.co';
+// This is the public anon key — safe to expose client-side, do NOT put the service role key here
+const SUPABASE_ANON_KEY = 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE';
+
+function showAlert(boxId, msg, type = 'error') {
+  const icons = {
+    error: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
+  };
+  document.getElementById(boxId).innerHTML = `<div class="alert alert-${type}">${icons[type]}<span>${msg}</span></div>`;
+}
+
+function showRequestCard() {
+  document.getElementById('request-card').style.display = '';
+  document.getElementById('newpw-card').style.display = 'none';
+  document.getElementById('expired-card').style.display = 'none';
+}
+
+// ── Detect which state to show based on the URL ──
+// Supabase sends recovery links with tokens in the URL FRAGMENT (after #), e.g.:
+//   #access_token=xxx&refresh_token=xxx&type=recovery
+// or an error fragment if the link expired:
+//   #error=access_denied&error_code=otp_expired&error_description=...
+(function detectState() {
+  const hash = window.location.hash.substring(1);
+  const hashParams = new URLSearchParams(hash);
+
+  if (hashParams.get('error')) {
+    // Expired or invalid link
+    document.getElementById('request-card').style.display = 'none';
+    document.getElementById('newpw-card').style.display = 'none';
+    document.getElementById('expired-card').style.display = '';
+    return;
+  }
+
+  if (hashParams.get('type') === 'recovery' && hashParams.get('access_token')) {
+    // Valid recovery token — show the new password form
+    window.__recoveryAccessToken = hashParams.get('access_token');
+    document.getElementById('request-card').style.display = 'none';
+    document.getElementById('newpw-card').style.display = '';
+    document.getElementById('expired-card').style.display = 'none';
+    return;
+  }
+
+  // Default: show the request form
+  showRequestCard();
+})();
+
+// ── STATE 1: Request reset link ──
+document.getElementById('request-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const btn = document.getElementById('request-btn');
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Sending...';
+
   try {
-    await fetch(`${API}/auth/reset-password`, {
-      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email})
+    const res = await fetch(`${API}/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
     });
-    // Always show success (prevents email enumeration)
-    document.getElementById('form-body').style.display = 'none';
-    document.getElementById('back-link').style.display = 'none';
-    document.getElementById('success-box').style.display = 'block';
-  } catch {
-    errEl.textContent = 'Could not connect. Is the backend running?';
-    errEl.style.display = 'block';
-    btn.disabled = false; btn.textContent = 'Send reset link';
+
+    // Always show success even if email doesn't exist (prevents account enumeration)
+    showAlert('alert-box-request', 'If that email is registered, a reset link is on its way. Check your inbox.', 'success');
+    btn.textContent = 'Link sent ✓';
+    setTimeout(() => { btn.disabled = false; btn.textContent = 'Send reset link'; }, 5000);
+
+  } catch (err) {
+    showAlert('alert-box-request', 'Could not connect to backend. Is it running?', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Send reset link';
   }
 });
-document.addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('reset-btn').click(); });
+
+// ── STATE 2: Set new password ──
+const pwInput = document.getElementById('newPassword');
+pwInput.addEventListener('input', () => {
+  const val = pwInput.value;
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (val.length >= 12) score++;
+  if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+  if (/[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val)) score++;
+  const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
+  const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
+  bars.forEach((bar, i) => { bar.style.background = i < score ? colors[Math.max(score - 1, 0)] : 'var(--border-subtle)'; });
+});
+
+document.getElementById('newpw-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const newPassword = document.getElementById('newPassword').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const btn = document.getElementById('newpw-btn');
+
+  if (newPassword !== confirmPassword) {
+    showAlert('alert-box-newpw', 'Passwords do not match.', 'error');
+    return;
+  }
+  if (newPassword.length < 8) {
+    showAlert('alert-box-newpw', 'Password must be at least 8 characters.', 'error');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Updating...';
+
+  try {
+    // Call Supabase directly using the recovery access token from the URL fragment
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${window.__recoveryAccessToken}`
+      },
+      body: JSON.stringify({ password: newPassword })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showAlert('alert-box-newpw', data.msg || data.error_description || 'Could not update password.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Update password';
+      return;
+    }
+
+    showAlert('alert-box-newpw', 'Password updated — redirecting to sign in...', 'success');
+    setTimeout(() => { window.location.href = 'login.html?reset=1'; }, 1200);
+
+  } catch (err) {
+    showAlert('alert-box-newpw', 'Something went wrong. Try requesting a new link.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Update password';
+  }
+});
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="../../js/layout.js"></script>
 </body>
 </html>

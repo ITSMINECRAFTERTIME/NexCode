@@ -1,140 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sign in — NexCode</title>
-<link rel="stylesheet" href="../../css/base.css"/>
-<style>
-body{display:flex;flex-direction:column;min-height:100vh}
-.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:calc(var(--nav) + 32px) 20px 60px;position:relative;z-index:2}
-.auth-card{width:100%;max-width:440px;background:rgba(255,255,255,.035);border:1px solid var(--b2);border-radius:var(--rxl);padding:clamp(28px,5vw,44px);box-shadow:0 40px 100px rgba(0,0,0,.6)}
-.auth-logo{display:flex;align-items:center;gap:9px;font-size:20px;font-weight:800;letter-spacing:-.05em;margin-bottom:28px;justify-content:center;text-decoration:none;color:inherit}
-.auth-logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#2f6bff,#1d4ed8);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(47,107,255,.4)}
-.auth-logo-mark svg{width:18px;height:18px}
-.auth-logo em{background:linear-gradient(120deg,var(--a2),var(--a3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
-h1{font-size:1.55rem;font-weight:900;letter-spacing:-.035em;margin-bottom:6px;text-align:center}
-.auth-sub{font-size:14px;color:var(--t2);text-align:center;margin-bottom:28px}
-.fg{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
-.fl{font-size:12.5px;font-weight:700;color:var(--t2);display:flex;align-items:center;justify-content:space-between}
-.fl a{color:var(--a2);font-weight:600;font-size:12px;transition:color .14s}
-.fl a:hover{color:var(--t1)}
-.fi{width:100%;padding:13px 15px;background:rgba(0,0,0,.32);border:1px solid var(--b2);border-radius:var(--rm);color:var(--t1);font-size:14.5px;outline:none;transition:border-color .2s,box-shadow .2s}
-.fi:focus{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 3px rgba(47,107,255,.1)}
-.fi::placeholder{color:var(--t3)}
-.pw-wrap{position:relative}
-.pw-wrap .fi{padding-right:44px}
-.pw-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;display:flex;align-items:center}
-.pw-eye:hover{color:var(--t2)}
-.submit-btn{width:100%;padding:14px;margin-top:4px;font-size:15px;font-weight:700}
-.err-msg{font-size:13px;color:var(--red);background:rgba(240,82,82,.08);border:1px solid rgba(240,82,82,.2);border-radius:10px;padding:11px 14px;display:none;margin-bottom:14px;line-height:1.5}
-.auth-link{display:flex;justify-content:center;margin-top:22px;font-size:13.5px;color:var(--t3);gap:6px}
-.auth-link a{color:var(--a2);font-weight:600;transition:color .14s}
-.auth-link a:hover{color:var(--t1)}
-</style>
+<link rel="stylesheet" href="../../css/auth.css">
 </head>
 <body>
-<main class="auth-wrap">
-  <div class="auth-card glass">
-    <a href="../../index.html" class="auth-logo">
-      <div class="auth-logo-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.5 9 9.5 5.2-1 9-4.5 9-9.5v-6L12 2z" fill="#fff" fill-opacity=".95"/><path d="M9 11.5l2 2 4-4.5" stroke="#2f6bff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      Nex<em>Code</em>
-    </a>
-    <h1>Welcome back</h1>
-    <p class="auth-sub">Sign in to your NexCode dashboard.</p>
+<div class="aurora"></div>
 
-    <div class="err-msg" id="err-msg"></div>
+<div class="auth-wrap">
+  <a href="../../index.html" class="auth-logo">
+    <div class="logo-mark">NX</div>
+    <span class="logo-text">Nex<span>Code</span></span>
+  </a>
 
-    <div class="fg">
-      <label class="fl" for="l-email">Email</label>
-      <input class="fi" id="l-email" type="email" placeholder="you@example.com" autocomplete="email"/>
-    </div>
-    <div class="fg">
-      <label class="fl" for="l-password">
-        Password
-        <a href="reset.html">Forgot password?</a>
-      </label>
-      <div class="pw-wrap">
-        <input class="fi" id="l-password" type="password" placeholder="Your password" autocomplete="current-password"/>
-        <button type="button" class="pw-eye" id="pw-eye" aria-label="Toggle password">👁</button>
+  <div class="auth-card">
+    <div class="auth-title">Welcome back</div>
+    <div class="auth-subtitle">Sign in to your NexCode dashboard</div>
+
+    <div id="alert-box"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="email" placeholder="you@example.com" required autocomplete="email">
       </div>
-    </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+      </div>
 
-    <button class="btn btn-primary submit-btn" id="login-btn">
-      Sign in <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-left:4px"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+      <div style="text-align:right;margin-bottom:16px">
+        <a href="reset.html" style="color:var(--accent-bright);text-decoration:none;font-size:12.5px;font-weight:500">Forgot password?</a>
+      </div>
 
-    <div class="auth-link">
-      <span>Don't have an account?</span>
-      <a href="register.html">Create one free</a>
+      <button class="btn btn-primary" type="submit" id="submit-btn">Sign in</button>
+    </form>
+
+    <div class="auth-links">
+      Don't have an account? <a href="register.html">Create one</a>
     </div>
   </div>
-</main>
+</div>
 
 <script>
+// ── IMPORTANT: set this to your backend's Codespaces URL (port 3000) ──
 const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
 
-document.getElementById('pw-eye').addEventListener('click', () => {
-  const pw = document.getElementById('l-password');
-  pw.type = pw.type === 'password' ? 'text' : 'password';
-  document.getElementById('pw-eye').textContent = pw.type === 'password' ? '👁' : '🙈';
-});
+// ── IMPORTANT: dashboard lives in a SIBLING folder, not inside nexcode-final ──
+// nexcode-final/pages/auth/login.html  ->  ../../../nexcode-dashboard/index.html
+const DASHBOARD_URL = '../../../nexcode-dashboard/index.html';
 
-document.getElementById('login-btn').addEventListener('click', async () => {
-  const btn   = document.getElementById('login-btn');
-  const errEl = document.getElementById('err-msg');
-  errEl.style.display = 'none';
+const form = document.getElementById('login-form');
+const btn = document.getElementById('submit-btn');
+const alertBox = document.getElementById('alert-box');
 
-  const email    = document.getElementById('l-email').value.trim();
-  const password = document.getElementById('l-password').value;
+function showAlert(msg, type = 'error') {
+  const icons = {
+    error: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+    info: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+  };
+  alertBox.innerHTML = `<div class="alert alert-${type}">${icons[type]}<span>${msg}</span></div>`;
+}
 
-  if (!email || !password) {
-    errEl.textContent = 'Please enter your email and password.';
-    errEl.style.display = 'block';
-    return;
-  }
+// Check for redirect messages (e.g. coming from confirm.html or reset flow)
+const params = new URLSearchParams(window.location.search);
+if (params.get('confirmed') === '1') {
+  showAlert('Email confirmed — you can sign in now.', 'success');
+}
+if (params.get('reset') === '1') {
+  showAlert('Password updated — sign in with your new password.', 'success');
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
 
   btn.disabled = true;
-  btn.textContent = 'Signing in…';
+  btn.innerHTML = '<div class="spinner"></div> Signing in...';
+  alertBox.innerHTML = '';
 
   try {
-    const res  = await fetch(`${API}/auth/login`, {
-      method:  'POST',
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password })
     });
+
     const data = await res.json();
 
     if (!res.ok) {
-      errEl.textContent = data.error || 'Could not sign in. Please try again.';
-      errEl.style.display = 'block';
+      showAlert(data.error || 'Invalid email or password.', 'error');
       btn.disabled = false;
-      btn.innerHTML = 'Sign in <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-left:4px"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      btn.textContent = 'Sign in';
       return;
     }
 
-    // Store tokens so the dashboard can use them
-    localStorage.setItem('nxc_access',  data.accessToken);
-    localStorage.setItem('nxc_refresh', data.refreshToken);
-    localStorage.setItem('nxc_user',    JSON.stringify(data.user));
+    // Store session tokens
+    if (data.session) {
+      localStorage.setItem('nxc_access_token', data.session.access_token);
+      localStorage.setItem('nxc_refresh_token', data.session.refresh_token);
+    }
 
-    // Redirect to dashboard
-    window.location.href = '../../dashboard.html';
+    showAlert('Signed in — redirecting...', 'success');
+    setTimeout(() => { window.location.href = DASHBOARD_URL; }, 600);
 
   } catch (err) {
-    errEl.textContent = 'Could not connect to the server. Is the backend running?';
-    errEl.style.display = 'block';
+    showAlert('Could not connect to backend. Is it running?', 'error');
     btn.disabled = false;
     btn.textContent = 'Sign in';
   }
 });
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('login-btn').click();
-});
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="../../js/layout.js"></script>
 </body>
 </html>
