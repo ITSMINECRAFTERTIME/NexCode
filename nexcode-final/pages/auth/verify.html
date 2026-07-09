@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verifying email — NexCode</title>
+<link rel="stylesheet" href="../../css/auth.css">
+</head>
+<body>
+<div class="aurora"></div>
+<div class="auth-wrap">
+  <a href="../../index.html" class="auth-logo">
+    <div class="logo-mark">NX</div>
+    <span class="logo-text">Nex<span>Code</span></span>
+  </a>
+
+  <!-- Loading -->
+  <div class="auth-card" id="loading-card">
+    <div class="status-icon-wrap"><div class="status-icon loading">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+    </div></div>
+    <div class="auth-title">Verifying your email</div>
+    <div class="auth-subtitle" style="margin-bottom:0">One moment...</div>
+    <div class="dot-pulse" style="margin-top:16px"><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- Success -->
+  <div class="auth-card" id="success-card" style="display:none">
+    <div class="status-icon-wrap"><div class="status-icon success">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </div></div>
+    <div class="auth-title">Email verified</div>
+    <div class="auth-subtitle">Your account is ready. Sign in to continue.</div>
+    <button class="btn btn-primary" onclick="window.location.href='login.html?confirmed=1'">Continue to sign in</button>
+  </div>
+
+  <!-- Error / expired -->
+  <div class="auth-card" id="error-card" style="display:none">
+    <div class="status-icon-wrap"><div class="status-icon error">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div></div>
+    <div class="auth-title" id="err-title">Link expired</div>
+    <div class="auth-subtitle" id="err-desc">This verification link is no longer valid. Sign up again to get a fresh one.</div>
+    <button class="btn btn-primary" onclick="window.location.href='register.html'">Back to sign up</button>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  ['loading-card','success-card','error-card'].forEach(c => {
+    document.getElementById(c).style.display = c === id ? '' : 'none';
+  });
+}
+
+setTimeout(() => {
+  const p = new URLSearchParams(window.location.hash.substring(1));
+  const error = p.get('error');
+  const errorCode = p.get('error_code');
+  const accessToken = p.get('access_token');
+  const type = p.get('type');
+
+  if (error) {
+    if (errorCode === 'otp_expired') {
+      document.getElementById('err-title').textContent = 'Verification link expired';
+      document.getElementById('err-desc').textContent = 'Links expire after a short time. Sign up again to get a fresh one, or try signing in if you already verified with a different link.';
+    } else {
+      document.getElementById('err-title').textContent = 'Something went wrong';
+      document.getElementById('err-desc').textContent = decodeURIComponent((p.get('error_description') || '').replace(/\+/g,' ')) || 'This link is invalid. Please try again.';
+    }
+    show('error-card');
+    return;
+  }
+
+  if (accessToken && (type === 'signup' || type === 'email_change' || type === 'magiclink')) {
+    localStorage.setItem('nxc_access_token', accessToken);
+    const rt = p.get('refresh_token');
+    if (rt) localStorage.setItem('nxc_refresh_token', rt);
+    show('success-card');
+    return;
+  }
+
+  document.getElementById('err-title').textContent = 'Invalid link';
+  document.getElementById('err-desc').textContent = 'Use the link from your most recent verification email.';
+  show('error-card');
+}, 900);
+</script>
+</body>
+</html>

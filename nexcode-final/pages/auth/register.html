@@ -8,19 +8,15 @@
 </head>
 <body>
 <div class="aurora"></div>
-
 <div class="auth-wrap">
   <a href="../../index.html" class="auth-logo">
     <div class="logo-mark">NX</div>
     <span class="logo-text">Nex<span>Code</span></span>
   </a>
-
   <div class="auth-card">
     <div class="auth-title">Create your account</div>
     <div class="auth-subtitle">Start protecting your scripts in minutes</div>
-
     <div id="alert-box"></div>
-
     <form id="register-form">
       <div class="form-group">
         <label class="form-label">Display name</label>
@@ -32,105 +28,78 @@
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input class="form-input" type="password" id="password" placeholder="At least 8 characters" required autocomplete="new-password" minlength="8">
+        <input class="form-input" type="password" id="password" placeholder="At least 8 characters" required minlength="8" autocomplete="new-password">
         <div class="pw-strength">
-          <div class="pw-bar" id="bar1"></div>
-          <div class="pw-bar" id="bar2"></div>
-          <div class="pw-bar" id="bar3"></div>
-          <div class="pw-bar" id="bar4"></div>
+          <div class="pw-bar" id="bar1"></div><div class="pw-bar" id="bar2"></div>
+          <div class="pw-bar" id="bar3"></div><div class="pw-bar" id="bar4"></div>
         </div>
         <div class="pw-strength-label" id="pw-label"></div>
+        <div class="form-hint">Must include an uppercase letter and a number.</div>
       </div>
-
       <button class="btn btn-primary" type="submit" id="submit-btn">Create account</button>
     </form>
-
-    <div class="auth-links">
-      Already have an account? <a href="login.html">Sign in</a>
-    </div>
+    <div class="auth-links">Already have an account? <a href="login.html">Sign in</a></div>
   </div>
 </div>
-
 <script>
 const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
-
-const form = document.getElementById('register-form');
-const btn = document.getElementById('submit-btn');
 const alertBox = document.getElementById('alert-box');
+const btn = document.getElementById('submit-btn');
 const pwInput = document.getElementById('password');
 
-// Password strength meter
-pwInput.addEventListener('input', () => {
-  const val = pwInput.value;
-  let score = 0;
-  if (val.length >= 8) score++;
-  if (val.length >= 12) score++;
-  if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
-  if (/[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val)) score++;
-
-  const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
-  const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
-  const labels = ['Weak', 'Fair', 'Good', 'Strong'];
-
-  bars.forEach((bar, i) => {
-    bar.style.background = i < score ? colors[Math.max(score - 1, 0)] : 'var(--border-subtle)';
-  });
-  document.getElementById('pw-label').textContent = val ? labels[Math.max(score - 1, 0)] : '';
-});
-
-function showAlert(msg, type = 'error') {
+function showAlert(msg, type='error') {
   const icons = {
-    error: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-    success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
-    info: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+    error:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    success:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
   };
   alertBox.innerHTML = `<div class="alert alert-${type}">${icons[type]}<span>${msg}</span></div>`;
 }
 
-form.addEventListener('submit', async (e) => {
+pwInput.addEventListener('input', () => {
+  const v = pwInput.value;
+  let s = 0;
+  if (v.length >= 8) s++;
+  if (v.length >= 12) s++;
+  if (/[A-Z]/.test(v) && /[a-z]/.test(v)) s++;
+  if (/[0-9]/.test(v) && /[^A-Za-z0-9]/.test(v)) s++;
+  const colors = ['#ef4444','#f59e0b','#3b82f6','#10b981'];
+  const labels = ['Weak','Fair','Good','Strong'];
+  ['bar1','bar2','bar3','bar4'].forEach((id,i) => {
+    document.getElementById(id).style.background = i < s ? colors[Math.max(s-1,0)] : 'var(--border-subtle)';
+  });
+  document.getElementById('pw-label').textContent = v ? labels[Math.max(s-1,0)] : '';
+});
+
+document.getElementById('register-form').addEventListener('submit', async e => {
   e.preventDefault();
-  const displayName = document.getElementById('displayName').value.trim();
-  const email = document.getElementById('email').value.trim();
   const password = pwInput.value;
-
-  if (password.length < 8) {
-    showAlert('Password must be at least 8 characters.', 'error');
-    return;
+  if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+    showAlert('Password must contain an uppercase letter and a number.'); return;
   }
-
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner"></div> Creating account...';
   alertBox.innerHTML = '';
-
   try {
     const res = await fetch(`${API}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, displayName })
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        email: document.getElementById('email').value.trim(),
+        password,
+        displayName: document.getElementById('displayName').value.trim()
+      })
     });
-
     const data = await res.json();
-
-    if (!res.ok) {
-      showAlert(data.error || 'Could not create account.', 'error');
-      btn.disabled = false;
-      btn.textContent = 'Create account';
-      return;
-    }
-
-    showAlert('Account created — check your email to confirm before signing in.', 'success');
-    form.reset();
-    btn.textContent = 'Account created ✓';
-    // Keep button disabled — they need to check email, not resubmit
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.textContent = 'Create account';
-    }, 4000);
-
-  } catch (err) {
-    showAlert('Could not connect to backend. Is it running?', 'error');
-    btn.disabled = false;
-    btn.textContent = 'Create account';
+    if (!res.ok) { showAlert(data.error || 'Could not create account.'); btn.disabled=false; btn.textContent='Create account'; return; }
+    showAlert('Account created! Check your email and click the verification link before signing in.','success');
+    document.getElementById('register-form').reset();
+    document.getElementById('pw-label').textContent = '';
+    ['bar1','bar2','bar3','bar4'].forEach(id => document.getElementById(id).style.background = 'var(--border-subtle)');
+    btn.textContent = 'Check your email ✓';
+    setTimeout(() => { btn.disabled=false; btn.textContent='Create account'; }, 6000);
+  } catch {
+    showAlert('Could not reach the backend. Is it running on port 3000?');
+    btn.disabled=false; btn.textContent='Create account';
   }
 });
 </script>

@@ -8,19 +8,15 @@
 </head>
 <body>
 <div class="aurora"></div>
-
 <div class="auth-wrap">
   <a href="../../index.html" class="auth-logo">
     <div class="logo-mark">NX</div>
     <span class="logo-text">Nex<span>Code</span></span>
   </a>
-
   <div class="auth-card">
     <div class="auth-title">Welcome back</div>
     <div class="auth-subtitle">Sign in to your NexCode dashboard</div>
-
     <div id="alert-box"></div>
-
     <form id="login-form">
       <div class="form-group">
         <label class="form-label">Email</label>
@@ -30,88 +26,53 @@
         <label class="form-label">Password</label>
         <input class="form-input" type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
       </div>
-
       <div style="text-align:right;margin-bottom:16px">
-        <a href="reset.html" style="color:var(--accent-bright);text-decoration:none;font-size:12.5px;font-weight:500">Forgot password?</a>
+        <a href="reset-confirm.html" style="color:var(--accent-bright);text-decoration:none;font-size:12.5px;font-weight:500">Forgot password?</a>
       </div>
-
       <button class="btn btn-primary" type="submit" id="submit-btn">Sign in</button>
     </form>
-
-    <div class="auth-links">
-      Don't have an account? <a href="register.html">Create one</a>
-    </div>
+    <div class="auth-links">Don't have an account? <a href="register.html">Create one</a></div>
   </div>
 </div>
-
 <script>
-// ── IMPORTANT: set this to your backend's Codespaces URL (port 3000) ──
 const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
+const DASHBOARD = '../../../nexcode-dashboard/index.html';
 
-// ── IMPORTANT: dashboard lives in a SIBLING folder, not inside nexcode-final ──
-// nexcode-final/pages/auth/login.html  ->  ../../../nexcode-dashboard/index.html
-const DASHBOARD_URL = '../../../nexcode-dashboard/index.html';
-
-const form = document.getElementById('login-form');
-const btn = document.getElementById('submit-btn');
 const alertBox = document.getElementById('alert-box');
+const btn = document.getElementById('submit-btn');
 
-function showAlert(msg, type = 'error') {
+function showAlert(msg, type='error') {
   const icons = {
-    error: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-    success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
-    info: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+    error:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    success:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
   };
   alertBox.innerHTML = `<div class="alert alert-${type}">${icons[type]}<span>${msg}</span></div>`;
 }
 
-// Check for redirect messages (e.g. coming from confirm.html or reset flow)
-const params = new URLSearchParams(window.location.search);
-if (params.get('confirmed') === '1') {
-  showAlert('Email confirmed — you can sign in now.', 'success');
-}
-if (params.get('reset') === '1') {
-  showAlert('Password updated — sign in with your new password.', 'success');
-}
+const p = new URLSearchParams(window.location.search);
+if (p.get('confirmed')==='1') showAlert('Email verified — sign in below.','success');
+if (p.get('reset')==='1') showAlert('Password updated — sign in with your new password.','success');
 
-form.addEventListener('submit', async (e) => {
+document.getElementById('login-form').addEventListener('submit', async e => {
   e.preventDefault();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner"></div> Signing in...';
   alertBox.innerHTML = '';
-
   try {
     const res = await fetch(`${API}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ email: document.getElementById('email').value.trim(), password: document.getElementById('password').value })
     });
-
     const data = await res.json();
-
-    if (!res.ok) {
-      showAlert(data.error || 'Invalid email or password.', 'error');
-      btn.disabled = false;
-      btn.textContent = 'Sign in';
-      return;
-    }
-
-    // Store session tokens
-    if (data.session) {
-      localStorage.setItem('nxc_access_token', data.session.access_token);
-      localStorage.setItem('nxc_refresh_token', data.session.refresh_token);
-    }
-
-    showAlert('Signed in — redirecting...', 'success');
-    setTimeout(() => { window.location.href = DASHBOARD_URL; }, 600);
-
-  } catch (err) {
-    showAlert('Could not connect to backend. Is it running?', 'error');
-    btn.disabled = false;
-    btn.textContent = 'Sign in';
+    if (!res.ok) { showAlert(data.error || 'Invalid email or password.'); btn.disabled=false; btn.textContent='Sign in'; return; }
+    if (data.accessToken) localStorage.setItem('nxc_access_token', data.accessToken);
+    if (data.refreshToken) localStorage.setItem('nxc_refresh_token', data.refreshToken);
+    showAlert('Signed in — redirecting...','success');
+    setTimeout(() => window.location.href = DASHBOARD, 600);
+  } catch {
+    showAlert('Could not reach the backend. Is it running on port 3000?');
+    btn.disabled=false; btn.textContent='Sign in';
   }
 });
 </script>
