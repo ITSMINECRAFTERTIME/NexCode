@@ -245,6 +245,32 @@ router.get('/verify-redirect', async (req, res) => {
                                                                       }
                                                                       });
 
+                                                                      router.get('/reset-redirect', async (req, res) => {
+                                                                          const { token_hash, type } = req.query;
+                                                                            const FRONTEND = process.env.FRONTEND_URL;
+
+                                                                              if (!token_hash) {
+                                                                                  return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?error=No+token`);
+                                                                                    }
+
+                                                                                      try {
+                                                                                          const { data, error } = await supabase.auth.verifyOtp({
+                                                                                                token_hash,
+                                                                                                      type: type || 'recovery'
+                                                                                                          });
+
+                                                                                                              if (error) {
+                                                                                                                    return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?error=${encodeURIComponent(error.message)}`);
+                                                                                                                        }
+
+                                                                                                                            const at = data.session?.access_token;
+                                                                                                                                const rt = data.session?.refresh_token;
+                                                                                                                                    return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?access_token=${at}&refresh_token=${rt}`);
+                                                                                                                                      } catch (err) {
+                                                                                                                                          return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?error=${encodeURIComponent(err.message)}`);
+                                                                                                                                            }
+                                                                                                                                            });
+                                                                      
 // Verify email via token_hash (new email template format)
 router.post('/verify-token', async (req, res) => {
   const { token_hash, type } = req.body;
