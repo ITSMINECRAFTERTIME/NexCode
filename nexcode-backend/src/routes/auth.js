@@ -123,6 +123,34 @@ router.post('/refresh', async (req, res) => {
   });
 });
 
+// Email verification via token_hash
+router.get('/verify', async (req, res) => {
+  const { token_hash, type } = req.query;
+    
+      if (!token_hash) {
+          return res.redirect(`${process.env.FRONTEND_URL}/pages/auth/verify.html?error=no_token`);
+            }
+
+              try {
+                  const { data, error } = await supabase.auth.verifyOtp({
+                        token_hash,
+                              type: type || 'signup'
+                                  });
+
+                                      if (error) {
+                                            return res.redirect(`${process.env.FRONTEND_URL}/pages/auth/verify.html?error=${encodeURIComponent(error.message)}`);
+                                                }
+
+                                                    // Success — redirect to dashboard with tokens in query
+                                                        const session = data.session;
+                                                            return res.redirect(
+                                                                  `${process.env.FRONTEND_URL}/pages/auth/verify.html?success=1&access_token=${session.access_token}&refresh_token=${session.refresh_token}`
+                                                                      );
+                                                                        } catch (err) {
+                                                                            return res.redirect(`${process.env.FRONTEND_URL}/pages/auth/verify.html?error=${encodeURIComponent(err.message)}`);
+                                                                              }
+                                                                              });
+
 // ── POST /auth/reset-password ───────────────────────────────
 // Step 1: user enters their email → Supabase sends a reset link
 router.post('/reset-password', async (req, res) => {
