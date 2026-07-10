@@ -53,7 +53,7 @@ function show(id) {
 }
 
 setTimeout(() => {
-  const p = new URLSearchParams(window.location.hash.substring(1));
+  const p = new URLSearchParams(window.location.search.substring(1) || window.location.hash.substring(1));
   const error = p.get('error');
   const errorCode = p.get('error_code');
   const accessToken = p.get('access_token');
