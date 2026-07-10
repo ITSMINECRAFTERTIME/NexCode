@@ -52,7 +52,6 @@ p { font-size: 15px; color: #9ca3af; line-height: 1.6; margin-bottom: 24px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .success { color: #10b981; }
 .err { color: #ef4444; }
-.debug { font-size: 11px; color: #6b7280; word-break: break-all; margin-top: 16px; background: #0a0a14; padding: 10px; border-radius: 6px; text-align: left; }
 </style>
 </head>
 <body>
@@ -61,87 +60,47 @@ p { font-size: 15px; color: #9ca3af; line-height: 1.6; margin-bottom: 24px; }
   <div id="app">
     <div class="spinner"></div>
     <h1>Verifying...</h1>
-    <p id="status">Sending to backend...</p>
   </div>
 </div>
 <script>
-const BACKEND = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
-
 const app = document.getElementById('app');
-const status = document.getElementById('status');
+const q = new URLSearchParams(window.location.search);
 
-function show(icon, title, msg, link, linkText, debug) {
+const success = q.get('success');
+const error = q.get('error');
+const accessToken = q.get('access_token');
+const refreshToken = q.get('refresh_token');
+
+if (success === '1' && accessToken) {
+  // Store tokens
+  localStorage.setItem('nxc_access_token', accessToken);
+  if (refreshToken) localStorage.setItem('nxc_refresh_token', refreshToken);
+
   app.innerHTML = `
-    <div class="icon">${icon}</div>
-    <h1>${title}</h1>
-    <p>${msg}</p>
-    ${debug ? `<div class="debug">${debug}</div>` : ''}
-    ${link ? `<a href="${link}" class="btn">${linkText}</a>` : ''}
+    <div class="icon">✅</div>
+    <h1 class="success">Email Verified!</h1>
+    <p>Your NexCode account is active. Taking you to the dashboard...</p>
+  `;
+  setTimeout(() => {
+    window.location.href = '../../../nexcode-dashboard/index.html';
+  }, 2000);
+
+} else if (error) {
+  app.innerHTML = `
+    <div class="icon">❌</div>
+    <h1 class="err">Verification Failed</h1>
+    <p>${decodeURIComponent(error)}</p>
+    <a href="register.html" class="btn">Back to Register</a>
+  `;
+
+} else {
+  app.innerHTML = `
+    <div class="icon">⚠️</div>
+    <h1>Invalid Link</h1>
+    <p>This page should only be opened from your confirmation email.</p>
+    <a href="register.html" class="btn">Back to Register</a>
   `;
 }
-
-async function run() {
-  // Read URL params - check both hash and query
-  const hash = new URLSearchParams(window.location.hash.replace('#',''));
-  const query = new URLSearchParams(window.location.search);
-
-  const errorCode = hash.get('error_code') || query.get('error_code');
-  if (errorCode) {
-    show('❌', 'Link Expired', 'This verification link has expired. Please register again with a new email.', 'register.html', 'Back to Register', 'error: ' + errorCode);
-    return;
-  }
-
-  const tokenHash = query.get('token_hash');
-  const type = query.get('type') || 'signup';
-  const accessToken = hash.get('access_token');
-  const refreshToken = hash.get('refresh_token');
-
-  // Send to backend to verify
-  let endpoint, body;
-
-  if (tokenHash) {
-    endpoint = '/auth/verify-token';
-    body = { token_hash: tokenHash, type };
-  } else if (accessToken) {
-    endpoint = '/auth/verify-session';
-    body = { access_token: accessToken, refresh_token: refreshToken };
-  } else {
-    show('⚠️', 'No Token', 'Open this page from the link in your confirmation email.', 'register.html', 'Register', 'search: ' + window.location.search + ' hash: ' + window.location.hash);
-    return;
-  }
-
-  try {
-    status.textContent = 'Contacting server...';
-    const res = await fetch(BACKEND + endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-
-    const data = await res.json();
-
-    if (!res.ok || data.error) {
-      show('❌', 'Verification Failed', data.error || 'Something went wrong.', 'register.html', 'Try Again', 'status: ' + res.status);
-      return;
-    }
-
-    // Store tokens
-    if (data.access_token) {
-      localStorage.setItem('nxc_access_token', data.access_token);
-      localStorage.setItem('nxc_refresh_token', data.refresh_token);
-    }
-
-    show('✅', '<span class="success">Email Verified!</span>', 'Your NexCode account is active. Redirecting to dashboard...', null, null, null);
-    setTimeout(() => {
-      window.location.href = '../../../nexcode-dashboard/index.html';
-    }, 2000);
-
-  } catch (err) {
-    show('❌', 'Connection Error', 'Could not reach the NexCode backend. Make sure the server is running.', 'register.html', 'Back to Register', err.message);
-  }
-}
-
-run();
 </script>
 </body>
 </html>
