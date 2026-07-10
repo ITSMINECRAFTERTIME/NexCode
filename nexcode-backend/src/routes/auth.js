@@ -219,4 +219,59 @@ router.get('/me', requireAuth, async (req, res) => {
   });
 });
 
+router.get('/verify-redirect', async (req, res) => {
+    const { token_hash, type } = req.query;
+      const FRONTEND = process.env.FRONTEND_URL;
+
+        if (!token_hash) {
+            return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/verify.html?error=No+token`);
+              }
+
+                try {
+                    const { data, error } = await supabase.auth.verifyOtp({
+                          token_hash,
+                                type: type || 'signup'
+                                    });
+
+                                        if (error) {
+                                              return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/verify.html?error=${encodeURIComponent(error.message)}`);
+                                                  }
+
+                                                      const at = data.session?.access_token;
+                                                          const rt = data.session?.refresh_token;
+                                                              return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/verify.html?success=1&access_token=${at}&refresh_token=${rt}`);
+                                                                } catch (err) {
+                                                                    return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/verify.html?error=${encodeURIComponent(err.message)}`);
+                                                                      }
+                                                                      });
+
+// Verify email via token_hash (new email template format)
+router.post('/verify-token', async (req, res) => {
+  const { token_hash, type } = req.body;
+    if (!token_hash) return res.status(400).json({ error: 'Missing token_hash' });
+      try {
+          const { data, error } = await supabase.auth.verifyOtp({ token_hash, type: type || 'signup' });
+              if (error) return res.status(400).json({ error: error.message });
+                  return res.json({
+                        access_token: data.session?.access_token,
+                              refresh_token: data.session?.refresh_token
+                                  });
+                                    } catch (err) {
+                                        return res.status(500).json({ error: err.message });
+                                          }
+                                          });
+
+                                          // Verify email via access_token (old hash format)
+                                          router.post('/verify-session', async (req, res) => {
+                                            const { access_token, refresh_token } = req.body;
+                                              if (!access_token) return res.status(400).json({ error: 'Missing access_token' });
+                                                try {
+                                                    const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
+                                                        if (error) return res.status(400).json({ error: error.message });
+                                                            return res.json({ access_token, refresh_token });
+                                                              } catch (err) {
+                                                                  return res.status(500).json({ error: err.message });
+                                                                    }
+                                                                    });
+                                                                    
 module.exports = router;
