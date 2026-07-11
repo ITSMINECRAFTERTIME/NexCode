@@ -154,16 +154,29 @@ router.get('/verify', async (req, res) => {
 // ── POST /auth/reset-password ───────────────────────────────
 // Step 1: user enters their email → Supabase sends a reset link
 router.post('/reset-password', async (req, res) => {
-  const result = resetRequestSchema.safeParse(req.body);
-  if (!result.success) return res.status(400).json({ error: result.error.errors[0].message });
+    const { token_hash, password } = req.body;
+      if (!token_hash || !password) return res.status(400).json({ error: 'Missing fields' });
 
-  // Always return 200 even if email not found — prevents email enumeration
-  await supabase.auth.resetPasswordForEmail(req.body.email, {
-    redirectTo: `${process.env.FRONTEND_URL}/pages/auth/reset-confirm.html`
-  });
+        try {
+            // First verify the OTP to get a session
+                const { data, error } = await supabase.auth.verifyOtp({
+                      token_hash,
+                            type: 'recovery'
+                                });
+                                    if (error) return res.status(400).json({ error: error.message });
 
-  return res.json({ message: 'If that email exists, a password reset link has been sent.' });
-});
+                                        // Then update the password using the session
+                                            const { error: updateError } = await supabase.auth.admin.updateUserById(
+                                                  data.user.id,
+                                                        { password }
+                                                            );
+                                                                if (updateError) return res.status(400).json({ error: updateError.message });
+
+                                                                    return res.json({ message: 'Password updated successfully' });
+                                                                      } catch (err) {
+                                                                          return res.status(500).json({ error: err.message });
+                                                                            }
+                                                                            });
 
 // ── POST /auth/reset-password/confirm ──────────────────────
 // Step 2: user lands on the reset page with a token, submits new password
@@ -245,31 +258,19 @@ router.get('/verify-redirect', async (req, res) => {
                                                                       }
                                                                       });
 
-                                                                      router.get('/reset-redirect', async (req, res) => {
-                                                                          const { token_hash, type } = req.query;
-                                                                            const FRONTEND = process.env.FRONTEND_URL;
+router.get('/reset-redirect', async (req, res) => {
+    const { token_hash, type } = req.query;
+      const FRONTEND = process.env.FRONTEND_URL;
 
-                                                                              if (!token_hash) {
-                                                                                  return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?error=No+token`);
-                                                                                    }
+        if (!token_hash) {
+            return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?error=No+token`);
+              }
 
-                                                                                      try {
-                                                                                          const { data, error } = await supabase.auth.verifyOtp({
-                                                                                                token_hash,
-                                                                                                      type: type || 'recovery'
-                                                                                                          });
-
-                                                                                                              if (error) {
-                                                                                                                    return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?error=${encodeURIComponent(error.message)}`);
-                                                                                                                        }
-
-                                                                                                                            const at = data.session?.access_token;
-                                                                                                                                const rt = data.session?.refresh_token;
-                                                                                                                                    return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?access_token=${at}&refresh_token=${rt}`);
-                                                                                                                                      } catch (err) {
-                                                                                                                                          return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?error=${encodeURIComponent(err.message)}`);
-                                                                                                                                            }
-                                                                                                                                            });
+                // Don't verify here — just pass the token to the frontend
+                  return res.redirect(
+                      `${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?token_hash=${encodeURIComponent(token_hash)}&type=${type || 'recovery'}`
+                        );
+                        });                                                  
                                                                       
 // Verify email via token_hash (new email template format)
 router.post('/verify-token', async (req, res) => {
