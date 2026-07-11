@@ -24,7 +24,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input class="form-input" type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+        <div style="position:relative;"><input class="form-input" type="password" id="password" placeholder="••••••••" required autocomplete="current-password" style="padding-right:40px;"><button type="button" onclick="togglePwd()" id="eye-btn" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#6b7280;font-size:16px;padding:4px;line-height:1;">👁</button></div>
       </div>
       <div style="text-align:right;margin-bottom:16px">
         <a href="reset-confirm.html" style="color:var(--accent-bright);text-decoration:none;font-size:12.5px;font-weight:500">Forgot password?</a>
@@ -36,6 +36,13 @@
 </div>
 <script>
 const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
+
+function togglePwd() {
+  const input = document.getElementById('password');
+  const btn = document.getElementById('eye-btn');
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+  else { input.type = 'password'; btn.textContent = '👁'; }
+}
 const DASHBOARD = '../../../nexcode-dashboard/index.html';
 
 const alertBox = document.getElementById('alert-box');

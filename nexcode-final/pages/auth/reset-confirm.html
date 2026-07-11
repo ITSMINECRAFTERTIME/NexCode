@@ -5,178 +5,203 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reset Password — NexCode</title>
 <link rel="stylesheet" href="../../css/auth.css">
-<style>
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .strength-bar { height: 4px; border-radius: 2px; background: #1a1a2e; margin-top: 8px; overflow: hidden; }
-  .strength-fill { height: 100%; border-radius: 2px; transition: width 0.3s, background 0.3s; width: 0%; }
-  .strength-text { font-size: 12px; margin-top: 6px; color: #6b7280; }
-  .req { font-size: 12px; color: #6b7280; margin: 4px 0; display: block; }
-  .req.met { color: #10b981; }
-  .req::before { content: '○  '; }
-  .req.met::before { content: '✓  '; }
-</style>
 </head>
 <body>
-<div class="auth-bg">
-  <div class="aurora-1"></div>
-  <div class="aurora-2"></div>
-</div>
+<div class="aurora"></div>
+<div class="auth-wrap">
+  <a href="../../index.html" class="auth-logo">
+    <div class="logo-mark">NX</div>
+    <span class="logo-text">Nex<span>Code</span></span>
+  </a>
 
-<nav class="auth-nav">
-  <a href="../../index.html" class="auth-logo">⚡ NexCode</a>
-</nav>
-
-<div class="auth-container">
-
-  <!-- Loading -->
-  <div class="auth-card" id="loading-state">
-    <div style="text-align:center;padding:40px 0;">
-      <div style="width:40px;height:40px;border:3px solid #1a1a2e;border-top-color:#2f6bff;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
-      <p style="color:#6b7280;font-size:14px;">Loading...</p>
-    </div>
+  <!-- STATE 1: Request reset email -->
+  <div class="auth-card" id="request-state" style="display:none;">
+    <div class="auth-title">Forgot your password?</div>
+    <div class="auth-subtitle">Enter your email and we'll send you a reset link</div>
+    <div id="req-alert"></div>
+    <form id="request-form">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="req-email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <button class="btn btn-primary" type="submit" id="req-btn">Send reset link</button>
+    </form>
+    <div class="auth-links"><a href="login.html">Back to Sign in</a></div>
   </div>
 
-  <!-- Error -->
-  <div class="auth-card" id="error-state" style="display:none;">
-    <div style="text-align:center;">
-      <div style="width:56px;height:56px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:24px;">✕</div>
-      <h2 style="font-size:20px;font-weight:700;color:#fff;margin:0 0 8px;">Link expired</h2>
-      <p id="error-msg" style="color:#9ca3af;font-size:14px;margin:0 0 28px;line-height:1.6;">This reset link is invalid or has expired.</p>
-      <a href="login.html" class="auth-btn" style="display:block;text-align:center;text-decoration:none;margin-bottom:12px;">Back to Login</a>
-      <button onclick="requestNew()" class="auth-btn-secondary" style="width:100%;cursor:pointer;">Request new reset link</button>
-    </div>
+  <!-- STATE 2: Email sent -->
+  <div class="auth-card" id="sent-state" style="display:none;">
+    <div class="auth-title">Check your email</div>
+    <div class="auth-subtitle">If an account exists for that email, you'll receive a reset link shortly. Check your spam folder too.</div>
+    <div style="height:16px;"></div>
+    <a href="login.html" class="btn btn-primary" style="display:block;text-align:center;text-decoration:none;">Back to Sign in</a>
   </div>
 
-  <!-- Reset Form -->
+  <!-- STATE 3: Set new password (token present) -->
   <div class="auth-card" id="form-state" style="display:none;">
-    <div class="auth-badge">🔐 Password Reset</div>
-    <h1 class="auth-title">Set new password</h1>
-    <p class="auth-subtitle">Choose a strong password for your NexCode account.</p>
-
-    <div id="form-error" class="auth-error" style="display:none;"></div>
-
-    <div class="auth-field">
-      <label class="auth-label">New Password</label>
-      <div class="auth-input-wrap">
-        <input type="password" id="password" class="auth-input" placeholder="Min. 8 characters" oninput="checkStrength(this.value)">
-        <button type="button" class="auth-eye" onclick="togglePwd('password', this)">👁</button>
+    <div class="auth-title">Set new password</div>
+    <div class="auth-subtitle">Pick something strong you haven't used before</div>
+    <div id="form-alert"></div>
+    <form id="reset-form">
+      <div class="form-group">
+        <label class="form-label">New password</label>
+        <div style="position:relative;">
+          <input class="form-input" type="password" id="password" placeholder="At least 8 characters" required autocomplete="new-password" style="padding-right:40px;" oninput="checkStrength(this.value)">
+          <button type="button" onclick="togglePwd('password','eye1')" id="eye1" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#6b7280;font-size:16px;padding:4px;line-height:1;">👁</button>
+        </div>
+        <div class="pw-strength">
+          <div class="pw-bar" id="bar1"></div>
+          <div class="pw-bar" id="bar2"></div>
+          <div class="pw-bar" id="bar3"></div>
+          <div class="pw-bar" id="bar4"></div>
+        </div>
+        <div class="pw-strength-label" id="pw-label"></div>
+        <div class="form-hint">Must include an uppercase letter and a number.</div>
       </div>
-      <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
-      <div class="strength-text" id="strength-text"></div>
-      <div style="margin-top:10px;">
-        <span class="req" id="req-len">At least 8 characters</span>
-        <span class="req" id="req-upper">One uppercase letter</span>
-        <span class="req" id="req-num">One number</span>
+      <div class="form-group">
+        <label class="form-label">Confirm password</label>
+        <div style="position:relative;">
+          <input class="form-input" type="password" id="confirm" placeholder="Repeat your password" required autocomplete="new-password" style="padding-right:40px;">
+          <button type="button" onclick="togglePwd('confirm','eye2')" id="eye2" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#6b7280;font-size:16px;padding:4px;line-height:1;">👁</button>
+        </div>
       </div>
-    </div>
-
-    <div class="auth-field">
-      <label class="auth-label">Confirm Password</label>
-      <div class="auth-input-wrap">
-        <input type="password" id="confirm" class="auth-input" placeholder="Repeat your password">
-        <button type="button" class="auth-eye" onclick="togglePwd('confirm', this)">👁</button>
-      </div>
-    </div>
-
-    <button class="auth-btn" id="submit-btn" onclick="doReset()" style="width:100%;cursor:pointer;">
-      <span id="btn-text">Update Password</span>
-    </button>
+      <button class="btn btn-primary" type="submit" id="reset-btn">Update password</button>
+    </form>
   </div>
 
-  <!-- Success -->
+  <!-- STATE 4: Link expired / error -->
+  <div class="auth-card" id="error-state" style="display:none;">
+    <div class="auth-title">Link expired</div>
+    <div class="auth-subtitle" id="error-msg">This reset link is invalid or has expired. Please request a new one.</div>
+    <div style="height:16px;"></div>
+    <button class="btn btn-primary" onclick="showRequest()" style="width:100%;margin-bottom:12px;">Request new reset link</button>
+    <div class="auth-links"><a href="login.html">Back to Sign in</a></div>
+  </div>
+
+  <!-- STATE 5: Success -->
   <div class="auth-card" id="success-state" style="display:none;">
-    <div style="text-align:center;">
-      <div style="width:56px;height:56px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:24px;">✓</div>
-      <h2 style="font-size:20px;font-weight:700;color:#fff;margin:0 0 8px;">Password updated!</h2>
-      <p style="color:#9ca3af;font-size:14px;margin:0 0 28px;line-height:1.6;">Your password has been changed successfully. You can now log in with your new password.</p>
-      <a href="login.html" class="auth-btn" style="display:block;text-align:center;text-decoration:none;">Go to Login</a>
-    </div>
+    <div class="auth-title">Password updated!</div>
+    <div class="auth-subtitle">Your password has been changed. Sign in with your new password.</div>
+    <div style="height:16px;"></div>
+    <a href="login.html?reset=1" class="btn btn-primary" style="display:block;text-align:center;text-decoration:none;">Sign in</a>
   </div>
 
 </div>
-
 <script>
-  const BACKEND = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
+const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
+
+function show(id) {
+  ['request-state','sent-state','form-state','error-state','success-state']
+    .forEach(s => document.getElementById(s).style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+function showRequest() { show('request-state'); }
+
+function showAlert(id, msg, type='error') {
+  const icons = {
+    error:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    success:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
+  };
+  document.getElementById(id).innerHTML = `<div class="alert alert-${type}">${icons[type]}<span>${msg}</span></div>`;
+}
+
+window.addEventListener('load', () => {
   const params = new URLSearchParams(window.location.search);
   const tokenHash = params.get('token_hash');
-  const errorParam = params.get('error');
+  const error = params.get('error');
 
-  function show(id) {
-    ['loading-state','error-state','form-state','success-state'].forEach(s => {
-      document.getElementById(s).style.display = s === id ? 'block' : 'none';
-    });
-  }
-
-  function requestNew() {
-    window.location.href = 'login.html?reset=1';
-  }
-
-  function togglePwd(id, btn) {
-    const el = document.getElementById(id);
-    el.type = el.type === 'password' ? 'text' : 'password';
-    btn.textContent = el.type === 'password' ? '👁' : '🙈';
-  }
-
-  function checkStrength(val) {
-    const fill = document.getElementById('strength-fill');
-    const text = document.getElementById('strength-text');
-    let score = 0;
-    document.getElementById('req-len').className = 'req' + (val.length >= 8 ? ' met' : '');
-    document.getElementById('req-upper').className = 'req' + (/[A-Z]/.test(val) ? ' met' : '');
-    document.getElementById('req-num').className = 'req' + (/[0-9]/.test(val) ? ' met' : '');
-    if (val.length >= 8) score++;
-    if (/[A-Z]/.test(val)) score++;
-    if (/[0-9]/.test(val)) score++;
-    if (/[^A-Za-z0-9]/.test(val)) score++;
-    const colors = ['#ef4444','#f97316','#eab308','#10b981'];
-    const labels = ['Weak','Fair','Good','Strong'];
-    fill.style.width = (score * 25) + '%';
-    fill.style.background = colors[score - 1] || '#1a1a2e';
-    text.textContent = score > 0 ? labels[score - 1] : '';
-    text.style.color = colors[score - 1] || '#6b7280';
-  }
-
-  async function doReset() {
-    const pwd = document.getElementById('password').value;
-    const conf = document.getElementById('confirm').value;
-    const errEl = document.getElementById('form-error');
-    const btn = document.getElementById('submit-btn');
-    const btnText = document.getElementById('btn-text');
-    errEl.style.display = 'none';
-
-    if (pwd.length < 8) { errEl.textContent = 'Password must be at least 8 characters.'; errEl.style.display = 'block'; return; }
-    if (pwd !== conf) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
-
-    btn.disabled = true;
-    btnText.textContent = 'Updating...';
-
-    try {
-      const res = await fetch(`${BACKEND}/auth/reset-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token_hash: tokenHash, password: pwd })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to reset password');
-      show('success-state');
-    } catch (err) {
-      errEl.textContent = err.message;
-      errEl.style.display = 'block';
-      btn.disabled = false;
-      btnText.textContent = 'Update Password';
-    }
-  }
-
-  // Init
-  if (errorParam) {
-    document.getElementById('error-msg').textContent = decodeURIComponent(errorParam);
+  if (error) {
+    document.getElementById('error-msg').textContent = decodeURIComponent(error);
     show('error-state');
   } else if (tokenHash) {
+    window._tokenHash = tokenHash;
     show('form-state');
   } else {
-    document.getElementById('error-msg').textContent = 'No reset token found. Please request a new link.';
-    show('error-state');
+    show('request-state');
   }
+});
+
+document.getElementById('request-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('req-email').value.trim();
+  const btn = document.getElementById('req-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Sending...';
+  try {
+    await fetch(`${API}/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    show('sent-state');
+  } catch {
+    showAlert('req-alert', 'Could not reach the backend. Is it running?');
+    btn.disabled = false;
+    btn.textContent = 'Send reset link';
+  }
+});
+
+document.getElementById('reset-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const pwd = document.getElementById('password').value;
+  const conf = document.getElementById('confirm').value;
+  const btn = document.getElementById('reset-btn');
+
+  if (!/[A-Z]/.test(pwd) || !/[0-9]/.test(pwd)) {
+    showAlert('form-alert', 'Password must contain an uppercase letter and a number.'); return;
+  }
+  if (pwd !== conf) {
+    showAlert('form-alert', 'Passwords do not match.'); return;
+  }
+  if (!window._tokenHash) {
+    showAlert('form-alert', 'Reset token missing. Please use the link from your email.'); return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Updating...';
+
+  try {
+    const res = await fetch(`${API}/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token_hash: window._tokenHash, password: pwd })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showAlert('form-alert', data.error || 'Failed to update password.');
+      btn.disabled = false;
+      btn.textContent = 'Update password';
+      return;
+    }
+    show('success-state');
+  } catch {
+    showAlert('form-alert', 'Could not reach the backend. Is it running?');
+    btn.disabled = false;
+    btn.textContent = 'Update password';
+  }
+});
+
+function togglePwd(inputId, btnId) {
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+  else { input.type = 'password'; btn.textContent = '👁'; }
+}
+
+function checkStrength(val) {
+  let s = 0;
+  if (val.length >= 8) s++;
+  if (val.length >= 12) s++;
+  if (/[A-Z]/.test(val) && /[a-z]/.test(val)) s++;
+  if (/[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val)) s++;
+  const colors = ['#ef4444','#f59e0b','#3b82f6','#10b981'];
+  const labels = ['Weak','Fair','Good','Strong'];
+  ['bar1','bar2','bar3','bar4'].forEach((id, i) => {
+    document.getElementById(id).style.background = i < s ? colors[Math.max(s-1,0)] : 'var(--border-subtle)';
+  });
+  document.getElementById('pw-label').textContent = val ? labels[Math.max(s-1,0)] : '';
+}
 </script>
 </body>
 </html>
