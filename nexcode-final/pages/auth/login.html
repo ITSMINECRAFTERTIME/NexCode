@@ -76,7 +76,7 @@ document.getElementById('login-form').addEventListener('submit', async e => {
     if (data.accessToken) localStorage.setItem('nxc_access_token', data.accessToken);
     if (data.refreshToken) localStorage.setItem('nxc_refresh_token', data.refreshToken);
     showAlert('Signed in — redirecting...','success');
-    setTimeout(() => window.location.href = DASHBOARD, 600);
+    setTimeout(() => window.location.href = DASHBOARD + '?token=' + data.accessToken, 600);
   } catch {
     showAlert('Could not reach the backend. Is it running on port 3000?');
     btn.disabled=false; btn.textContent='Sign in';

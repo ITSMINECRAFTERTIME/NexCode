@@ -1341,6 +1341,14 @@ function renderKeyRow(k) {
   </tr>`;
 }
 
+// Pick up token passed from login
+  const _urlParams = new URLSearchParams(window.location.search);
+  if (_urlParams.get('token')) {
+    localStorage.setItem('nxc_access_token', _urlParams.get('token'));
+    localStorage.setItem('nxc_refresh_token', _urlParams.get('refresh') || '');
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+
 async function loadKeys() {
   const token = localStorage.getItem('nxc_access_token');
   const tbody = document.getElementById('key-tbody');
