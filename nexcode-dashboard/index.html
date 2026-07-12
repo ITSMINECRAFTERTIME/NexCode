@@ -1251,6 +1251,12 @@ fmt.<span class="code-func">Println</span>(result.Valid)</div>
 
 <script src="js/dashboard.js"></script>
 <script>
+const _p = new URLSearchParams(window.location.search);
+if (_p.get('token')) {
+localStorage.setItem('nxc_access_token', _p.get('token'));
+localStorage.setItem('nxc_refresh_token', _p.get('refresh') || '');
+window.history.replaceState({}, '', window.location.pathname);
+}
 
 // Tab switching
 function switchTab(btn, tabId) {
