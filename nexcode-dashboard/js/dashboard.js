@@ -8,7 +8,8 @@ function navigate(pageId) {
   document.querySelector('.topbar-title').textContent = pageTitles[pageId] || 'Dashboard';
   closeSidebar();
   window.scrollTo(0, 0);
-}
+  if (pageId === 'keys') loadKeys();
+  }
 
 const pageTitles = {
   overview: 'Overview', scripts: 'Scripts', keys: 'Key Manager',

@@ -15,6 +15,9 @@ const PORT = process.env.PORT || 3000;
 const dashboardRoutes = require('./routes/dashboard');
 app.use('/dashboard', dashboardRoutes);
 
+const keysRoutes = require('./routes/keys');
+app.use('/keys', keysRoutes);
+
 // ── CORS ────────────────────────────────────────────────────
 // Allow requests from your frontend (Live Server, Vercel, etc.)
 app.use(cors({

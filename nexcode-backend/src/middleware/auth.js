@@ -2,7 +2,7 @@
 // Reads the Authorization: Bearer <token> header, validates it with Supabase,
 // and attaches req.user to the request.
 
-const { supabase } = require('../lib/supabase');
+const { supabaseAdmin } = require('../lib/supabase');
 
 async function requireAuth(req, res, next) {
   const header = req.headers.authorization;
@@ -12,7 +12,7 @@ async function requireAuth(req, res, next) {
 
   const token = header.slice(7);
 
-  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
 
   if (error || !user) {
     return res.status(401).json({ error: 'Invalid or expired token.' });

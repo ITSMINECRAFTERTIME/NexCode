@@ -134,7 +134,7 @@
           <div class="stat-icon blue">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
           </div>
-          <div class="stat-value" id="stat-keys" data-target="1247">0</div>
+          <div class="stat-value" id="stat-keys" data-target="0">0</div>
           <div class="stat-label">Active Keys</div>
           <div class="stat-change up" id="stat-keys-change">↑ 48 this week</div>
         </div>
@@ -142,7 +142,7 @@
           <div class="stat-icon green">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           </div>
-          <div class="stat-value" id="stat-executions" data-target="84920">0</div>
+          <div class="stat-value" id="stat-executions" data-target="0">0</div>
           <div class="stat-label">Total Executions</div>
           <div class="stat-change up" id="stat-exec-change">↑ 12% vs last month</div>
         </div>
@@ -150,7 +150,7 @@
           <div class="stat-icon yellow">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
           </div>
-          <div class="stat-value" id="stat-scripts" data-target="3">0</div>
+          <div class="stat-value" id="stat-scripts" data-target="0">0</div>
           <div class="stat-label">Live Scripts</div>
           <div class="stat-change neutral">All healthy</div>
         </div>
@@ -158,7 +158,7 @@
           <div class="stat-icon purple">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
           </div>
-          <div class="stat-value" id="stat-projects" data-target="2">0</div>
+          <div class="stat-value" id="stat-projects" data-target="0">0</div>
           <div class="stat-label">Projects</div>
           <div class="stat-change neutral">2 hubs active</div>
         </div>
@@ -1251,6 +1251,7 @@ fmt.<span class="code-func">Println</span>(result.Valid)</div>
 
 <script src="js/dashboard.js"></script>
 <script>
+
 // Tab switching
 function switchTab(btn, tabId) {
   const allTabs = btn.closest('.tabs').nextElementSibling;
@@ -1301,37 +1302,195 @@ document.querySelectorAll('#page-api .tab-btn').forEach(btn => {
 });
 
 // Key generation
-function doGenKey() {
-  const key = genKey();
-  const tbody = document.getElementById('key-tbody');
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-accent)">${key}</code></td>
-    <td>AimScript Pro</td><td><span class="badge badge-purple">Lifetime</span></td>
-    <td><span class="badge badge-green">Active</span></td>
-    <td><span class="badge badge-gray">Unlocked</span></td><td>Never</td><td>—</td>
+// ── KEY MANAGER ──────────────────────────────────────────────
+
+function keyTypeBadge(type) {
+  const map = { lifetime:'badge-purple', day:'badge-blue', trial:'badge-yellow', ffa:'badge-gray' };
+  const label = { lifetime:'Lifetime', day:'Day-locked', trial:'Trial', ffa:'FFA' };
+  return `<span class="badge ${map[type]||'badge-gray'}">${label[type]||type}</span>`;
+}
+
+function statusBadge(status) {
+  const map = { active:'badge-green', revoked:'badge-red', expired:'badge-yellow' };
+  return `<span class="badge ${map[status]||'badge-gray'}">${status.charAt(0).toUpperCase()+status.slice(1)}</span>`;
+}
+
+function formatExpiry(exp) {
+  if (!exp) return 'Never';
+  const d = new Date(exp);
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+function renderKeyRow(k) {
+  const revoked = k.status === 'revoked';
+  return `<tr style="${revoked?'opacity:.5':''}">
+    <td><code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-accent)">${k.key_value}</code></td>
+    <td>${k.script_id || '—'}</td>
+    <td>${keyTypeBadge(k.key_type)}</td>
+    <td>${statusBadge(k.status)}</td>
+    <td>${k.hwid ? '<span class="badge badge-blue">Locked</span>' : '<span class="badge badge-gray">Unlocked</span>'}</td>
+    <td>${formatExpiry(k.expires_at)}</td>
+    <td>${k.note || '—'}</td>
     <td><div class="td-actions">
-      <button class="btn btn-ghost btn-xs" onclick="toast('HWID reset','success')">Reset HWID</button>
-      <button class="btn btn-ghost btn-xs" onclick="toast('Extended 30d','success')">Extend</button>
-      <button class="btn btn-danger btn-xs" onclick="revokeKey(this)">Revoke</button>
-    </div></td>`;
-  tbody.insertBefore(tr, tbody.firstChild);
-  closeModal('modal-genkey');
-  toast(`Key generated: ${key}`, 'success');
+      <button class="btn btn-ghost btn-xs" ${revoked?'disabled':''} onclick="doResetHwid('${k.id}',this)">Reset HWID</button>
+      <button class="btn btn-ghost btn-xs" ${revoked?'disabled':''} onclick="doExtend('${k.id}',this)">Extend</button>
+      ${revoked
+        ? '<button class="btn btn-ghost btn-xs" disabled>Revoked</button>'
+        : `<button class="btn btn-danger btn-xs" onclick="doRevoke('${k.id}',this)">Revoke</button>`}
+    </div></td>
+  </tr>`;
 }
 
-function doBulkGen() {
-  closeModal('modal-bulkgen');
-  toast('50 keys generated and exported as TXT', 'success');
+async function loadKeys() {
+  const token = localStorage.getItem('nxc_access_token');
+  const tbody = document.getElementById('key-tbody');
+  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-muted)">Loading keys...</td></tr>';
+  try {
+    const res = await fetch(`${API}/keys`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (!res.ok) { toast(data.error || 'Failed to load keys', 'error'); return; }
+    const keys = data.keys || [];
+    if (keys.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">No keys yet. Generate your first key above.</td></tr>';
+    } else {
+      tbody.innerHTML = keys.map(renderKeyRow).join('');
+    }
+    const sub = document.querySelector('#page-keys .page-subtitle');
+    if (sub) sub.textContent = `${data.total} key${data.total !== 1 ? 's' : ''} total`;
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-muted)">Failed to load keys.</td></tr>';
+  }
 }
 
-function revokeKey(btn) {
-  const row = btn.closest('tr');
-  row.style.opacity = '0.5';
-  row.querySelector('.badge-green, .badge-yellow')?.classList?.replace('badge-green','badge-red');
-  btn.textContent = 'Revoked';
+async function doGenKey() {
+  const token = localStorage.getItem('nxc_access_token');
+  const modal = document.getElementById('modal-genkey');
+  const type = modal.querySelector('#key-type-sel').value;
+  const days = modal.querySelector('input[type="number"]')?.value;
+  const note = modal.querySelectorAll('input')[0]?.value || '';
+  const hwid = modal.querySelector('select:last-of-type')?.value;
+
+  const hwidPolicy = hwid && hwid.includes('immediately') ? 'lock_immediately' : hwid && hwid.includes('No') ? 'none' : 'lock_on_exec';
+
+  try {
+    const res = await fetch(`${API}/keys`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key_type: type, days, note, hwid_policy: hwidPolicy })
+    });
+    const data = await res.json();
+    if (!res.ok) { toast(data.error || 'Failed to generate key', 'error'); return; }
+    closeModal('modal-genkey');
+    toast(`Key generated: ${data.key.key_value}`, 'success');
+    loadKeys();
+  } catch (err) {
+    toast('Could not reach backend', 'error');
+  }
+}
+
+async function doBulkGen() {
+  const token = localStorage.getItem('nxc_access_token');
+  const modal = document.getElementById('modal-bulkgen');
+  const count = modal.querySelector('input[type="number"]')?.value || 10;
+  const type = modal.querySelectorAll('select')[1]?.value?.toLowerCase().replace('-day','').includes('life') ? 'lifetime' : 'day';
+  const format = modal.querySelector('select:last-of-type')?.value || 'TXT';
+
+  try {
+    const res = await fetch(`${API}/keys/bulk`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key_type: type, count })
+    });
+    const data = await res.json();
+    if (!res.ok) { toast(data.error || 'Bulk gen failed', 'error'); return; }
+
+    // Export
+    const keys = data.keys || [];
+    const content = format.includes('JSON')
+      ? JSON.stringify(keys, null, 2)
+      : keys.join('\n');
+    const ext = format.includes('JSON') ? 'json' : format.includes('CSV') ? 'csv' : 'txt';
+    const blob = new Blob([content], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `nexcode-keys-${Date.now()}.${ext}`;
+    a.click();
+
+    closeModal('modal-bulkgen');
+    toast(`${keys.length} keys generated and exported`, 'success');
+    loadKeys();
+  } catch (err) {
+    toast('Could not reach backend', 'error');
+  }
+}
+
+async function doRevoke(id, btn) {
+  const token = localStorage.getItem('nxc_access_token');
   btn.disabled = true;
-  toast('Key revoked', 'error');
+  btn.textContent = '...';
+  try {
+    const res = await fetch(`${API}/keys/${id}/revoke`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) { toast('Failed to revoke', 'error'); btn.disabled = false; btn.textContent = 'Revoke'; return; }
+    toast('Key revoked', 'error');
+    loadKeys();
+  } catch (err) {
+    toast('Could not reach backend', 'error');
+    btn.disabled = false; btn.textContent = 'Revoke';
+  }
+}
+
+async function doResetHwid(id, btn) {
+  const token = localStorage.getItem('nxc_access_token');
+  btn.disabled = true;
+  try {
+    const res = await fetch(`${API}/keys/${id}/reset-hwid`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) { toast('Failed to reset HWID', 'error'); btn.disabled = false; return; }
+    toast('HWID reset — key unlinked', 'success');
+    loadKeys();
+  } catch (err) {
+    toast('Could not reach backend', 'error');
+    btn.disabled = false;
+  }
+}
+
+async function doExtend(id, btn) {
+  const token = localStorage.getItem('nxc_access_token');
+  btn.disabled = true;
+  try {
+    const res = await fetch(`${API}/keys/${id}/extend`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ days: 30 })
+    });
+    const data = await res.json();
+    if (!res.ok) { toast(data.error || 'Failed to extend', 'error'); btn.disabled = false; return; }
+    toast('Key extended 30 days', 'success');
+    loadKeys();
+  } catch (err) {
+    toast('Could not reach backend', 'error');
+    btn.disabled = false;
+  }
+}
+
+function revokeKey(btn) { /* legacy stub — replaced by doRevoke */ }
+
+function filterKeysByStatus(val) {
+  const token = localStorage.getItem('nxc_access_token');
+  const status = val === 'All Status' ? '' : val.toLowerCase();
+  const tbody = document.getElementById('key-tbody');
+  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-muted)">Loading...</td></tr>';
+  fetch(`${API}/keys${status ? '?status='+status : ''}`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  }).then(r => r.json()).then(data => {
+    const keys = data.keys || [];
+    tbody.innerHTML = keys.length ? keys.map(renderKeyRow).join('') : '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">No keys found.</td></tr>';
+  });
 }
 
 function toggleDays() {
@@ -1381,8 +1540,8 @@ const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
 
 async function loadStats(token) {
   try {
-    const res = await fetch(, {
-      headers: { 'Authorization':  }
+    const res = await fetch(`${API}/dashboard/stats`, {
+      headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!res.ok) return;
     const s = await res.json();
@@ -1408,13 +1567,13 @@ async function loadStats(token) {
 
     const keysChange = document.getElementById('stat-keys-change');
     if (keysChange && s.keysThisWeek !== undefined) {
-      keysChange.textContent = s.keysThisWeek > 0 ?  : 'No new keys this week';
+      keysChange.textContent = s.keysThisWeek > 0 ? `+${s.keysThisWeek} this week` : 'No new keys this week';
       keysChange.className = 'stat-change ' + (s.keysThisWeek > 0 ? 'up' : 'neutral');
     }
 
     const execChange = document.getElementById('stat-exec-change');
     if (execChange && s.execsLastMonth !== undefined) {
-      execChange.textContent = s.execsLastMonth > 0 ?  : 'No executions yet';
+      execChange.textContent = s.execsLastMonth > 0 ? `${s.execsLastMonth} last month` : 'No executions yet';
       execChange.className = 'stat-change ' + (s.execsLastMonth > 0 ? 'up' : 'neutral');
     }
 
