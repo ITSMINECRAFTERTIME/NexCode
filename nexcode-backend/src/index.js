@@ -12,6 +12,9 @@ const app  = express();
 app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
+const dashboardRoutes = require('./routes/dashboard');
+app.use('/dashboard', dashboardRoutes);
+
 // ── CORS ────────────────────────────────────────────────────
 // Allow requests from your frontend (Live Server, Vercel, etc.)
 app.use(cors({

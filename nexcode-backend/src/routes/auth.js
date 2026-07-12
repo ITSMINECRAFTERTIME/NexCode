@@ -45,7 +45,7 @@ router.post('/register', async (req, res) => {
     password,
     options: {
       data: { display_name: displayName || email.split('@')[0] },
-      emailRedirectTo: `${FRONTEND}/pages/auth/verify.html`
+      emailRedirectTo: `${process.env.FRONTEND_URL}/nexcode-final/pages/auth/verify.html`
     }
   });
 
@@ -136,7 +136,7 @@ router.get('/verify-redirect', async (req, res) => {
   const FRONTEND = process.env.FRONTEND_URL;
 
   if (!token_hash) {
-    return res.redirect(`${FRONTEND}/pages/auth/verify.html?error=No+token`);
+    return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/verify.html?error=No+token`);
   }
 
   try {
@@ -146,15 +146,15 @@ router.get('/verify-redirect', async (req, res) => {
     });
 
     if (error) {
-      return res.redirect(`${FRONTEND}/pages/auth/verify.html?error=${encodeURIComponent(error.message)}`);
+      return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/verify.html?error=${encodeURIComponent(error.message)}`);
     }
 
     const { access_token, refresh_token } = data.session;
     return res.redirect(
-      `${FRONTEND}/pages/auth/verify.html?success=1&access_token=${access_token}&refresh_token=${refresh_token}`
+      `${FRONTEND}/nexcode-final/pages/auth/verify.html?success=1&access_token=${access_token}&refresh_token=${refresh_token}`
     );
   } catch (err) {
-    return res.redirect(`${FRONTEND}/pages/auth/verify.html?error=${encodeURIComponent(err.message)}`);
+    return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/verify.html?error=${encodeURIComponent(err.message)}`);
   }
 });
 
@@ -166,11 +166,11 @@ router.get('/reset-redirect', async (req, res) => {
   const FRONTEND = process.env.FRONTEND_URL;
 
   if (!token_hash) {
-    return res.redirect(`${FRONTEND}/pages/auth/reset-confirm.html?error=No+token`);
+    return res.redirect(`${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?error=No+token`);
   }
 
   return res.redirect(
-    `${FRONTEND}/pages/auth/reset-confirm.html?token_hash=${encodeURIComponent(token_hash)}&type=${type || 'recovery'}`
+    `${FRONTEND}/nexcode-final/pages/auth/reset-confirm.html?token_hash=${encodeURIComponent(token_hash)}&type=${type || 'recovery'}`
   );
 });
 
