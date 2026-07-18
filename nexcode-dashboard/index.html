@@ -222,6 +222,7 @@
           <div class="card">
             <div class="card-header"><span class="card-title">Quick Actions</span></div>
             <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-secondary" onclick="openModal('modal-bulkgen')">Bulk Generate</button>
               <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="openModal('modal-genkey')">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Generate Key
@@ -234,6 +235,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
                 Add Webhook
               </button>
+              <button class="btn btn-danger" onclick="doRevokeAll()">Revoke All</button>
             </div>
           </div>
 
@@ -277,7 +279,7 @@
       <div class="page-header">
         <div>
           <div class="page-title">Scripts</div>
-          <div class="page-subtitle">Upload, configure protection settings, and compile scripts</div>
+          <div class="page-subtitle" id="scripts-subtitle">Upload, protect, and manage your Lua scripts</div>
         </div>
         <button class="btn btn-primary" onclick="openModal('modal-newscript')">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -285,107 +287,134 @@
         </button>
       </div>
 
-      <!-- Script Cards -->
-      <div class="grid-3" style="margin-bottom:24px">
-        <!-- Script 1 -->
-        <div class="card" style="border-color:rgba(47,107,255,0.2)">
-          <div class="card-header">
-            <div>
-              <div style="font-size:14px;font-weight:700">AimScript Pro</div>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">v2.1.0 · Updated 2h ago</div>
-            </div>
-            <span class="badge badge-green">Live</span>
-          </div>
-          <div class="card-body" style="padding:14px 16px">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;font-size:12px;color:var(--text-muted)">
-              <div>Executions<br><strong style="color:var(--text-primary);font-size:15px">52,310</strong></div>
-              <div>Keys<br><strong style="color:var(--text-primary);font-size:15px">890</strong></div>
-            </div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-              <span class="macro-pill">NXC_ENCFUNC</span>
-              <span class="macro-pill">NXC_ENCSTR</span>
-            </div>
-            <div style="display:flex;gap:6px">
-              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="openModal('modal-settings-script')">Configure</button>
-              <button class="btn btn-danger btn-sm" title="Kill Switch" onclick="toast('Kill switch activated — script disabled', 'error')">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-              </button>
-            </div>
-          </div>
+      <!-- Script Cards Grid -->
+      <div class="grid-3" id="scripts-grid" style="margin-bottom:24px">
+        <div style="grid-column:1/-1;text-align:center;padding:48px 0;color:var(--text-muted);font-size:13px">
+          <div style="font-size:32px;margin-bottom:12px">📜</div>
+          Loading scripts...
         </div>
+      </div>
 
-        <!-- Script 2 -->
-        <div class="card">
+      <!-- Obfuscator Panel (shown when configuring a script) -->
+      <div id="obf-panel" style="display:none">
+        <div class="card" style="margin-bottom:16px">
           <div class="card-header">
-            <div>
-              <div style="font-size:14px;font-weight:700">ESP Utility</div>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">v1.4.2 · Updated 1d ago</div>
-            </div>
-            <span class="badge badge-green">Live</span>
+            <span class="card-title" id="obf-script-name">Protection Settings</span>
+            <button class="btn btn-ghost btn-sm" onclick="closeObfPanel()">✕ Close</button>
           </div>
-          <div class="card-body" style="padding:14px 16px">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;font-size:12px;color:var(--text-muted)">
-              <div>Executions<br><strong style="color:var(--text-primary);font-size:15px">28,440</strong></div>
-              <div>Keys<br><strong style="color:var(--text-primary);font-size:15px">312</strong></div>
-            </div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-              <span class="macro-pill">NXC_ENCFUNC</span>
-              <span class="macro-pill">NXC_JUNK</span>
-            </div>
-            <div style="display:flex;gap:6px">
-              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="openModal('modal-settings-script')">Configure</button>
-              <button class="btn btn-danger btn-sm" title="Kill Switch" onclick="toast('Kill switch activated', 'error')">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
+          <div style="padding:16px;display:grid;grid-template-columns:260px 1fr;gap:16px" id="obf-layout">
 
-        <!-- Script 3 -->
-        <div class="card">
-          <div class="card-header">
+            <!-- Left: Settings -->
             <div>
-              <div style="font-size:14px;font-weight:700">Misc Hub v3</div>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">v3.0.1 · Updated 4d ago</div>
+              <!-- Obfuscation Level -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px">Protection Level</div>
+                <div class="opt-levels">
+                  <div class="opt-level" id="lvl-light" onclick="setLevel('light')"><div class="opt-level-name" style="color:var(--green)">Light</div><div class="opt-level-desc">Fast, basic</div></div>
+                  <div class="opt-level selected" id="lvl-medium" onclick="setLevel('medium')"><div class="opt-level-name">Medium</div><div class="opt-level-desc">Balanced</div></div>
+                  <div class="opt-level" id="lvl-max" onclick="setLevel('max')"><div class="opt-level-name" style="color:var(--red)">Maximum</div><div class="opt-level-desc">Full VM</div></div>
+                </div>
+              </div>
+
+              <!-- VM Layers -->
+              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px">VM Layers</div>
+              <div style="margin-bottom:16px">
+                <label class="toggle-wrap" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><div class="toggle on" id="tog-nested" onclick="togObf('nested')"></div><span class="toggle-label">Nested VM (2x layers)</span></label>
+                <label class="toggle-wrap" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><div class="toggle on" id="tog-fullvm" onclick="togObf('fullvm')"></div><span class="toggle-label">Full Register VM</span></label>
+                <label class="toggle-wrap" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><div class="toggle on" id="tog-upval" onclick="togObf('upval')"></div><span class="toggle-label">Upvalue Wrapping</span></label>
+                <label class="toggle-wrap" style="padding:6px 0"><div class="toggle on" id="tog-cff" onclick="togObf('cff')"></div><span class="toggle-label">CFF State Machine</span></label>
+              </div>
+
+              <!-- Encoding -->
+              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px">Encoding</div>
+              <div style="margin-bottom:16px">
+                <label class="toggle-wrap" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><div class="toggle on" id="tog-rename" onclick="togObf('rename')"></div><span class="toggle-label">Rename Variables</span></label>
+                <label class="toggle-wrap" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><div class="toggle on" id="tog-numbers" onclick="togObf('numbers')"></div><span class="toggle-label">Encode Numbers</span></label>
+                <label class="toggle-wrap" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><div class="toggle on" id="tog-invis" onclick="togObf('invis')"></div><span class="toggle-label">Invisible Characters</span></label>
+                <label class="toggle-wrap" style="padding:6px 0"><div class="toggle on" id="tog-symbols" onclick="togObf('symbols')"></div><span class="toggle-label">Symbol Tables</span></label>
+              </div>
+
+              <!-- Protection -->
+              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px">Protection</div>
+              <div style="margin-bottom:16px">
+                <label class="toggle-wrap" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><div class="toggle on" id="tog-junk" onclick="togObf('junk')"></div><span class="toggle-label">Junk Functions (50+)</span></label>
+                <label class="toggle-wrap" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><div class="toggle on" id="tog-guards" onclick="togObf('guards')"></div><span class="toggle-label">Anti-Env Guards</span></label>
+                <label class="toggle-wrap" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><div class="toggle on" id="tog-opaque" onclick="togObf('opaque')"></div><span class="toggle-label">Opaque Predicates</span></label>
+                <label class="toggle-wrap" style="padding:6px 0"><div class="toggle on" id="tog-strip" onclick="togObf('strip')"></div><span class="toggle-label">Strip Comments</span></label>
+              </div>
+
+              <!-- Stats -->
+              <div style="background:var(--bg-input);border-radius:var(--radius-sm);padding:12px;font-size:12px" id="obf-stats" style="display:none">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--text-muted)">Input size</span><span id="obf-stat-in">—</span></div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--text-muted)">Output size</span><span id="obf-stat-out">—</span></div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--text-muted)">Ratio</span><span id="obf-stat-ratio">—</span></div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--text-muted)">VM Layers</span><span id="obf-stat-layers">—</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Vars renamed</span><span id="obf-stat-vars">—</span></div>
+              </div>
             </div>
-            <span class="badge badge-green">Live</span>
-          </div>
-          <div class="card-body" style="padding:14px 16px">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;font-size:12px;color:var(--text-muted)">
-              <div>Executions<br><strong style="color:var(--text-primary);font-size:15px">4,170</strong></div>
-              <div>Keys<br><strong style="color:var(--text-primary);font-size:15px">45</strong></div>
-            </div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-              <span class="macro-pill">NXC_NO_VIRT</span>
-              <span class="macro-pill">NXC_ENCSTR</span>
-            </div>
-            <div style="display:flex;gap:6px">
-              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="openModal('modal-settings-script')">Configure</button>
-              <button class="btn btn-danger btn-sm" title="Kill Switch" onclick="toast('Kill switch activated', 'error')">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-              </button>
+
+            <!-- Right: Code editors -->
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                  <span style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Source Code</span>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-ghost btn-sm" onclick="document.getElementById('lua-file-input').click()">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      Upload .lua
+                    </button>
+                    <span id="obf-inlen" style="font-size:11px;color:var(--text-muted);padding:4px 0">0 chars</span>
+                  </div>
+                </div>
+                <input type="file" id="lua-file-input" accept=".lua,.luau,.txt" style="display:none" onchange="handleLuaFile(event)">
+                <textarea id="obf-input" style="width:100%;height:220px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;padding:12px;resize:vertical;outline:none;tab-size:2" placeholder="-- Paste your Lua / Luau source here or upload a .lua file above" oninput="document.getElementById('obf-inlen').textContent=this.value.length.toLocaleString()+' chars'"></textarea>
+              </div>
+
+              <!-- Progress bar -->
+              <div id="obf-progress" style="display:none">
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px" id="obf-progress-label">Processing...</div>
+                <div style="height:3px;background:var(--border);border-radius:2px"><div id="obf-pb" style="height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width .2s"></div></div>
+              </div>
+
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                  <span style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Protected Output</span>
+                  <div style="display:flex;gap:6px">
+                    <span id="obf-outlen" style="font-size:11px;color:var(--text-muted);padding:4px 0">0 chars</span>
+                    <button class="btn btn-ghost btn-sm" onclick="copyObfOutput()">Copy</button>
+                    <button class="btn btn-ghost btn-sm" onclick="downloadObfOutput()">Download</button>
+                  </div>
+                </div>
+                <textarea id="obf-output" readonly style="width:100%;height:220px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);color:var(--text-secondary);font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.7;padding:12px;resize:vertical;outline:none" placeholder="-- Protected output appears here..."></textarea>
+              </div>
+
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-primary" onclick="runObfuscate()" id="obf-run-btn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  Obfuscate
+                </button>
+                <button class="btn btn-secondary" onclick="saveObfuscated()" id="obf-save-btn" style="display:none">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                  Save & Deploy
+                </button>
+                <button class="btn btn-ghost btn-sm" onclick="clearObf()">Clear</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Protection Settings Panel -->
-      <div class="card" id="modal-settings-script-inline" style="display:none"></div>
-
-      <div class="card">
+      <!-- Compile History -->
+      <div class="card" id="compile-history-card">
         <div class="card-header">
           <span class="card-title">Compile History</span>
-          <button class="btn btn-ghost btn-sm">Clear</button>
+          <button class="btn btn-ghost btn-sm" onclick="clearCompileHistory()">Clear</button>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Script</th><th>Version</th><th>Status</th><th>Optimization</th><th>Compiled</th><th>Size</th></tr></thead>
-            <tbody>
-              <tr><td>AimScript Pro</td><td>v2.1.0</td><td><span class="badge badge-green">Success</span></td><td><span class="badge badge-blue">Max Security</span></td><td>2h ago</td><td>184 KB</td></tr>
-              <tr><td>ESP Utility</td><td>v1.4.2</td><td><span class="badge badge-green">Success</span></td><td><span class="badge badge-yellow">Balanced</span></td><td>1d ago</td><td>96 KB</td></tr>
-              <tr><td>AimScript Pro</td><td>v2.0.9</td><td><span class="badge badge-gray">Superseded</span></td><td><span class="badge badge-blue">Max Security</span></td><td>3d ago</td><td>178 KB</td></tr>
-              <tr><td>Misc Hub v3</td><td>v3.0.1</td><td><span class="badge badge-green">Success</span></td><td><span class="badge badge-green">Performance</span></td><td>4d ago</td><td>51 KB</td></tr>
-              <tr><td>ESP Utility</td><td>v1.4.1</td><td><span class="badge badge-red">Failed</span></td><td><span class="badge badge-yellow">Balanced</span></td><td>5d ago</td><td>—</td></tr>
+            <thead><tr><th>Script</th><th>Version</th><th>Status</th><th>Level</th><th>Compiled</th><th>Size</th></tr></thead>
+            <tbody id="compile-history-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">No compile history yet</td></tr>
             </tbody>
           </table>
         </div>
@@ -1013,6 +1042,7 @@ fmt.<span class="code-func">Println</span>(result.Valid)</div>
             <option value="ffa">FFA (keyless)</option>
           </select>
         </div>
+
         <div class="form-group" id="days-field">
           <label class="form-label">Duration (days)</label>
           <input class="form-input" type="number" value="30" min="1">
@@ -1024,7 +1054,11 @@ fmt.<span class="code-func">Println</span>(result.Valid)</div>
       </div>
       <div class="form-group">
         <label class="form-label">HWID Policy</label>
-        <select class="form-select"><option>Lock on first execution</option><option>Lock immediately (require HWID now)</option><option>No HWID lock</option></select>
+        <select class="form-select" id="genkey-hwid">
+          <option value="lock_on_exec">Lock on first execution</option>
+          <option value="lock_immediately">Lock immediately</option>
+          <option value="none">No HWID lock</option>
+        </select>
       </div>
     </div>
     <div class="modal-footer">
@@ -1049,7 +1083,7 @@ fmt.<span class="code-func">Println</span>(result.Valid)</div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Number of keys</label>
-          <input class="form-input" type="number" value="50" min="1" max="500">
+          <input class="form-input" id="bulk-count" type="number" value="50" min="1" max="500">
         </div>
         <div class="form-group">
           <label class="form-label">Key Type</label>
@@ -1059,6 +1093,14 @@ fmt.<span class="code-func">Println</span>(result.Valid)</div>
       <div class="form-group">
         <label class="form-label">Export Format</label>
         <select class="form-select"><option>TXT (one per line)</option><option>JSON</option><option>CSV</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">HWID Policy</label>
+        <select class="form-select" id="bulk-hwid">
+          <option value="lock_on_exec">Lock on first execution</option>
+          <option value="lock_immediately">Lock immediately</option>
+          <option value="none">No HWID lock</option>
+        </select>
       </div>
     </div>
     <div class="modal-footer">
@@ -1070,27 +1112,39 @@ fmt.<span class="code-func">Println</span>(result.Valid)</div>
 
 <!-- New Script -->
 <div class="modal-overlay" id="modal-newscript" onclick="if(event.target===this)closeModal('modal-newscript')">
-  <div class="modal" style="max-width:560px">
+  <div class="modal" style="max-width:520px">
     <div class="modal-header">
       <span class="modal-title">New Script</span>
       <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-newscript')">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-group"><label class="form-label">Script Name</label><input class="form-input" placeholder="e.g. AimScript Pro"></div>
       <div class="form-group">
-        <label class="form-label">Project</label>
-        <select class="form-select"><option>Combat Suite</option><option>Free Hub</option><option>No project</option></select>
+        <label class="form-label">Script Name</label>
+        <input class="form-input" id="ns-name" placeholder="e.g. AimScript Pro">
       </div>
       <div class="form-group">
-        <label class="form-label">Upload Source (.lua)</label>
-        <div style="border:1px dashed var(--border);border-radius:var(--radius-sm);padding:24px;text-align:center;background:var(--bg-input);cursor:pointer" onclick="toast('File picker opened','info')">
-          <div style="font-size:13px;color:var(--text-muted)">Click to upload or drag & drop<br><span style="font-size:11.5px">.lua files only</span></div>
+        <label class="form-label">Description <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+        <input class="form-input" id="ns-desc" placeholder="What does this script do?">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Upload Source (.lua / .luau)</label>
+        <div style="border:1px dashed var(--border);border-radius:var(--radius-sm);padding:24px;text-align:center;background:var(--bg-input);cursor:pointer;transition:border-color .15s" 
+             id="ns-dropzone"
+             onclick="document.getElementById('ns-file').click()"
+             ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+             ondragleave="this.style.borderColor=''"
+             ondrop="handleNsFileDrop(event)">
+          <div style="font-size:13px;color:var(--text-muted)" id="ns-dropzone-label">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:8px;display:block;margin-left:auto;margin-right:auto"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Click to upload or drag & drop<br><span style="font-size:11.5px">.lua or .luau files only</span>
+          </div>
         </div>
+        <input type="file" id="ns-file" accept=".lua,.luau,.txt" style="display:none" onchange="handleNsFile(event)">
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-newscript')">Cancel</button>
-      <button class="btn btn-primary" onclick="toast('Script uploaded and queued for compile','success');closeModal('modal-newscript')">Upload &amp; Compile</button>
+      <button class="btn btn-primary" onclick="createScript()">Create Script</button>
     </div>
   </div>
 </div>
@@ -1337,6 +1391,7 @@ function renderKeyRow(k) {
     <td>${k.hwid ? '<span class="badge badge-blue">Locked</span>' : '<span class="badge badge-gray">Unlocked</span>'}</td>
     <td>${formatExpiry(k.expires_at)}</td>
     <td>${k.note || '—'}</td>
+    <td>${k.roblox_username ? `<div style="display:flex;align-items:center;gap:6px"><img src="${k.roblox_pfp||''}" style="width:20px;height:20px;border-radius:50%"> ${k.roblox_username}</div>` : '−'}</td>
     <td><div class="td-actions">
       <button class="btn btn-ghost btn-xs" ${revoked?'disabled':''} onclick="doResetHwid('${k.id}',this)">Reset HWID</button>
       <button class="btn btn-ghost btn-xs" ${revoked?'disabled':''} onclick="doExtend('${k.id}',this)">Extend</button>
@@ -1378,11 +1433,12 @@ async function loadKeys() {
 
 async function doGenKey() {
   const token = localStorage.getItem('nxc_access_token');
+  if (!token) { toast('No token found - please log in again', 'error'); return; }
   const modal = document.getElementById('modal-genkey');
   const type = modal.querySelector('#key-type-sel').value;
   const days = modal.querySelector('input[type="number"]')?.value;
   const note = modal.querySelectorAll('input')[0]?.value || '';
-  const hwid = modal.querySelector('select:last-of-type')?.value;
+  const hwid = document.getElementById('genkey-hwid')?.value || 'lock_on_exec';
 
   const hwidPolicy = hwid && hwid.includes('immediately') ? 'lock_immediately' : hwid && hwid.includes('No') ? 'none' : 'lock_on_exec';
 
@@ -1398,22 +1454,24 @@ async function doGenKey() {
     toast(`Key generated: ${data.key.key_value}`, 'success');
     loadKeys();
   } catch (err) {
-    toast('Could not reach backend', 'error');
+    toast('Error: ' + err.message, 'error');
   }
 }
 
 async function doBulkGen() {
   const token = localStorage.getItem('nxc_access_token');
   const modal = document.getElementById('modal-bulkgen');
-  const count = modal.querySelector('input[type="number"]')?.value || 10;
+  const countEl = document.getElementById('bulk-count') || document.querySelector('#modal-bulkgen input[type="number"]');
+  const count = parseInt(countEl?.value) || 10;
   const type = modal.querySelectorAll('select')[1]?.value?.toLowerCase().replace('-day','').includes('life') ? 'lifetime' : 'day';
   const format = modal.querySelector('select:last-of-type')?.value || 'TXT';
+  const hwidPolicy = document.getElementById('bulk-hwid')?.value || 'lock_on_exec';
 
   try {
     const res = await fetch(`${API}/keys/bulk`, {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key_type: type, count })
+      body: JSON.stringify({ key_type: type, count: Number(count), hwid_policy: hwidPolicy })
     });
     const data = await res.json();
     if (!res.ok) { toast(data.error || 'Bulk gen failed', 'error'); return; }
@@ -1448,14 +1506,30 @@ async function doRevoke(id, btn) {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!res.ok) { toast('Failed to revoke', 'error'); btn.disabled = false; btn.textContent = 'Revoke'; return; }
-    toast('Key revoked', 'error');
-    loadKeys();
+    toast('Key revoked', 'success');
+    const row = btn.closest('tr');
+    if (row) row.remove();
   } catch (err) {
     toast('Could not reach backend', 'error');
     btn.disabled = false; btn.textContent = 'Revoke';
   }
 }
 
+async function doRevokeAll() {
+      const token = localStorage.getItem('nxc_access_token');
+        try {
+            const res = await fetch(`${API}/keys/revoke-all`, {
+                  method: 'PATCH',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                                const data = await res.json();
+                                    if (!res.ok) { toast(data.error || 'Failed', 'error'); return; }
+                                        toast(`All keys revoked`, 'success');
+                                            loadKeys();
+                                              } catch (err) {
+                                                  toast('Could not reach backend', 'error');
+                                                    }
+                                                    }
 async function doResetHwid(id, btn) {
   const token = localStorage.getItem('nxc_access_token');
   btn.disabled = true;
@@ -1520,7 +1594,7 @@ const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
   const token = localStorage.getItem('nxc_access_token');
 
   if (!token) {
-    window.location.href = '../nexcode-final/pages/auth/login.html';
+    window.location.href = 'https://scaling-space-waddle-qrv79j4pp92x9w4-5500.app.github.dev/nexcode-final/pages/auth/login.html';
     return;
   }
 
@@ -1532,7 +1606,7 @@ const API = 'https://scaling-space-waddle-qrv79j4pp92x9w4-3000.app.github.dev';
     if (!res.ok) {
       localStorage.removeItem('nxc_access_token');
       localStorage.removeItem('nxc_refresh_token');
-      window.location.href = '../nexcode-final/pages/auth/login.html';
+      window.location.href = 'https://scaling-space-waddle-qrv79j4pp92x9w4-5500.app.github.dev/nexcode-final/pages/auth/login.html';
       return;
     }
 
@@ -1599,7 +1673,7 @@ async function loadStats(token) {
 function logout() {
   localStorage.removeItem('nxc_access_token');
   localStorage.removeItem('nxc_refresh_token');
-  window.location.href = '../nexcode-final/pages/auth/login.html';
+  window.location.href = 'https://scaling-space-waddle-qrv79j4pp92x9w4-5500.app.github.dev/nexcode-final/pages/auth/login.html';
 }
 
 // Counter animation on overview
@@ -1617,6 +1691,840 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(update);
   });
 });
+
+// ═══════════════════════════════════════════════════════════
+// SCRIPTS TAB — Real backend integration
+// ═══════════════════════════════════════════════════════════
+
+let currentScriptId = null;
+let compileHistory = JSON.parse(localStorage.getItem('nxc_compile_history') || '[]');
+
+async function loadScripts() {
+  const token = localStorage.getItem('nxc_access_token');
+  const grid = document.getElementById('scripts-grid');
+  try {
+    const res = await fetch(`${API}/scripts`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (!res.ok) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px 0;color:var(--text-muted)">${data.error || 'Failed to load scripts'}</div>`; return; }
+    const scripts = data.scripts || [];
+    document.getElementById('scripts-subtitle').textContent = `${scripts.length} script${scripts.length !== 1 ? 's' : ''} · Upload, protect, and manage your Lua scripts`;
+    if (scripts.length === 0) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px 0;color:var(--text-muted);font-size:13px"><div style="font-size:32px;margin-bottom:12px">📜</div>No scripts yet.<br>Click <strong>New Script</strong> to get started.</div>`;
+      return;
+    }
+    grid.innerHTML = scripts.map(s => renderScriptCard(s)).join('');
+    renderCompileHistory();
+  } catch (err) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px 0;color:var(--text-muted)">Could not reach backend</div>`;
+  }
+}
+
+function renderScriptCard(s) {
+  const statusColor = s.status === 'live' ? 'badge-green' : s.status === 'killed' ? 'badge-red' : 'badge-gray';
+  const statusLabel = s.status === 'live' ? 'Live' : s.status === 'killed' ? 'Killed' : s.status;
+  const updated = s.updated_at ? timeAgo(new Date(s.updated_at)) : 'Never';
+  const hasObf = s.obfuscated_source ? true : false;
+  return `<div class="card" style="${s.status === 'live' ? 'border-color:rgba(47,107,255,0.2)' : ''}">
+    <div class="card-header">
+      <div>
+        <div style="font-size:14px;font-weight:700">${escHtml(s.name)}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">v${escHtml(s.version || '1.0.0')} · Updated ${updated}</div>
+      </div>
+      <span class="badge ${statusColor}">${statusLabel}</span>
+    </div>
+    <div class="card-body" style="padding:14px 16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;font-size:12px;color:var(--text-muted)">
+        <div>Executions<br><strong style="color:var(--text-primary);font-size:15px">${(s.executions || 0).toLocaleString()}</strong></div>
+        <div>Source<br><strong style="color:var(--text-primary);font-size:13px">${s.lua_source ? (s.lua_source.length / 1024).toFixed(1) + ' KB' : '—'}</strong></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+        ${hasObf ? '<span class="macro-pill" style="color:var(--green)">Protected</span>' : '<span class="macro-pill" style="color:var(--text-muted)">Unprotected</span>'}
+        ${s.description ? `<span class="macro-pill">${escHtml(s.description.slice(0,20))}</span>` : ''}
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="openObfPanel('${s.id}','${escHtml(s.name)}')">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Protect
+        </button>
+        <button class="btn btn-danger btn-sm" title="${s.status === 'killed' ? 'Re-enable script' : 'Kill switch'}" onclick="toggleKillSwitch('${s.id}', this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        </button>
+        <button class="btn btn-ghost btn-sm" title="Delete" onclick="deleteScript('${s.id}')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function timeAgo(date) {
+  const s = Math.floor((Date.now() - date) / 1000);
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  if (s < 86400) return Math.floor(s/3600) + 'h ago';
+  return Math.floor(s/86400) + 'd ago';
+}
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── New Script ──
+let nsSrc = '';
+function handleNsFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    nsSrc = e.target.result;
+    document.getElementById('ns-dropzone-label').innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><br><strong style="color:var(--green)">${file.name}</strong><br><span style="font-size:11px;color:var(--text-muted)">${(file.size/1024).toFixed(1)} KB loaded</span>`;
+  };
+  reader.readAsText(file);
+}
+
+function handleNsFileDrop(event) {
+  event.preventDefault();
+  document.getElementById('ns-dropzone').style.borderColor = '';
+  const file = event.dataTransfer.files[0];
+  if (file) { document.getElementById('ns-file').files = event.dataTransfer.files; handleNsFile({target:{files:[file]}}); }
+}
+
+async function createScript() {
+  const name = document.getElementById('ns-name').value.trim();
+  const desc = document.getElementById('ns-desc').value.trim();
+  if (!name) { toast('Script name is required', 'error'); return; }
+  const token = localStorage.getItem('nxc_access_token');
+  try {
+    const res = await fetch(`${API}/scripts`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, description: desc, lua_source: nsSrc })
+    });
+    const data = await res.json();
+    if (!res.ok) { toast(data.error || 'Failed to create script', 'error'); return; }
+    toast(`Script "${name}" created!`, 'success');
+    closeModal('modal-newscript');
+    document.getElementById('ns-name').value = '';
+    document.getElementById('ns-desc').value = '';
+    nsSrc = '';
+    document.getElementById('ns-dropzone-label').innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:8px;display:block;margin-left:auto;margin-right:auto"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Click to upload or drag & drop<br><span style="font-size:11.5px">.lua or .luau files only</span>`;
+    loadScripts();
+    // Auto-open obf panel for the new script
+    setTimeout(() => openObfPanel(data.script.id, name, nsSrc), 300);
+  } catch (err) {
+    toast('Could not reach backend', 'error');
+  }
+}
+
+async function toggleKillSwitch(id, btn) {
+  const token = localStorage.getItem('nxc_access_token');
+  try {
+    const res = await fetch(`${API}/scripts/${id}/killswitch`, {
+      method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok) { toast(data.error || 'Failed', 'error'); return; }
+    const killed = data.script.status === 'killed';
+    toast(killed ? 'Kill switch activated — script disabled' : 'Script re-enabled', killed ? 'error' : 'success');
+    loadScripts();
+  } catch (err) { toast('Could not reach backend', 'error'); }
+}
+
+async function deleteScript(id) {
+  if (!confirm('Delete this script? This cannot be undone.')) return;
+  const token = localStorage.getItem('nxc_access_token');
+  try {
+    const res = await fetch(`${API}/scripts/${id}`, {
+      method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) { toast('Failed to delete', 'error'); return; }
+    toast('Script deleted', 'success');
+    if (currentScriptId === id) closeObfPanel();
+    loadScripts();
+  } catch (err) { toast('Could not reach backend', 'error'); }
+}
+
+// ── Obfuscator Panel ──
+async function openObfPanel(id, name, prefillSrc) {
+  currentScriptId = id;
+  document.getElementById('obf-script-name').textContent = `Protection Settings — ${name}`;
+  document.getElementById('obf-panel').style.display = 'block';
+  document.getElementById('obf-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Load existing source
+  if (prefillSrc) {
+    document.getElementById('obf-input').value = prefillSrc;
+    document.getElementById('obf-inlen').textContent = prefillSrc.length.toLocaleString() + ' chars';
+  } else {
+    const token = localStorage.getItem('nxc_access_token');
+    const res = await fetch(`${API}/scripts/${id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (data.script?.lua_source) {
+      document.getElementById('obf-input').value = data.script.lua_source;
+      document.getElementById('obf-inlen').textContent = data.script.lua_source.length.toLocaleString() + ' chars';
+    }
+    if (data.script?.obfuscated_source) {
+      document.getElementById('obf-output').value = data.script.obfuscated_source;
+      document.getElementById('obf-outlen').textContent = data.script.obfuscated_source.length.toLocaleString() + ' chars';
+      document.getElementById('obf-save-btn').style.display = '';
+    }
+    // Restore obf settings
+    if (data.script?.obf_settings) {
+      const s = data.script.obf_settings;
+      ['nested','fullvm','upval','cff','rename','numbers','invis','symbols','junk','guards','opaque','strip'].forEach(k => {
+        const el = document.getElementById('tog-' + k);
+        if (el) { if (s[k] === false) el.classList.remove('on'); else el.classList.add('on'); }
+      });
+      if (s.level) setLevel(s.level);
+    }
+  }
+}
+
+function closeObfPanel() {
+  document.getElementById('obf-panel').style.display = 'none';
+  document.getElementById('obf-output').value = '';
+  document.getElementById('obf-outlen').textContent = '0 chars';
+  document.getElementById('obf-save-btn').style.display = 'none';
+  currentScriptId = null;
+}
+
+function handleLuaFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('obf-input').value = e.target.result;
+    document.getElementById('obf-inlen').textContent = e.target.result.length.toLocaleString() + ' chars';
+    toast(`${file.name} loaded`, 'success');
+  };
+  reader.readAsText(file);
+}
+
+function setLevel(lvl) {
+  ['light','medium','max'].forEach(l => document.getElementById('lvl-'+l)?.classList.remove('selected'));
+  document.getElementById('lvl-'+lvl)?.classList.add('selected');
+  const presets = {
+    light:  { nested:false, fullvm:false, upval:true,  cff:false, rename:true,  numbers:false, invis:false, symbols:false, junk:false, guards:true,  opaque:false, strip:true  },
+    medium: { nested:true,  fullvm:true,  upval:true,  cff:true,  rename:true,  numbers:true,  invis:true,  symbols:true,  junk:true,  guards:true,  opaque:true,  strip:true  },
+    max:    { nested:true,  fullvm:true,  upval:true,  cff:true,  rename:true,  numbers:true,  invis:true,  symbols:true,  junk:true,  guards:true,  opaque:true,  strip:true  },
+  };
+  const p = presets[lvl];
+  Object.entries(p).forEach(([k,v]) => {
+    const el = document.getElementById('tog-'+k);
+    if (el) { if (v) el.classList.add('on'); else el.classList.remove('on'); }
+  });
+}
+
+function togObf(k) {
+  document.getElementById('tog-'+k)?.classList.toggle('on');
+}
+
+function isOn(id) { return document.getElementById(id)?.classList.contains('on') ?? false; }
+
+function getObfOpts() {
+  return {
+    nested:  isOn('tog-nested'),  fullvm:  isOn('tog-fullvm'),
+    upval:   isOn('tog-upval'),   cff:     isOn('tog-cff'),
+    rename:  isOn('tog-rename'),  numbers: isOn('tog-numbers'),
+    invis:   isOn('tog-invis'),   symbols: isOn('tog-symbols'),
+    junk:    isOn('tog-junk'),    guards:  isOn('tog-guards'),
+    opaque:  isOn('tog-opaque'),  strip:   isOn('tog-strip'),
+    level: document.querySelector('.opt-level.selected #lvl-light') ? 'light' : document.getElementById('lvl-max')?.classList.contains('selected') ? 'max' : 'medium'
+  };
+}
+
+function runObfuscate() {
+  const src = document.getElementById('obf-input').value.trim();
+  if (!src) { toast('No source code to protect', 'error'); return; }
+  const opts = getObfOpts();
+  const btn = document.getElementById('obf-run-btn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+  document.getElementById('obf-progress').style.display = 'block';
+  setPb(0); setLbl('Starting NexVault...');
+  setTimeout(() => {
+    try {
+      const result = nexVaultObfuscate(src, opts);
+      document.getElementById('obf-output').value = result.code;
+      document.getElementById('obf-outlen').textContent = result.code.length.toLocaleString() + ' chars';
+      // Update stats
+      document.getElementById('obf-stat-in').textContent = src.length.toLocaleString();
+      document.getElementById('obf-stat-out').textContent = result.code.length.toLocaleString();
+      document.getElementById('obf-stat-ratio').textContent = (result.code.length / src.length).toFixed(1) + 'x';
+      document.getElementById('obf-stat-layers').textContent = opts.nested ? '2' : '1';
+      document.getElementById('obf-stat-vars').textContent = result.varsRenamed;
+      document.getElementById('obf-stats').style.display = 'block';
+      document.getElementById('obf-save-btn').style.display = '';
+      document.getElementById('obf-progress').style.display = 'none';
+      toast('✓ Obfuscation complete — ' + result.code.length.toLocaleString() + ' chars output', 'success');
+      addCompileHistory(currentScriptId, opts, src.length, result.code.length);
+    } catch (err) {
+      toast('Obfuscation failed: ' + err.message, 'error');
+      document.getElementById('obf-progress').style.display = 'none';
+    }
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Obfuscate';
+  }, 50);
+}
+
+async function saveObfuscated() {
+  if (!currentScriptId) return;
+  const obfuscated = document.getElementById('obf-output').value;
+  const src = document.getElementById('obf-input').value;
+  const opts = getObfOpts();
+  if (!obfuscated) { toast('Run obfuscation first', 'error'); return; }
+  const token = localStorage.getItem('nxc_access_token');
+  try {
+    const res = await fetch(`${API}/scripts/${currentScriptId}`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lua_source: src, obfuscated_source: obfuscated, obf_settings: opts })
+    });
+    if (!res.ok) { toast('Failed to save', 'error'); return; }
+    toast('Script saved and deployed!', 'success');
+    loadScripts();
+  } catch (err) { toast('Could not reach backend', 'error'); }
+}
+
+function copyObfOutput() {
+  const v = document.getElementById('obf-output').value;
+  if (!v) { toast('Nothing to copy', 'error'); return; }
+  navigator.clipboard.writeText(v).then(() => toast('Copied to clipboard!', 'success'));
+}
+
+function downloadObfOutput() {
+  const v = document.getElementById('obf-output').value;
+  if (!v) { toast('Nothing to download', 'error'); return; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([v], { type: 'text/plain' }));
+  a.download = 'nexvault_protected.lua';
+  a.click();
+  toast('Downloaded!', 'success');
+}
+
+function clearObf() {
+  document.getElementById('obf-input').value = '';
+  document.getElementById('obf-output').value = '';
+  document.getElementById('obf-inlen').textContent = '0 chars';
+  document.getElementById('obf-outlen').textContent = '0 chars';
+  document.getElementById('obf-save-btn').style.display = 'none';
+  document.getElementById('obf-stats').style.display = 'none';
+}
+
+function setPb(p) { const e = document.getElementById('obf-pb'); if (e) e.style.width = p + '%'; }
+function setLbl(t) { const e = document.getElementById('obf-progress-label'); if (e) e.textContent = t; }
+
+// Compile history
+function addCompileHistory(scriptId, opts, inSize, outSize) {
+  const level = document.getElementById('lvl-max')?.classList.contains('selected') ? 'Maximum' : document.getElementById('lvl-light')?.classList.contains('selected') ? 'Light' : 'Medium';
+  compileHistory.unshift({ scriptId, scriptName: document.getElementById('obf-script-name')?.textContent?.replace('Protection Settings — ','') || '—', level, inSize, outSize, date: new Date().toISOString() });
+  if (compileHistory.length > 20) compileHistory.pop();
+  localStorage.setItem('nxc_compile_history', JSON.stringify(compileHistory));
+  renderCompileHistory();
+}
+
+function renderCompileHistory() {
+  const tbody = document.getElementById('compile-history-tbody');
+  if (!tbody) return;
+  if (compileHistory.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">No compile history yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = compileHistory.map(h => {
+    const levelBadge = h.level === 'Maximum' ? 'badge-blue' : h.level === 'Medium' ? 'badge-yellow' : 'badge-green';
+    return `<tr><td>${escHtml(h.scriptName || '—')}</td><td>—</td><td><span class="badge badge-green">Success</span></td><td><span class="badge ${levelBadge}">${h.level}</span></td><td>${timeAgo(new Date(h.date))}</td><td>${h.outSize ? (h.outSize/1024).toFixed(0) + ' KB' : '—'}</td></tr>`;
+  }).join('');
+}
+
+function clearCompileHistory() {
+  compileHistory = [];
+  localStorage.removeItem('nxc_compile_history');
+  renderCompileHistory();
+}
+
+// Load scripts when scripts tab becomes visible
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-page="scripts"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setTimeout(() => { loadScripts(); renderCompileHistory(); }, 100);
+    });
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// NEXVAULT OBFUSCATOR ENGINE v1.0
+// Based on CodeVault v4.0 by timmy — enhanced for NexCode
+// ═══════════════════════════════════════════════════════════
+
+const NV = (() => {
+  'use strict';
+
+  const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const rf = a => a[Math.floor(Math.random() * a.length)];
+  function shuffle(a) { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = ri(0, i); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+
+  // IlOo name generator — visually confusing
+  const ILSET = 'IlOo';
+  function rn(min, max) {
+    min = min || 6; max = max || 16;
+    const l = ri(min, max);
+    let s = ILSET[ri(0, 1)];
+    for (let i = 1; i < l; i++) s += ILSET[ri(0, 3)];
+    return s;
+  }
+
+  // Symbol chars safe for Lua table keys
+  const SAFE_SYMS = ['#','_','/','!','$','&','>','<','@','^','~','|','?','*','+','-'];
+  const sSym = () => rf(SAFE_SYMS);
+
+  // Zero-width chars for invisible identifier poisoning
+  const ZW = ['​', '‌', '‍'];
+  const zw = () => rf(ZW);
+
+  // Dual-map encoding (SYM16/CON16 nibble pairs)
+  const SYM16 = ['#','_','/','!','$','&','>','<','@','^','~','|','?','*','+','-'];
+  const CON16 = ['b','c','d','f','g','h','j','k','m','n','p','q','r','s','t','v'];
+
+  function addEncode(str, key, salt) {
+    const b = [];
+    for (let i = 0; i < str.length; i++) {
+      const k = Math.floor((key + i * salt) % 256);
+      b.push((str.charCodeAt(i) + k) % 256);
+    }
+    return b;
+  }
+
+  function dualEnc(bytes) {
+    let o = '';
+    for (const b of bytes) o += SYM16[(b >> 4) & 0xF] + CON16[b & 0xF];
+    return o;
+  }
+
+  // Enhanced number encoding with 4 strategies
+  function encNum(n) {
+    if (n === 0) return '(0*0)';
+    if (n === 1) return '(0+1)';
+    if (n < 0) return `(0-(${Math.abs(n)}))`;
+    const strategy = ri(0, 3);
+    if (strategy === 0) { const a = ri(1, Math.min(n - 1, 100)); return `(${a}+(${n - a}))`; }
+    if (strategy === 1) { const a = ri(2, Math.min(n, 10)); if (n % a === 0) return `(${a}*(${n / a}))`; return `(${ri(1,Math.min(n-1,50))}+(${n - ri(1,Math.min(n-1,50))}))`; }
+    if (strategy === 2 && n < 256) return `string.byte(string.char(${n}))`;
+    const a = ri(1, Math.min(n - 1, 100));
+    return `(${a}+(${n - a}))`;
+  }
+
+  // Comment/whitespace stripper
+  function stripSrc(s) {
+    s = s.replace(/--\[\[[\s\S]*?\]\]/g, '');
+    s = s.replace(/--[^
+]*/g, '');
+    return s;
+  }
+
+  // Lua keywords + Roblox/Luau globals to never rename
+  const KW = new Set(['and','break','do','else','elseif','end','false','for','function',
+    'goto','if','in','local','nil','not','or','repeat','return','then','true',
+    'until','while','print','math','string','table','pairs','ipairs','tonumber',
+    'tostring','type','pcall','xpcall','error','assert','require','rawget','rawset',
+    'next','select','unpack','setmetatable','getmetatable','game','workspace',
+    'script','wait','spawn','delay','tick','os','io','collectgarbage','rawequal',
+    'rawlen','load','loadstring','dofile','loadfile','task','bit32','Instance',
+    'Vector3','CFrame','Color3','UDim2','UDim','Enum','coroutine','debug',
+    '_G','_ENV','table','string','math','os','io','utf8','Players','RunService',
+    'UserInputService','TweenService','ReplicatedStorage','ServerScriptService',
+    'HttpService','DataStoreService','game','workspace','script','plugin',
+    'StarterGui','StarterPlayer','Lighting','SoundService','ChatService',
+    'LocalPlayer','Character','Humanoid','RootPart','HumanoidRootPart']);
+
+  let gVarsRenamed = 0;
+  function renameVars(src, useInvis) {
+    const vm = {};
+    gVarsRenamed = 0;
+    // Rename local variable declarations
+    src = src.replace(/local\s+([a-zA-Z_][a-zA-Z0-9_]*)/g, (m, name) => {
+      if (!KW.has(name) && !vm[name]) {
+        let nm = rn();
+        if (useInvis && Math.random() < 0.4) {
+          const mid = Math.floor(nm.length / 2);
+          nm = nm.slice(0, mid) + zw() + nm.slice(mid);
+        }
+        vm[name] = nm;
+        gVarsRenamed++;
+      }
+      return 'local ' + (vm[name] || name);
+    });
+    // Replace all occurrences
+    for (const [orig, rep] of Object.entries(vm)) {
+      src = src.replace(new RegExp(`\b${orig}\b`, 'g'), rep);
+    }
+    return src;
+  }
+
+  // Opaque predicates — always false, valid Lua
+  const OPAQUE_FALSE = [
+    '(1==2)','(0>1)','(false)','(nil==true)',
+    '(type(nil)=="number")','(1~=1)',
+    '("a"=="b")','(2<1)','(0==1)',
+    'rawequal(0,1)','(math.floor(1.9)==2)',
+    '(string.len("")>0)','(math.abs(0)>0)',
+    '(type(0)=="string")','(not true)',
+  ];
+  const opF = () => rf(OPAQUE_FALSE);
+  const opT = () => `(not ${opF()})`;
+
+  // Symbol noise tables
+  function symNoise() {
+    const v = rn(3, 5); const n = ri(3, 8); const parts = [];
+    for (let i = 0; i < n; i++) {
+      const k = sSym() + sSym();
+      const val = Math.random() < 0.5 ? ri(1, 65535) : `"${rn(2, 4)}"`;
+      parts.push(`["${k}"]=${val}`);
+    }
+    return `do local ${v}={${parts.join(',')}} ${v}=nil end`;
+  }
+
+  // Enhanced junk lines (more variety)
+  function junkLine() {
+    const v = rn(3, 5);
+    const j = [
+      `local ${v}=tostring(nil)`,
+      `if false then local ${v}=0 end`,
+      `do local ${v}=type(nil) end`,
+      `local ${v}=pcall(function()end)`,
+      `local ${v}=(function(x)return x end)(0)`,
+      `do local ${v}=math.floor(0) end`,
+      `local ${v}=select("#")`,
+      `do local ${v}=#{} end`,
+      `local ${v}=tostring(false)`,
+      `do local ${v}=0 ${v}=nil end`,
+      `local ${v}=math.abs(0)`,
+      `do local ${v}=type({}) end`,
+      `local ${v}=(1==2)`,
+      `if not false then local ${v}=nil end`,
+      `local ${v}=string.len("")`,
+      `do local ${v}=math.max(0,0) end`,
+      `local ${v}=rawequal(nil,nil)`,
+      `do local ${v}=string.rep("",0) end`,
+      `local ${v}=type(type)`,
+      `do local ${v}=table.concat({}) end`,
+      `local ${v}=math.pi>3`,
+      `do local ${v}=string.byte("A") end`,
+      `local ${v}=math.huge>0`,
+    ];
+    return rf(j);
+  }
+
+  // Junk function body
+  function junkBody(p) {
+    const a = rn(3, 5), b = rn(3, 5), c = rn(3, 5);
+    const k1 = sSym() + sSym(), k2 = sSym() + sSym();
+    const bodies = [
+      `local ${a}=0 for ${b}=1,${ri(3,9)} do ${a}=${a}+${b} end return ${a}`,
+      `local ${a}=${p} or 0 return tostring(${a})`,
+      `local ${a}={["${k1}"]=${ri(1,999)},["${k2}"]=${ri(1,999)}} return type(${a})`,
+      `if type(${p})=="number" then return ${p}+${ri(1,100)} end return 0`,
+      `local ${a}=math.floor(${ri(10,999)}) local ${b}=math.abs(-${ri(1,50)}) return ${a}-${b}`,
+      `local ${a}=tostring(${ri(1,65535)}) return #${a}`,
+      `local ${a}=0 local ${b}=${ri(3,12)} repeat ${a}=${a}+1 until ${a}>=${b} return ${a}`,
+      `local ${a}=pcall(function() local ${b}=${ri(1,99)} end) return ${a}`,
+      `local ${a}=string.rep("x",${ri(1,7)}) return #${a}`,
+      `for ${a}=1,${ri(2,8)} do local ${b}=${a}*2 end return nil`,
+      `local ${a}=math.max(${ri(1,50)},${ri(51,200)}) return ${a}%${ri(2,9)}`,
+      `local ${a}={} for ${b}=1,${ri(2,7)} do ${a}[${b}]=${b}*${b} end return #${a}`,
+      `local ${a}=${ri(1,9999)} local ${b}=${a}%${ri(2,7)} return ${a}+${b}`,
+    ];
+    return rf(bodies);
+  }
+
+  // Anti-environment guards
+  function makeGuards() {
+    const G = [];
+    const g = code => G.push(code);
+    g(`do local _ga=string.sub("abcde",2,4) if _ga~="bcd" then end end`);
+    g(`do local _gb=string.rep("x",3) if #_gb~=3 then end end`);
+    g(`do local _gc=string.lower("ABC") if _gc~="abc" then end end`);
+    g(`do local _gd=string.upper("abc") if _gd~="ABC" then end end`);
+    g(`do local _ge=math.floor(3.9) if _ge~=3 then end end`);
+    g(`do local _gf=math.abs(-7) if _gf~=7 then end end`);
+    g(`do local _gg=math.max(1,2,3) if _gg~=3 then end end`);
+    g(`do local _gh=math.min(1,2,3) if _gh~=1 then end end`);
+    g(`do if (2+2)~=4 then end end`);
+    g(`do if type(nil)~="nil" then end end`);
+    g(`do if type(0)~="number" then end end`);
+    g(`do if type("")~="string" then end end`);
+    g(`do if type({})~="table" then end end`);
+    g(`do if tostring(true)~="true" then end end`);
+    g(`do if tostring(42)~="42" then end end`);
+    g(`do local _gi=1+2+3+4+5 if _gi~=15 then end end`);
+    g(`do local _gj=7*7 if _gj~=49 then end end`);
+    g(`do if rawequal(1,1)==false then end end`);
+    g(`do local _gk=string.byte("A") if _gk~=65 then end end`);
+    g(`do local _gl=string.char(65) if _gl~="A" then end end`);
+    g(`do local _gm=#{1,2,3,4,5} if _gm~=5 then end end`);
+    g(`do local _gn=string.format("%d",42) if _gn~="42" then end end`);
+    g(`do if (not true)==true then end end`);
+    g(`do local _go=table.concat({"a","b","c"}) if _go~="abc" then end end`);
+    g(`do local _gp=math.floor(math.sqrt(9)) if _gp~=3 then end end`);
+    g(`do local _gq=tostring(nil) if _gq~="nil" then end end`);
+    return shuffle(G);
+  }
+
+  // Full register VM (decorative valid Lua for decompiler confusion)
+  function buildFullVM() {
+    const vExec=rn(), vProto=rn(), vUpvIn=rn();
+    const vRegs=rn(), vK=rn(), vCode=rn(), vP=rn();
+    const vIp=rn(), vTop=rn(), vVa=rn(), vUv=rn();
+    const vIns=rn(), vOp=rn(), vA=rn(), vB=rn(), vC=rn();
+    const vBx=rn(), vSbx=rn(), vRK=rn();
+    const vOuv=rn(), vGuv=rn(), vCuv=rn();
+    const vFn=rn(), vCa=rn(), vRs=rn(), vI=rn();
+    const ops = {};
+    const opNames = ['MOVE','LOADK','LOADBOOL','LOADNIL','GETUPVAL','GETGLOBAL',
+      'GETTABLE','SETGLOBAL','SETUPVAL','SETTABLE','NEWTABLE','SELF',
+      'ADD','SUB','MUL','DIV','MOD','POW','UNM','NOT','LEN','CONCAT',
+      'JMP','EQ','LT','LE','TEST','TESTSET','CALL','TAILCALL','RETURN',
+      'FORLOOP','FORPREP','TFORLOOP','SETLIST','CLOSE','CLOSURE','VARARG'];
+    opNames.forEach((n, i) => ops[n] = { name: rn(4, 8), val: i });
+    const L = [];
+    L.push(`-- [[ NexVault Full Register VM ]]`);
+    L.push(`local function ${vExec}(${vProto},${vUpvIn},...)`);
+    L.push(` local ${vRegs}={} local ${vK}=${vProto}[1] local ${vCode}=${vProto}[2] local ${vP}=${vProto}[3]`);
+    L.push(` local ${vIp}=1 local ${vTop}=0 local ${vVa}={...} local ${vUv}=${vUpvIn} or {} local ${vOuv}={}`);
+    Object.values(ops).forEach(o => L.push(` local ${o.name}=${o.val}`));
+    L.push(` local _SBX=131071 local _FPF=50`);
+    L.push(` local function ${vRK}(x) if x>=256 then return ${vK}[x-256+1] else return ${vRegs}[x] end end`);
+    L.push(` local function ${vGuv}(r) if not ${vOuv}[r] then ${vOuv}[r]={${vRegs}[r]} end return ${vOuv}[r] end`);
+    L.push(` local function ${vCuv}(fr) for r,c in pairs(${vOuv}) do if r>=fr then c[1]=${vRegs}[r] ${vOuv}[r]=nil end end end`);
+    L.push(` local _np=${vProto}[4] or 0 for ${vI}=1,_np do ${vRegs}[${vI}-1]=${vVa}[${vI}] end`);
+    L.push(` while true do`);
+    L.push(`  local ${vIns}=${vCode}[${vIp}] ${vIp}=${vIp}+1`);
+    L.push(`  local ${vOp}=${vIns}>>26 local ${vA}=(${vIns}>>18)&255 local ${vB}=(${vIns}>>9)&511 local ${vC}=${vIns}&511`);
+    L.push(`  local ${vBx}=${vIns}&262143 local ${vSbx}=${vBx}-_SBX`);
+    const O = ops;
+    L.push(`  if ${vOp}==${O.MOVE.name} then ${vRegs}[${vA}]=${vRegs}[${vB}]`);
+    L.push(`  elseif ${vOp}==${O.LOADK.name} then ${vRegs}[${vA}]=${vK}[${vBx}+1]`);
+    L.push(`  elseif ${vOp}==${O.ADD.name} then ${vRegs}[${vA}]=${vRK}(${vB})+${vRK}(${vC})`);
+    L.push(`  elseif ${vOp}==${O.SUB.name} then ${vRegs}[${vA}]=${vRK}(${vB})-${vRK}(${vC})`);
+    L.push(`  elseif ${vOp}==${O.MUL.name} then ${vRegs}[${vA}]=${vRK}(${vB})*${vRK}(${vC})`);
+    L.push(`  elseif ${vOp}==${O.RETURN.name} then ${vCuv}(0) if ${vB}==1 then return end local _r={} for _i=0,${vB}-2 do _r[_i+1]=${vRegs}[${vA}+_i] end return table.unpack(_r)`);
+    L.push(`  end end end`);
+    L.push(`-- [[ End NexVault VM ]]`);
+    return L.join('\n');
+  }
+
+  // Build one VM encoding layer
+  function buildLayer(payload, key, salt, opts, isOuter) {
+    const L = []; const N = () => rn();
+    const CSIZ = ri(55, 90);
+    const chunks = [];
+    for (let i = 0; i < payload.length; i += CSIZ) chunks.push(payload.slice(i, i + CSIZ));
+    const cvars = chunks.map(() => N());
+    const encK = opts.numbers ? encNum(key) : String(key);
+    const encS = opts.numbers ? encNum(salt) : String(salt);
+    const vKEY=N(), vSALT=N(), vSMAP=N(), vCMAP=N();
+    const vFULL=N(), vTC=N(), vD=N(), vI=N(), vHI=N(), vLO=N();
+    const vBYTE=N(), vXI=N(), vKV=N(), vFN=N(), vERR=N(), vCODE=N();
+    const vJT=N();
+
+    if (isOuter) {
+      L.push(`-- Protected by NexVault — NexCode Script Protection Platform`);
+      L.push(`-- Build ${ri(1000,9999)} | ${new Date().toISOString().slice(0,10)} | Randomized per compile`);
+      L.push(`--[=[NexVault v1.0 | 2-Layer Nested VM | Full Register VM | Luau Safe]=]`);
+      L.push('');
+    }
+
+    if (opts.guards) {
+      const gs = makeGuards();
+      const take = isOuter ? Math.min(18, gs.length) : Math.min(8, gs.length);
+      for (const g of gs.slice(0, take)) {
+        const gv = N();
+        L.push(`local ${gv}=function() ${g} end pcall(${gv}) ${gv}=nil`);
+      }
+      L.push('');
+    }
+
+    let junkFnCnt = 0;
+    if (opts.junk) {
+      const cnt = isOuter ? ri(45, 58) : ri(12, 20);
+      junkFnCnt = cnt;
+      L.push(`local ${vJT}={}`);
+      const idxs = shuffle(Array.from({ length: cnt }, (_, i) => i + 1));
+      for (let ii = 0; ii < cnt; ii++) {
+        const idx = idxs[ii]; const p = N();
+        let body = junkBody(p);
+        if (ii > 3 && Math.random() < 0.3) body = `${vJT}[${idxs[ri(0,ii-1)]}](0) ` + body;
+        L.push(`${vJT}[${idx}]=function(${p}) ${body} end`);
+        if (opts.symbols && Math.random() < 0.3) L.push(symNoise());
+        if (Math.random() < 0.25) L.push(junkLine());
+      }
+      for (let i = 0; i < ri(4, 8); i++) L.push(`pcall(${vJT}[${idxs[ri(0,idxs.length-1)]}],0)`);
+      L.push('');
+    }
+
+    if (opts.junk) { for (let i = 0; i < ri(5, 12); i++) L.push(junkLine()); L.push(''); }
+
+    L.push(`local ${vKEY}=${encK}`);
+    L.push(`local ${vSALT}=${encS}`);
+    L.push('');
+
+    const smE = SYM16.map((s, i) => `["${s}"]=${i}`).join(',');
+    const cmE = CON16.map((c, i) => `["${c}"]=${i}`).join(',');
+    L.push(`local ${vSMAP}={${smE}}`);
+    L.push(`local ${vCMAP}={${cmE}}`);
+    L.push('');
+
+    for (let i = 0; i < chunks.length; i++) {
+      const esc = chunks[i].replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,'\\n').replace(/\r/g,'\\r');
+      L.push(`local ${cvars[i]}="${esc}"`);
+      if (opts.opaque) L.push(`if ${opF()} then ${cvars[i]}="" end`);
+      if (opts.junk && Math.random() < 0.25) L.push(junkLine());
+    }
+    L.push('');
+
+    L.push(`local ${vTC}=table.concat`);
+    L.push(`local ${vFULL}=${vTC}({${cvars.join(',')}})`);
+    for (const cv of cvars) L.push(`${cv}=nil`);
+    L.push('');
+
+    if (opts.junk) { for (let i = 0; i < ri(3, 7); i++) L.push(junkLine()); }
+    if (opts.symbols) L.push(symNoise());
+    L.push('');
+
+    L.push(`local ${vD}={}`);
+    L.push(`if ${opT()} then`);
+    L.push(` for ${vI}=1,#${vFULL},2 do`);
+    L.push(`  local ${vHI}=${vSMAP}[string.sub(${vFULL},${vI},${vI})] or 0`);
+    L.push(`  local ${vLO}=${vCMAP}[string.sub(${vFULL},${vI}+1,${vI}+1)] or 0`);
+    L.push(`  local ${vBYTE}=${vHI}*16+${vLO}`);
+    L.push(`  local ${vXI}=math.floor((${vI}-1)/2)`);
+    L.push(`  local ${vKV}=math.floor((${vKEY}+${vXI}*${vSALT})%256)`);
+    L.push(`  ${vD}[#${vD}+1]=string.char((${vBYTE}-${vKV}+256)%256)`);
+    if (opts.opaque && Math.random() < 0.4) L.push(`  if ${opF()} then local ${N()}=nil end`);
+    L.push(` end`);
+    L.push(`end`);
+    L.push(`${vSMAP}=nil ${vCMAP}=nil ${vFULL}=nil`);
+    L.push('');
+
+    if (opts.junk) { for (let i = 0; i < ri(3, 6); i++) L.push(junkLine()); }
+    if (opts.symbols) L.push(symNoise());
+    L.push('');
+
+    L.push(`local ${vFN},${vERR},${vCODE}=nil,nil,table.concat(${vD})`);
+    L.push(`${vD}=nil ${vJT}=nil`);
+    L.push(`if type(loadstring)=="function" then ${vFN},${vERR}=loadstring(${vCODE}) end`);
+    L.push(`if not ${vFN} and type(load)=="function" then`);
+    L.push(` local _ok,_f,_e=pcall(load,${vCODE})`);
+    L.push(` if _ok and type(_f)=="function" then ${vFN}=_f ${vERR}=_e end`);
+    L.push(`end`);
+    L.push(`if not ${vFN} then`);
+    L.push(` local _e=_G or _ENV`);
+    L.push(` if _e and type(_e.loadstring)=="function" then ${vFN},${vERR}=_e.loadstring(${vCODE}) end`);
+    L.push(`end`);
+    L.push(`${vCODE}=nil`);
+
+    if (opts.cff) {
+      const S0=ri(100,999), S1=ri(1000,9999), S2=ri(10000,99999), S3=ri(100000,999999);
+      const vST=N(), vGO=N();
+      L.push(`if type(${vFN})=="function" then`);
+      L.push(` local ${vST}=${S0} local ${vGO}=true`);
+      L.push(` while ${vGO} do`);
+      L.push(`  if ${vST}==${S0} then`);
+      if (opts.junk) L.push(`   ${junkLine()}`);
+      L.push(`   ${vST}=${S1}`);
+      L.push(`  elseif ${vST}==${S1} then`);
+      L.push(`   pcall(${vFN})`);
+      L.push(`   ${vST}=${S2}`);
+      L.push(`  elseif ${vST}==${S2} then`);
+      if (opts.junk) L.push(`   ${junkLine()}`);
+      L.push(`   ${vST}=${S3}`);
+      L.push(`  else`);
+      L.push(`   ${vGO}=false`);
+      L.push(`  end`);
+      L.push(` end`);
+      L.push(`else`);
+      L.push(` error("[NexVault] "..tostring(${vERR}),2)`);
+      L.push(`end`);
+      L.push(`${vFN}=nil ${vERR}=nil`);
+    } else {
+      L.push(`if type(${vFN})=="function" then pcall(${vFN})`);
+      L.push(`else error("[NexVault] "..tostring(${vERR}),2) end`);
+      L.push(`${vFN}=nil ${vERR}=nil`);
+    }
+
+    L.push('');
+    if (opts.junk) { for (let i = 0; i < ri(4, 9); i++) L.push(junkLine()); }
+    if (opts.symbols) { for (let i = 0; i < ri(8, 15); i++) L.push(symNoise()); }
+
+    return { code: L.join('\n'), junkFnCnt };
+  }
+
+  // Main obfuscation entry point
+  function obfuscate(src, opts) {
+    setPb(5); setLbl('Stripping comments...');
+    if (opts.strip) src = stripSrc(src);
+
+    setPb(12); setLbl('Renaming variables...');
+    let vsR = 0;
+    if (opts.rename) { src = renameVars(src, opts.invis); vsR = gVarsRenamed; }
+
+    setPb(22); setLbl('Encoding numbers...');
+    if (opts.numbers) {
+      src = src.replace(/\b(\d+)\b/g, (m, n) => {
+        const v = parseInt(n);
+        if (v <= 1 || v > 999) return m;
+        return encNum(v);
+      });
+    }
+
+    setPb(32); setLbl('Building inner layer...');
+    const innerSrc = `-- [NexVault Inner Layer]\n${src}`;
+
+    let vmBlock = '';
+    if (opts.fullvm) { setPb(40); setLbl('Building register VM...'); vmBlock = buildFullVM() + '\n'; }
+
+    setPb(50); setLbl('Encoding inner layer...');
+    const k2 = ri(1, 254), s2 = ri(1, 15);
+    const enc2 = addEncode(innerSrc, k2, s2);
+    const dual2 = dualEnc(enc2);
+
+    setPb(60); setLbl('Building inner VM...');
+    const innerResult = buildLayer(dual2, k2, s2, opts, false);
+    const innerLayerCode = vmBlock + innerResult.code;
+
+    let finalCode;
+    if (opts.nested) {
+      setPb(72); setLbl('Encoding outer layer...');
+      const k1 = ri(1, 254), s1 = ri(1, 15);
+      const enc1 = addEncode(innerLayerCode, k1, s1);
+      const dual1 = dualEnc(enc1);
+      setPb(82); setLbl('Building outer VM...');
+      const outerResult = buildLayer(dual1, k1, s1, opts, true);
+      finalCode = outerResult.code;
+    } else {
+      // Single layer — just use inner with outer header
+      finalCode = `-- Protected by NexVault — NexCode Script Protection Platform\n-- Build ${ri(1000,9999)} | ${new Date().toISOString().slice(0,10)}\n` + innerLayerCode;
+    }
+
+    if (opts.upval) {
+      const vW = rn(), vU = rn();
+      finalCode = `local ${vW}=(function(${vU})\n${finalCode}\nend)(nil)`;
+    }
+
+    setPb(95); setLbl('Finalizing...');
+    const trail = [];
+    if (opts.symbols) { for (let i = 0; i < ri(12, 22); i++) trail.push(symNoise()); }
+    if (opts.junk) { for (let i = 0; i < ri(5, 10); i++) trail.push(junkLine()); }
+    const result = finalCode + (trail.length ? '\n' + trail.join('\n') : '');
+
+    setPb(100);
+    return { code: result, varsRenamed: vsR };
+  }
+
+  return { obfuscate };
+})();
+
+function nexVaultObfuscate(src, opts) {
+  return NV.obfuscate(src, opts);
+}
+
 </script>
 </body>
 </html>
